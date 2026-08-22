@@ -16,8 +16,9 @@ const FeatureCard: React.FC<{
   icon: React.ReactNode;
   title: string;
   description: string;
+  bgClass: string;
   children: React.ReactNode;
-}> = ({ index, icon, title, description, children }) => {
+}> = ({ index, icon, title, description, bgClass, children }) => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const [rect, setRect] = useState<DOMRect | null>(null);
@@ -65,8 +66,8 @@ const FeatureCard: React.FC<{
           : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)',
         transition: isHovered ? 'none' : 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
       }}
-      className={`relative bg-white border rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-sm transition-shadow duration-300 ${
-        isHovered ? 'shadow-lg border-slate-300' : 'border-slate-200/80'
+      className={`relative border rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-sm transition-all duration-300 ${bgClass} ${
+        isHovered ? 'shadow-md border-slate-300' : ''
       }`}
     >
       {/* Background Hover Radial Glow */}
@@ -83,7 +84,7 @@ const FeatureCard: React.FC<{
         {/* Header Icon & Title */}
         <div className="flex items-start justify-between mb-4">
           <div className={`p-3 rounded-xl transition-all duration-300 ${
-            isHovered ? 'bg-[#0F1F4B] text-white shadow-md' : 'bg-slate-50 text-slate-650'
+            isHovered ? 'bg-[#0F1F4B] text-white shadow-md' : 'bg-slate-50 text-slate-655'
           }`}>
             {icon}
           </div>
@@ -116,8 +117,8 @@ export const PlatformSection: React.FC = () => {
 
       {/* Static mesh grid decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[120px] opacity-[0.05]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.04]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[120px] opacity-[0.05]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#2563EB] rounded-full filter blur-[130px] opacity-[0.04]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
@@ -144,6 +145,7 @@ export const PlatformSection: React.FC = () => {
             icon={<Users className="w-5.5 h-5.5" />}
             title="Employee Management"
             description="Consolidate staff profiles, files, and contracts inside a secure corporate directory."
+            bgClass="bg-[#EFF6FF] border-[#BFDBFE]/60 hover:bg-[#EFF6FF]/95"
             children={
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2.5 pb-2.5 border-b border-slate-200/50">
@@ -172,6 +174,7 @@ export const PlatformSection: React.FC = () => {
             icon={<Clock className="w-5.5 h-5.5" />}
             title="Attendance Tracker"
             description="Track daily shift times, login durations, and check-in milestones in real time."
+            bgClass="bg-[#EEF2F6] border-[#D1D5DB]/70 hover:bg-[#EEF2F6]/95"
             children={
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-between items-center text-[10px] font-semibold text-slate-500">
@@ -201,6 +204,7 @@ export const PlatformSection: React.FC = () => {
             icon={<Calendar className="w-5.5 h-5.5" />}
             title="Leave & Time-Off"
             description="Manage annual leave and medical leaves with integrated manager approval paths."
+            bgClass="bg-[#F5F3FF] border-[#DDD6FE]/70 hover:bg-[#F5F3FF]/95"
             children={
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-between items-center text-[10px] font-semibold">
@@ -223,6 +227,7 @@ export const PlatformSection: React.FC = () => {
             icon={<GitPullRequest className="w-5.5 h-5.5" />}
             title="Approval Workflows"
             description="Route employee request notifications directly to managers for quick sign-offs."
+            bgClass="bg-[#F0F5FF] border-[#C7D2FE]/60 hover:bg-[#F0F5FF]/95"
             children={
               <div className="flex items-center justify-between text-[9px] bg-white border border-slate-200/50 p-2.5 rounded shadow-3xs">
                 <div>
@@ -247,6 +252,7 @@ export const PlatformSection: React.FC = () => {
             icon={<Coins className="w-5.5 h-5.5" />}
             title="Payroll Visibility"
             description="Review basic salary scales, standard allowances, and tax withholding summaries."
+            bgClass="bg-[#F8FAFC] border-[#E2E8F0] hover:bg-[#F1F5F9]/95"
             children={
               <div className="flex flex-col gap-2 font-mono text-[9px] font-semibold text-slate-500">
                 <div className="flex justify-between border-b border-slate-100 pb-1.5">
