@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
                 <div className="w-1 h-4.5 bg-zinc-700 rounded-full" />
                 <div className="w-1 h-2.5 bg-zinc-400 rounded-full" />
               </div>
-              <span className="text-lg font-bold tracking-tight text-white font-sans">
+              <span className="text-lg font-bold tracking-tight bg-gradient-to-r from-[#E2E8F0] via-[#94A3B8] to-[#E2E8F0] bg-clip-text text-transparent font-sans">
                 Dayflow
               </span>
             </div>
@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
 
         {/* Oversized Brand Typography Section (Editorial Statement) */}
         <div className="py-20 relative select-none pointer-events-none flex flex-col items-center justify-center overflow-hidden">
-          <h2 className="text-[14vw] md:text-[13vw] font-black tracking-tighter text-white/[0.02] uppercase leading-none text-center w-full font-sans">
+          <h2 className="text-[14vw] md:text-[13vw] font-black tracking-tighter text-[#E2E8F0]/[0.02] uppercase leading-none text-center w-full font-sans">
             Dayflow
           </h2>
           <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs md:text-sm font-bold uppercase tracking-[0.45em] text-white/80 whitespace-nowrap block pt-2.5 font-mono">
