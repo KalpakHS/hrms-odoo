@@ -1,109 +1,131 @@
-import React from 'react';
-import { motion, type Variants } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { ArrowRight, CheckCircle } from 'lucide-react';
 
 export const Hero: React.FC = () => {
-  // Heading & Tagline words arrays for staggered word animation
-  const mainWords = "HUMAN RESOURCE MANAGEMENT SYSTEM".split(" ");
-  const taglineWords = "Every workday, perfectly aligned.".split(" ");
+  // Typewriter text state variables
+  const [text1, setText1] = useState("");
+  const [text2, setText2] = useState("");
+  const [isDone1, setIsDone1] = useState(false);
+  const [isDone2, setIsDone2] = useState(false);
 
-  // Staggered text reveal variants (smooth fade-in and slight upward slide)
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.06,
+  useEffect(() => {
+    const fullText1 = "HUMAN RESOURCE";
+    let i = 0;
+    
+    // Type Line 1 character-by-character
+    const timer1 = setInterval(() => {
+      if (i < fullText1.length) {
+        setText1(fullText1.slice(0, i + 1));
+        i++;
+      } else {
+        clearInterval(timer1);
+        setIsDone1(true);
       }
-    }
-  };
+    }, 70); // 70ms step speed
 
-  const wordVariants: Variants = {
-    hidden: { opacity: 0, y: 12, filter: 'blur(3px)' },
-    visible: {
-      opacity: 1,
-      y: 0,
-      filter: 'blur(0px)',
-      transition: {
-        duration: 0.45,
-        ease: 'easeOut' as const,
-      }
-    }
-  };
+    return () => clearInterval(timer1);
+  }, []);
+
+  useEffect(() => {
+    if (!isDone1) return;
+    const fullText2 = "MANAGEMENT SYSTEM";
+    let i = 0;
+    
+    // Pause before typing Line 2
+    const delay = setTimeout(() => {
+      const timer2 = setInterval(() => {
+        if (i < fullText2.length) {
+          setText2(fullText2.slice(0, i + 1));
+          i++;
+        } else {
+          clearInterval(timer2);
+          setIsDone2(true);
+        }
+      }, 65); // 65ms step speed
+      
+      return () => clearInterval(timer2);
+    }, 200);
+
+    return () => clearTimeout(delay);
+  }, [isDone1]);
 
   return (
-    <section id="home" className="relative min-h-[80vh] flex items-center justify-center pt-32 pb-24 bg-white text-center select-none">
+    <section id="home" className="relative min-h-[90vh] flex items-center justify-center pt-40 pb-32 bg-gradient-to-b from-[#EFF6FF] via-white to-white text-center select-none overflow-hidden border-b border-slate-100/60">
       
       {/* 
-        Pure white and completely static background.
-        No canvas, no pulsing gradient spheres, no moving particle elements.
+        Subtle light glow element.
+        Extremely low opacity blue radial glow behind typography.
       */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl aspect-square bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0%,rgba(255,255,255,0)_70%)] pointer-events-none z-0" />
 
-      <div className="max-w-4xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-7">
+      <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-9">
         
         {/* 
-          Main prominently centered HRMS Heading.
-          Uses outline-white (hollow style with a dark border) and solid Dayflow blue.
+          HRMS-ODOO Eyebrow Badge.
+          Fade-in + slight scale.
         */}
-        <motion.h2
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-3xl sm:text-5xl md:text-6.5xl font-black uppercase tracking-tight leading-none font-sans"
+        <motion.div
+          initial={{ opacity: 0, scale: 0.94 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-xs border border-blue-100/70 rounded-full shadow-2xs text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB]"
         >
-          {mainWords.map((word, idx) => {
-            const isBlue = word === "MANAGEMENT" || word === "SYSTEM";
-            return (
-              <motion.span
-                key={idx}
-                variants={wordVariants}
-                className={`inline-block mr-3 sm:mr-4 last:mr-0 ${
-                  isBlue 
-                    ? 'text-[#2563EB]' // Solid Dayflow Blue
-                    : 'text-outline-navy' // Hollow White with Deep Navy outline
-                }`}
-              >
-                {word}
-              </motion.span>
-            );
-          })}
-        </motion.h2>
-
-        {/* Tagline centered directly below the main heading */}
-        <motion.h1
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="text-4xl sm:text-5.5xl md:text-6.5xl font-black tracking-tight text-[#0F172A] leading-tight font-sans"
-        >
-          {taglineWords.map((word, idx) => {
-            // Emphasize "perfectly aligned." in Dayflow Blue, other words in Deep Navy
-            const isBlue = word === "perfectly" || word === "aligned.";
-            return (
-              <motion.span
-                key={idx}
-                variants={wordVariants}
-                className={`inline-block mr-2 sm:mr-3 last:mr-0 ${
-                  isBlue ? 'text-[#2563EB]' : 'text-[#0F1F4B]'
-                }`}
-              >
-                {word}
-              </motion.span>
-            );
-          })}
-        </motion.h1>
+          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
+          HRMS-ODOO Platform
+        </motion.div>
 
         {/* 
-          Clean, static supporting description.
-          No motion animations are applied here to preserve visual simplicity.
+          Main HRMS Heading - significantly larger and bolder.
+          Types character-by-character with a blinking cursor at the typing edge.
         */}
-        <p className="text-sm sm:text-base md:text-lg text-[#64748B] leading-relaxed max-w-2xl mt-1 font-semibold">
+        <div className="flex flex-col items-center leading-[0.96] font-sans font-black tracking-tighter uppercase w-full">
+          {/* Line 1: HUMAN RESOURCE (Deep Navy) */}
+          <h2 className="text-[#0F1F4B] text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] min-h-[1.1em] flex items-center justify-center">
+            {text1}
+            {!isDone1 && (
+              <span className="text-[#2563EB] animate-pulse ml-1 inline-block select-none font-light">|</span>
+            )}
+          </h2>
+          
+          {/* Line 2: MANAGEMENT SYSTEM (Refined Blue Gradient) */}
+          <h2 className="text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] min-h-[1.1em] mt-2.5 sm:mt-4 flex items-center justify-center">
+            <span className="bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
+              {text2}
+            </span>
+            {isDone1 && (
+              <span className="text-[#2563EB] animate-pulse ml-1 inline-block select-none font-light">|</span>
+            )}
+          </h2>
+        </div>
+
+        {/* Tagline message centered directly below heading, animated after typing finishes */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={isDone2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="text-2xl sm:text-3.5xl md:text-4.5xl font-extrabold tracking-tight text-[#0F1F4B] leading-tight font-sans mt-1"
+        >
+          Every workday, <span className="text-[#2563EB]">perfectly aligned.</span>
+        </motion.div>
+
+        {/* Clean supporting description, animated after typing finishes */}
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={isDone2 ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-sm sm:text-base md:text-lg text-[#64748B] leading-relaxed max-w-2xl mt-1 font-semibold"
+        >
           A unified HRMS for managing employees, profiles, attendance, leave, payroll visibility, and HR workflows from one connected platform.
-        </p>
+        </motion.p>
 
-        {/* 
-          Clean, static CTA Button block.
-        */}
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
+        {/* Action buttons, animated after typing finishes */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={isDone2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="flex flex-wrap items-center justify-center gap-4 mt-1"
+        >
           <button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#2563EB]">
             Get Started
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -111,11 +133,9 @@ export const Hero: React.FC = () => {
           <button className="bg-transparent hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer">
             Explore Platform
           </button>
-        </div>
+        </motion.div>
 
-        {/* 
-          Static Trust badge indicators.
-        */}
+        {/* Static Trust badge indicators */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] font-extrabold uppercase tracking-widest text-[#64748B] font-mono mt-10">
           <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2563EB]" /> Role-Based Access</span>
           <span className="text-slate-300">•</span>
