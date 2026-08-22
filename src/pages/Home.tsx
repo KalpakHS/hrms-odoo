@@ -7,17 +7,22 @@ import { RoleBasedSection } from '../components/RoleBasedSection';
 import { ProductCTA } from '../components/ProductCTA';
 import { Footer } from '../components/Footer';
 
-export const Home: React.FC = () => {
+interface HomeProps {
+  onSignIn: () => void;
+  onGetStarted: () => void;
+}
+
+export const Home: React.FC<HomeProps> = ({ onSignIn, onGetStarted }) => {
   return (
     <div className="min-h-screen bg-white text-[#0F172A] flex flex-col font-sans transition-colors duration-300">
       {/* Sticky Enterprise Navbar */}
-      <Navbar />
+      <Navbar onSignIn={onSignIn} onGetStarted={onGetStarted} />
 
       {/* Main Page Content */}
       <main className="flex-grow">
         
         {/* Hero split layout */}
-        <Hero />
+        <Hero onGetStarted={onGetStarted} />
 
         {/* Platform 5 Cards Grid */}
         <PlatformSection />
@@ -29,7 +34,7 @@ export const Home: React.FC = () => {
         <RoleBasedSection />
 
         {/* Prominent Pre-Footer CTA banner */}
-        <ProductCTA />
+        <ProductCTA onGetStarted={onGetStarted} />
 
       </main>
 

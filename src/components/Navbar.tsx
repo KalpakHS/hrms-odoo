@@ -2,7 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-export const Navbar: React.FC = () => {
+interface NavbarProps {
+  onSignIn: () => void;
+  onGetStarted: () => void;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ onSignIn, onGetStarted }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -69,12 +74,18 @@ export const Navbar: React.FC = () => {
 
           {/* Right Call-To-Action Button Suite */}
           <div className="hidden md:flex items-center gap-6">
-            <button className={`text-sm font-bold transition-colors cursor-pointer ${
-              isScrolled ? 'text-[#182018] hover:text-[#63B64F]' : 'text-[#182018]/90 hover:text-[#63B64F]'
-            }`}>
+            <button 
+              onClick={onSignIn}
+              className={`text-sm font-bold transition-colors cursor-pointer border-none bg-transparent ${
+                isScrolled ? 'text-[#182018] hover:text-[#63B64F]' : 'text-[#182018]/90 hover:text-[#63B64F]'
+              }`}
+            >
               Sign In
             </button>
-            <button className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-1.5 cursor-pointer border border-[#63B64F]">
+            <button 
+              onClick={onGetStarted}
+              className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-5 py-3 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-1.5 cursor-pointer border border-[#63B64F]"
+            >
               Get Started
               <ArrowRight className="w-4 h-4" />
             </button>
@@ -115,10 +126,16 @@ export const Navbar: React.FC = () => {
               ))}
               <hr className="border-slate-200/80 my-2" />
               <div className="flex flex-col gap-3 pt-2">
-                <button className="text-center font-bold text-[#0F172A] hover:text-[#2563EB] py-2.5 border border-slate-200 rounded-lg cursor-pointer">
+                <button 
+                  onClick={() => { setIsMobileMenuOpen(false); onSignIn(); }}
+                  className="text-center font-bold text-[#182018] hover:text-[#163A2B] py-2.5 border border-slate-200 rounded-lg cursor-pointer bg-transparent"
+                >
                   Sign In
                 </button>
-                <button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white font-bold py-3 rounded-lg shadow-sm text-center cursor-pointer">
+                <button 
+                  onClick={() => { setIsMobileMenuOpen(false); onGetStarted(); }}
+                  className="bg-[#163A2B] hover:bg-[#0f2a1f] text-white font-bold py-3 rounded-lg shadow-sm text-center cursor-pointer border-none"
+                >
                   Get Started
                 </button>
               </div>
