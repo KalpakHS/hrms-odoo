@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<h2>Dayflow HRMS Login</h2>
+<p style="color: #64748b; font-size: 14px;">Sign in with your system-generated Login ID (e.g. OIJODO20260001)</p>
+
+<form method="POST" action="{% url 'accounts:login' %}">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+        <div class="errors">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div>
+        <label for="id_login_id"><strong>{{ form.login_id.label }}</strong></label>
+        {{ form.login_id }}
+        {% if form.login_id.errors %}
+            <div class="errors">{{ form.login_id.errors }}</div>
+        {% endif %}
+    </div>
+
+    <div>
+        <label for="id_password"><strong>{{ form.password.label }}</strong></label>
+        {{ form.password }}
+        {% if form.password.errors %}
+            <div class="errors">{{ form.password.errors }}</div>
+        {% endif %}
+    </div>
+
+    <button type="submit" class="btn">Sign In</button>
+</form>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dayflow HRMS{% endblock %}</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 40px auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .form-control { width: 100%; padding: 10px; margin: 8px 0 16px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
+        .btn { background: #2563eb; color: #ffffff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; }
+        .btn:hover { background: #1d4ed8; }
+        .alert { padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
+        .alert-success { background: #dcfce7; color: #166534; }
+        .alert-error, .alert-danger { background: #fee2e2; color: #991b1b; }
+        .alert-info { background: #e0f2fe; color: #075985; }
+        .errors { color: #dc2626; font-size: 13px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
