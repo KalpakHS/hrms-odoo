@@ -51,13 +51,33 @@ export const Hero: React.FC = () => {
   }, [isDone1]);
 
   return (
-    <section id="home" className="relative min-h-[90vh] flex items-center justify-center pt-40 pb-32 bg-gradient-to-b from-[#EFF6FF] via-white to-white text-center select-none overflow-hidden border-b border-slate-100/60">
+    <section id="home" className="relative min-h-[90vh] flex items-center justify-center pt-40 pb-32 bg-white text-center select-none overflow-hidden border-b border-slate-100/60">
       
       {/* 
-        Subtle light glow element.
-        Extremely low opacity blue radial glow behind typography.
+        Premium Animated Mesh-Gradient Background
+        Slow-moving blobs: Deep purple, warm orange, magenta, coral/red, and electric blue.
       */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl aspect-square bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0%,rgba(255,255,255,0)_70%)] pointer-events-none z-0" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* White base */}
+        <div className="absolute inset-0 bg-white" />
+        
+        {/* Very subtle light-blue base radial gradient */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,246,255,0.8)_0%,rgba(255,255,255,0)_100%)]" />
+
+        {/* Blob 1: Deep Purple */}
+        <div className="absolute top-[-15%] left-[-15%] w-[60vw] h-[60vw] bg-[#6D28D9] rounded-full filter blur-[120px] opacity-[0.14] animate-mesh-1" />
+        {/* Blob 2: Warm Orange */}
+        <div className="absolute bottom-[-15%] right-[-10%] w-[65vw] h-[65vw] bg-[#F97316] rounded-full filter blur-[140px] opacity-[0.12] animate-mesh-2" />
+        {/* Blob 3: Magenta */}
+        <div className="absolute top-[20%] right-[-15%] w-[50vw] h-[50vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.13] animate-mesh-3" />
+        {/* Blob 4: Coral / Red */}
+        <div className="absolute bottom-[10%] left-[-15%] w-[55vw] h-[55vw] bg-[#EF4444] rounded-full filter blur-[130px] opacity-[0.12] animate-mesh-4" />
+        {/* Blob 5: Electric Blue Hint */}
+        <div className="absolute top-[35%] left-[20%] w-[40vw] h-[40vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.1] animate-mesh-1" />
+
+        {/* Extremely subtle blue radial glow overlay behind centered typography */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl aspect-square bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0%,rgba(255,255,255,0)_70%)] pointer-events-none z-0" />
+      </div>
 
       <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-9">
         

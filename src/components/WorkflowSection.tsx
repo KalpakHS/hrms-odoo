@@ -60,7 +60,13 @@ export const WorkflowSection: React.FC = () => {
       {/* Top separator line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
+      {/* Subtle background mesh blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.05] animate-mesh-3" />
+        <div className="absolute bottom-[10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.05] animate-mesh-4" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-20">

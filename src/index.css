@@ -51,3 +51,46 @@ body {
   -webkit-text-stroke: 1.5px #2563EB;
   text-stroke: 1.5px #2563EB;
 }
+
+/* Premium mesh gradient blob animations */
+@keyframes meshFloat1 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  33% { transform: translate(8%, -8%) scale(1.08); }
+  66% { transform: translate(-4%, 6%) scale(0.93); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+@keyframes meshFloat2 {
+  0% { transform: translate(0px, 0px) scale(1.05); }
+  50% { transform: translate(-10%, 10%) scale(0.92); }
+  100% { transform: translate(0px, 0px) scale(1.05); }
+}
+
+@keyframes meshFloat3 {
+  0% { transform: translate(0px, 0px) scale(0.92); }
+  33% { transform: translate(-6%, -10%) scale(1.06); }
+  66% { transform: translate(10%, 4%) scale(1); }
+  100% { transform: translate(0px, 0px) scale(0.92); }
+}
+
+@keyframes meshFloat4 {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(8%, 12%) scale(1.12); }
+  100% { transform: translate(0px, 0px) scale(1); }
+}
+
+.animate-mesh-1 {
+  animation: meshFloat1 28s infinite alternate ease-in-out;
+}
+
+.animate-mesh-2 {
+  animation: meshFloat2 32s infinite alternate ease-in-out;
+}
+
+.animate-mesh-3 {
+  animation: meshFloat3 30s infinite alternate ease-in-out;
+}
+
+.animate-mesh-4 {
+  animation: meshFloat4 36s infinite alternate ease-in-out;
+}

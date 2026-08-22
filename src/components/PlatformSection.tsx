@@ -160,11 +160,17 @@ export const PlatformSection: React.FC = () => {
   };
 
   return (
-    <section id="features" className="py-24 bg-[#F8FAFC] relative">
+    <section id="features" className="py-24 bg-[#F8FAFC] relative overflow-hidden">
       {/* Top separator line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
-      <div className="max-w-7xl mx-auto px-6 md:px-8">
+      {/* Subtle background mesh blobs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[110px] opacity-[0.06] animate-mesh-1" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.05] animate-mesh-2" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
