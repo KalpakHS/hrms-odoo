@@ -3,16 +3,59 @@
 {% block title %}Dashboard - Dayflow HRMS{% endblock %}
 
 {% block content %}
-<h2>Dayflow HRMS Dashboard</h2>
-<p>Signed in as: <strong>{{ user.get_full_name|default:user.login_id }}</strong> (Role: <span style="background: #e2e8f0; padding: 2px 8px; border-radius: 4px; font-weight: 600;">{{ role }}</span>)</p>
-
-<div style="background: #f1f5f9; padding: 15px; border-radius: 6px; margin: 20px 0;">
-    <p><strong>Login ID:</strong> {{ login_id }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div>
+        <h2 style="margin: 0;">Welcome, {{ user.get_full_name|default:user.login_id }}</h2>
+        <p style="color: #64748b; margin: 4px 0 0 0;">Role: <strong style="color: #1e293b;">{{ user.role }}</strong> | Login ID: <strong>{{ user.login_id }}</strong></p>
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'accounts:password_change' %}" class="btn btn-secondary btn-sm">Change Password</a>
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger btn-sm">Log Out</a>
+    </div>
 </div>
 
-<div style="display: flex; gap: 10px;">
-    <a href="{% url 'accounts:password_change' %}" style="display: inline-block; padding: 10px; background: #e2e8f0; color: #334155; text-decoration: none; border-radius: 6px; font-weight: 600;">Change Password</a>
-    <a href="{% url 'accounts:logout' %}" style="display: inline-block; padding: 10px; background: #fee2e2; color: #991b1b; text-decoration: none; border-radius: 6px; font-weight: 600;">Log Out</a>
+<div class="grid-3" style="margin-bottom: 25px;">
+    <!-- Attendance Quick Card -->
+    <div class="card" style="border-top: 4px solid #0284c7; margin-bottom: 0;">
+        <h3 style="margin-top: 0; color: #0284c7;">⏱️ Attendance</h3>
+        <p style="color: #64748b; font-size: 13px;">Manage daily check-ins, check-outs, work duration, and timesheets.</p>
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="{% url 'attendance:dashboard' %}" class="btn btn-sm">Attendance Dashboard &raquo;</a>
+            {% if user.role == 'ADMIN' or user.role == 'HR' or user.is_superuser %}
+                <a href="{% url 'attendance:attendance_list' %}" class="btn btn-secondary btn-sm">Organizational Attendance</a>
+            {% elif user.employee_profile %}
+                <a href="{% url 'attendance:my_attendance' %}" class="btn btn-secondary btn-sm">My Attendance History</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Leave Quick Card -->
+    <div class="card" style="border-top: 4px solid #16a34a; margin-bottom: 0;">
+        <h3 style="margin-top: 0; color: #16a34a;">🌴 Leave & Time Off</h3>
+        <p style="color: #64748b; font-size: 13px;">Apply for leaves, track leave balances, review approvals, and manage leave types.</p>
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="{% url 'leave:dashboard' %}" class="btn btn-sm">Leave Dashboard &raquo;</a>
+            {% if user.role == 'ADMIN' or user.role == 'HR' or user.is_superuser %}
+                <a href="{% url 'leave:leave_list' %}" class="btn btn-secondary btn-sm">Review Leave Requests</a>
+            {% elif user.employee_profile %}
+                <a href="{% url 'leave:leave_apply' %}" class="btn btn-secondary btn-sm">Apply for Leave</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Payroll Quick Card -->
+    <div class="card" style="border-top: 4px solid #9333ea; margin-bottom: 0;">
+        <h3 style="margin-top: 0; color: #9333ea;">💵 Payroll & Compensation</h3>
+        <p style="color: #64748b; font-size: 13px;">View salary structures, monthly generated payslips, and download PDF slips.</p>
+        <div style="margin-top: 15px; display: flex; flex-direction: column; gap: 8px;">
+            <a href="{% url 'payroll:dashboard' %}" class="btn btn-sm">Payroll Dashboard &raquo;</a>
+            {% if user.role == 'ADMIN' or user.role == 'HR' or user.is_superuser %}
+                <a href="{% url 'payroll:salary_list' %}" class="btn btn-secondary btn-sm">Salary Directory</a>
+                <a href="{% url 'payroll:payslip_list' %}" class="btn btn-secondary btn-sm">Payslips Directory</a>
+            {% elif user.employee_profile %}
+                <a href="{% url 'payroll:my_payslips' %}" class="btn btn-secondary btn-sm">My Payslips</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% endblock %}
