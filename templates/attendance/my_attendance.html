@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}My Attendance History - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>My Attendance History ({{ total_count }})</h2>
+    <a href="{% url 'attendance:dashboard' %}" class="btn btn-secondary">&laquo; Back to Dashboard</a>
+</div>
+
+<form method="GET" class="filter-bar">
+    <label>From: <input type="date" name="date_from" value="{{ selected_from }}"></label>
+    <label>To: <input type="date" name="date_to" value="{{ selected_to }}"></label>
+    
+    <select name="status">
+        <option value="">All Statuses</option>
+        {% for code, label in status_choices %}
+            <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'attendance:my_attendance' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Work Hours</th>
+                <th>Status</th>
+                <th>Notes / Remarks</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in page_obj %}
+            <tr>
+                <td><strong>{{ r.date|date:"Y-m-d (l)" }}</strong></td>
+                <td>{{ r.check_in|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.check_out|time:"h:i A"|default:"-" }}</td>
+                <td><strong>{{ r.work_hours }} hrs</strong></td>
+                <td>
+                    {% if r.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                    {% elif r.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                    {% elif r.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                    {% elif r.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                    {% elif r.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                    {% else %}<span class="badge badge-absent">{{ r.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.notes|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'attendance:attendance_detail' r.id %}" class="btn btn-sm">View Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No attendance records found for this period.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Record Details - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 650px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Attendance Record</h2>
+        <div>
+            {% if can_edit %}
+                <a href="{% url 'attendance:attendance_edit' attendance.id %}" class="btn btn-sm">Edit Record</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Employee Name</th>
+            <td><strong>{{ attendance.employee.full_name }}</strong></td>
+        </tr>
+        <tr>
+            <th>Login ID</th>
+            <td><strong>{{ attendance.employee.user.login_id }}</strong></td>
+        </tr>
+        <tr>
+            <th>Company</th>
+            <td>{{ attendance.employee.company.name }}</td>
+        </tr>
+        <tr>
+            <th>Department</th>
+            <td>{{ attendance.employee.department.name|default:"Not Assigned" }}</td>
+        </tr>
+        <tr>
+            <th>Attendance Date</th>
+            <td><strong>{{ attendance.date|date:"F d, Y (l)" }}</strong></td>
+        </tr>
+        <tr>
+            <th>Check-In Time</th>
+            <td>
+                {% if attendance.check_in %}
+                    <span style="color: #16a34a; font-weight: 600;">{{ attendance.check_in|time:"h:i A" }}</span>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Check-Out Time</th>
+            <td>
+                {% if attendance.check_out %}
+                    <span style="color: #dc2626; font-weight: 600;">{{ attendance.check_out|time:"h:i A" }}</span>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Total Work Hours</th>
+            <td><strong style="color: #2563eb; font-size: 16px;">{{ attendance.work_hours }} hrs</strong></td>
+        </tr>
+        <tr>
+            <th>Status</th>
+            <td>
+                {% if attendance.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                {% elif attendance.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                {% elif attendance.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                {% elif attendance.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                {% elif attendance.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                {% else %}<span class="badge badge-absent">{{ attendance.get_status_display }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Notes / Remarks</th>
+            <td>{{ attendance.notes|default:"None recorded" }}</td>
+        </tr>
+        <tr>
+            <th>Record Created</th>
+            <td><span style="color: #64748b; font-size: 13px;">{{ attendance.created_at|date:"Y-m-d H:i" }}</span></td>
+        </tr>
+        <tr>
+            <th>Last Updated</th>
+            <td><span style="color: #64748b; font-size: 13px;">{{ attendance.updated_at|date:"Y-m-d H:i" }}</span></td>
+        </tr>
+    </table>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px;">
+        {% if user.is_admin or user.is_hr or user.is_superuser %}
+            <a href="{% url 'attendance:attendance_list' %}" class="btn btn-secondary">&laquo; All Attendance</a>
+        {% endif %}
+        {% if user.employee_profile %}
+            <a href="{% url 'attendance:my_attendance' %}" class="btn btn-secondary">&laquo; My History</a>
+        {% endif %}
+        <a href="{% url 'attendance:dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+</div>
+{% endblock %}

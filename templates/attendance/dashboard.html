@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Attendance Dashboard - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Attendance Dashboard</h2>
+    <div>
+        <span style="color: #64748b; font-size: 14px; font-weight: 500;">Today: <strong>{{ today|date:"l, F d, Y" }}</strong></span>
+    </div>
+</div>
+
+{% if employee %}
+<!-- Employee Today's Attendance Card -->
+<div class="card" style="border-left: 4px solid #2563eb;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h3 style="margin: 0;">Today's Attendance for {{ employee.full_name }}</h3>
+            <p style="color: #64748b; margin: 4px 0 0 0; font-size: 13px;">Login ID: {{ employee.user.login_id }} | Department: {{ employee.department.name|default:"General" }}</p>
+        </div>
+        <div>
+            {% if today_record %}
+                {% if today_record.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                {% elif today_record.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                {% elif today_record.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                {% elif today_record.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                {% elif today_record.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                {% else %}<span class="badge badge-absent">{{ today_record.get_status_display }}</span>
+                {% endif %}
+            {% else %}
+                <span class="badge" style="background: #f1f5f9; color: #64748b;">Not Checked In</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid-3" style="margin-top: 20px;">
+        <div class="stat-card">
+            <div class="stat-label">Check-In Time</div>
+            <div class="stat-num" style="color: #16a34a;">
+                {% if today_record and today_record.check_in %}{{ today_record.check_in|time:"h:i A" }}{% else %}--:--{% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Check-Out Time</div>
+            <div class="stat-num" style="color: #dc2626;">
+                {% if today_record and today_record.check_out %}{{ today_record.check_out|time:"h:i A" }}{% else %}--:--{% endif %}
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">Total Work Hours</div>
+            <div class="stat-num" style="color: #2563eb;">
+                {% if today_record and today_record.work_hours %}{{ today_record.work_hours }} hrs{% else %}0.00 hrs{% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Check-In / Check-Out Action Form -->
+    <div style="margin-top: 20px; display: flex; gap: 15px; align-items: center;">
+        {% if not today_record or not today_record.check_in %}
+            <form method="POST" action="{% url 'attendance:check_in' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success" style="font-size: 15px; padding: 10px 24px;">▶ Check In Now</button>
+            </form>
+        {% elif not today_record.check_out %}
+            <form method="POST" action="{% url 'attendance:check_out' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="font-size: 15px; padding: 10px 24px;">⏹ Check Out Now</button>
+            </form>
+            <span style="color: #16a34a; font-size: 13px; font-weight: 500;">● Active workday in progress</span>
+        {% else %}
+            <div class="badge badge-present" style="padding: 8px 16px; font-size: 13px;">
+                ✔ Completed Workday for Today ({{ today_record.work_hours }} hrs)
+            </div>
+        {% endif %}
+
+        <a href="{% url 'attendance:my_attendance' %}" class="btn btn-secondary btn-sm" style="margin-left: auto;">View My Full History &raquo;</a>
+    </div>
+</div>
+{% endif %}
+
+{% if is_admin_or_hr and stats %}
+<!-- Admin / HR Summary Cards -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0;">Today's Company-Wide Attendance Overview</h3>
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'attendance:attendance_create' %}" class="btn btn-sm">+ Record Attendance</a>
+            <a href="{% url 'attendance:attendance_list' %}" class="btn btn-secondary btn-sm">All Records &raquo;</a>
+        </div>
+    </div>
+
+    <div class="grid-4">
+        <div class="stat-card">
+            <div class="stat-label">Total Recorded</div>
+            <div class="stat-num">{{ stats.total_records }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Present</div>
+            <div class="stat-num" style="color: #16a34a;">{{ stats.present_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Late Arrival</div>
+            <div class="stat-num" style="color: #d97706;">{{ stats.late_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">WFH</div>
+            <div class="stat-num" style="color: #0284c7;">{{ stats.wfh_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Half Day</div>
+            <div class="stat-num" style="color: #ea580c;">{{ stats.half_day_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">On Leave</div>
+            <div class="stat-num" style="color: #9333ea;">{{ stats.on_leave_count }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Absent</div>
+            <div class="stat-num" style="color: #dc2626;">{{ stats.absent_count }}</div>
+        </div>
+    </div>
+
+    {% if today_all_records %}
+    <h4 style="margin-top: 25px; margin-bottom: 10px;">Today's Employee Check-Ins</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Hours</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in today_all_records %}
+            <tr>
+                <td><strong>{{ r.employee.full_name }}</strong> ({{ r.employee.user.login_id }})</td>
+                <td>{{ r.employee.department.name|default:"-" }}</td>
+                <td>{{ r.check_in|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.check_out|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.work_hours }} hrs</td>
+                <td>
+                    {% if r.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                    {% elif r.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                    {% elif r.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                    {% elif r.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                    {% elif r.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                    {% else %}<span class="badge badge-absent">{{ r.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'attendance:attendance_detail' r.id %}" class="btn btn-sm">View</a>
+                    <a href="{% url 'attendance:attendance_edit' r.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endif %}
+
+{% if recent_records and employee %}
+<!-- Employee Recent Records Table -->
+<div class="card">
+    <h3 style="margin-top: 0;">My Recent Attendance History</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Work Hours</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in recent_records %}
+            <tr>
+                <td><strong>{{ r.date|date:"Y-m-d (D)" }}</strong></td>
+                <td>{{ r.check_in|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.check_out|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.work_hours }} hrs</td>
+                <td>
+                    {% if r.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                    {% elif r.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                    {% elif r.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                    {% elif r.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                    {% elif r.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                    {% else %}<span class="badge badge-absent">{{ r.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.notes|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'attendance:attendance_detail' r.id %}" class="btn btn-sm">Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% endblock %}

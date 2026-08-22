@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}All Attendance Records - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Attendance Records Directory ({{ total_count }})</h2>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'attendance:attendance_create' %}" class="btn">+ Record Attendance</a>
+        <a href="{% url 'attendance:dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+</div>
+
+<form method="GET" class="filter-bar">
+    <input type="text" name="q" value="{{ selected_q }}" placeholder="Search name or login ID..." style="min-width: 180px;">
+
+    <select name="employee">
+        <option value="">All Employees</option>
+        {% for e in employees %}
+            <option value="{{ e.id }}" {% if selected_emp == e.id|stringformat:"s" %}selected{% endif %}>{{ e.full_name }} ({{ e.user.login_id }})</option>
+        {% endfor %}
+    </select>
+
+    <select name="company">
+        <option value="">All Companies</option>
+        {% for c in companies %}
+            <option value="{{ c.id }}" {% if selected_company == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="department">
+        <option value="">All Departments</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}" {% if selected_dept == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="status">
+        <option value="">All Statuses</option>
+        {% for code, label in status_choices %}
+            <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Date: <input type="date" name="date" value="{{ selected_date }}"></label>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'attendance:attendance_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Employee Name</th>
+                <th>Login ID</th>
+                <th>Department</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Work Hours</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in page_obj %}
+            <tr>
+                <td><strong>{{ r.date|date:"Y-m-d" }}</strong></td>
+                <td>{{ r.employee.full_name }}</td>
+                <td><strong>{{ r.employee.user.login_id }}</strong></td>
+                <td>{{ r.employee.department.name|default:"-" }}</td>
+                <td>{{ r.check_in|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.check_out|time:"h:i A"|default:"-" }}</td>
+                <td>{{ r.work_hours }} hrs</td>
+                <td>
+                    {% if r.status == 'PRESENT' %}<span class="badge badge-present">Present</span>
+                    {% elif r.status == 'LATE' %}<span class="badge badge-late">Late Arrival</span>
+                    {% elif r.status == 'WFH' %}<span class="badge badge-wfh">Work From Home</span>
+                    {% elif r.status == 'HALF_DAY' %}<span class="badge badge-half-day">Half Day</span>
+                    {% elif r.status == 'ON_LEAVE' %}<span class="badge badge-on-leave">On Leave</span>
+                    {% else %}<span class="badge badge-absent">{{ r.get_status_display }}</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'attendance:attendance_detail' r.id %}" class="btn btn-sm">View</a>
+                    <a href="{% url 'attendance:attendance_edit' r.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_emp %}&employee={{ selected_emp }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_emp %}&employee={{ selected_emp }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_date %}&date={{ selected_date }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No attendance records matched your filter criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}
