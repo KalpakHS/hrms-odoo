@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useProjectContext } from '../../context/useProjectContext';
-import { Search, Plus, CalendarCheck, HeartPulse, Check, X, FileText, Sparkles } from 'lucide-react';
+import { Search, Plus, CalendarCheck, HeartPulse, Check, X, FileText, Sparkles, Calendar as CalendarIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import { TimeOffRequestModal } from './TimeOffRequestModal';
 
 export const TimeOffView: React.FC = () => {
@@ -15,6 +15,8 @@ export const TimeOffView: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'timeoff' | 'allocation'>('timeoff');
   const [searchQuery, setSearchQuery] = useState('');
+  const [calendarMonth, setCalendarMonth] = useState<number>(7); // August (0-indexed 7)
+  const [calendarYear, setCalendarYear] = useState<number>(2026);
 
   const paidAvailable = currentUser?.paidTimeOffAvailable ?? 24;
   const sickAvailable = currentUser?.sickTimeOffAvailable ?? 7;
@@ -26,6 +28,47 @@ export const TimeOffView: React.FC = () => {
       req.type.toLowerCase().includes(searchQuery.toLowerCase());
     return isUserRequest && matchesSearch;
   });
+
+  // Calendar Helpers for August 2026 Visual Calendar
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+  const firstDayOfWeek = new Date(calendarYear, calendarMonth, 1).getDay();
+
+  const handlePrevMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear(calendarYear - 1);
+    } else {
+      setCalendarMonth(calendarMonth - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear(calendarYear + 1);
+    } else {
+      setCalendarMonth(calendarMonth + 1);
+    }
+  };
+
+  // Check if a specific date number in calendar has a leave request
+  const getLeaveForDay = (dayNum: number) => {
+    const formattedDay = dayNum < 10 ? `0${dayNum}` : `${dayNum}`;
+    const formattedMonth = calendarMonth + 1 < 10 ? `0${calendarMonth + 1}` : `${calendarMonth + 1}`;
+    const dateStr = `${calendarYear}-${formattedMonth}-${formattedDay}`;
+
+    return timeOffRequests.find(
+      (r) =>
+        (currentRole === 'admin' || r.employeeId === currentUser?.id) &&
+        dateStr >= r.startDate &&
+        dateStr <= r.endDate
+    );
+  };
 
   return (
     <div className="space-y-6 font-sans">
@@ -79,7 +122,7 @@ export const TimeOffView: React.FC = () => {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Allocation
+            Allocation Overview
           </button>
         </div>
 
@@ -130,6 +173,85 @@ export const TimeOffView: React.FC = () => {
           <span className="text-xs bg-[#F3E8FF] text-[#9333EA] font-bold px-3.5 py-1 rounded-full border border-[#E9D5FF]">
             Medical Leave
           </span>
+        </div>
+      </div>
+
+      {/* Multi-Month Visual Calendar Widget (For Employee & Admin Visual Schedule) */}
+      <div className="bg-white border border-slate-200/80 rounded-[32px] p-6 sm:p-8 shadow-floating space-y-4">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+          <div className="flex items-center gap-2">
+            <CalendarIcon className="w-5 h-5 text-[#9333EA]" />
+            <h3 className="font-extrabold text-lg text-slate-900 font-heading">
+              Visual Leave Schedule Calendar — {monthNames[calendarMonth]} {calendarYear}
+            </h3>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrevMonth}
+              className="p-2 hover:bg-slate-100 rounded-full border border-slate-200 text-slate-600 transition cursor-pointer"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <span className="text-xs font-bold text-slate-900 font-mono px-3 py-1 bg-slate-100 rounded-full border border-slate-200">
+              {monthNames[calendarMonth]} {calendarYear}
+            </span>
+            <button
+              onClick={handleNextMonth}
+              className="p-2 hover:bg-slate-100 rounded-full border border-slate-200 text-slate-600 transition cursor-pointer"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+
+        {/* Days Grid */}
+        <div className="grid grid-cols-7 gap-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider py-2">
+          <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+        </div>
+
+        <div className="grid grid-cols-7 gap-2 text-xs">
+          {/* Blank offset days */}
+          {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
+            <div key={`blank-${idx}`} className="h-12 bg-slate-50/50 rounded-2xl border border-transparent" />
+          ))}
+
+          {/* Day numbers */}
+          {Array.from({ length: daysInMonth }).map((_, idx) => {
+            const dayNum = idx + 1;
+            const leave = getLeaveForDay(dayNum);
+            const isToday = dayNum === 22 && calendarMonth === 7 && calendarYear === 2026;
+
+            return (
+              <div
+                key={`day-${dayNum}`}
+                className={`h-12 rounded-2xl p-1.5 flex flex-col justify-between border transition ${
+                  isToday
+                    ? 'border-yellow-400 bg-[#FEF08A]/30 font-bold shadow-xs'
+                    : leave
+                    ? leave.status === 'Approved'
+                      ? 'border-rose-200 bg-rose-50/80 text-rose-700'
+                      : 'border-amber-200 bg-amber-50/80 text-amber-700'
+                    : 'border-slate-100 hover:border-slate-300 bg-white text-slate-700'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <span className={`text-[11px] font-bold ${isToday ? 'text-slate-900' : ''}`}>
+                    {dayNum}
+                  </span>
+                  {leave && (
+                    <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
+                  )}
+                </div>
+
+                {leave && (
+                  <span className="text-[9px] font-bold truncate leading-tight block font-mono bg-white/80 px-1 rounded">
+                    {leave.type === 'Sick Leave' ? 'Sick' : 'PTO'}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
