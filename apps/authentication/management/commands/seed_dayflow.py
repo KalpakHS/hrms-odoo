@@ -8,11 +8,11 @@ from datetime import date, time, timedelta
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
-from apps.authentication.models import User, UserRole
-from apps.employees.models import Employee, EmploymentType
-from apps.attendance.models import Attendance, AttendanceStatus
-from apps.leaves.models import LeaveRequest, LeaveType, LeaveStatus
-from apps.payroll.models import Payroll
+from authentication.models import User, UserRole
+from employees.models import Employee, Company, Department, Designation, EmploymentType
+from attendance.models import Attendance, AttendanceStatus
+from leaves.models import LeaveRequest, LeaveType, LeaveStatus
+from payroll.models import Payroll
 
 class Command(BaseCommand):
     help = 'Seeds Dayflow HRMS initial roles, admin, employees, payroll, and test logs.'
@@ -20,6 +20,42 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         self.stdout.write(self.style.NOTICE('Starting Dayflow HRMS database seeding...'))
+
+        # 0. Master Company, Departments, and Designations
+        company, _ = Company.objects.get_or_create(
+            code='OI',
+            defaults={
+                'name': 'Odoo India',
+                'contact_email': 'contact@odoo.com',
+                'address': 'Gandhinagar, Gujarat, India'
+            }
+        )
+
+        dept_hr, _ = Department.objects.get_or_create(
+            code='HR',
+            defaults={'name': 'Human Resources', 'description': 'HR & People Operations'}
+        )
+        dept_eng, _ = Department.objects.get_or_create(
+            code='ENG',
+            defaults={'name': 'Engineering', 'description': 'Software Engineering & Tech'}
+        )
+        dept_des, _ = Department.objects.get_or_create(
+            code='DES',
+            defaults={'name': 'Product & Design', 'description': 'UI/UX & Product Design'}
+        )
+
+        desig_hr_dir, _ = Designation.objects.get_or_create(
+            title='HR Director',
+            department=dept_hr
+        )
+        desig_sr_eng, _ = Designation.objects.get_or_create(
+            title='Senior Full Stack Engineer',
+            department=dept_eng
+        )
+        desig_lead_des, _ = Designation.objects.get_or_create(
+            title='Lead UI/UX Designer',
+            department=dept_des
+        )
 
         # 1. Create Admin User
         admin_user, created = User.objects.get_or_create(
@@ -43,25 +79,22 @@ class Command(BaseCommand):
         admin_emp, _ = Employee.objects.get_or_create(
             user=admin_user,
             defaults={
-                'emp_code': 'EMP-001',
+                'company': company,
                 'first_name': 'Sarah',
                 'last_name': 'Connor',
                 'email': 'admin@dayflow.internal',
-                'phone': '+1-555-0100',
+                'mobile': '+1-555-0100',
                 'address': '100 Cyberdyne Way, Suite 400, San Francisco, CA',
-                'department': 'Human Resources',
-                'designation': 'HR Director',
-                'joining_date': date(2023, 1, 15),
-                'employment_type': EmploymentType.FULL_TIME
+                'department': dept_hr,
+                'designation': desig_hr_dir,
+                'joining_date': date(2023, 1, 15)
             }
         )
         Payroll.objects.get_or_create(
             employee=admin_emp,
             defaults={
-                'basic_salary': Decimal('9500.00'),
-                'allowances': Decimal('1500.00'),
-                'deductions': Decimal('1200.00'),
-                'currency': 'USD'
+                'monthly_wage': Decimal('9500.00'),
+                'effective_from': date(2023, 1, 15)
             }
         )
 
@@ -84,16 +117,15 @@ class Command(BaseCommand):
         emp1, _ = Employee.objects.get_or_create(
             user=emp1_user,
             defaults={
-                'emp_code': 'EMP-002',
+                'company': company,
                 'first_name': 'John',
                 'last_name': 'Doe',
                 'email': 'john.doe@dayflow.internal',
-                'phone': '+1-555-0144',
+                'mobile': '+1-555-0144',
                 'address': '742 Evergreen Terrace, Springfield',
-                'department': 'Engineering',
-                'designation': 'Senior Full Stack Engineer',
+                'department': dept_eng,
+                'designation': desig_sr_eng,
                 'joining_date': date(2023, 6, 1),
-                'employment_type': EmploymentType.FULL_TIME,
                 'emergency_contact_name': 'Jane Doe',
                 'emergency_contact_phone': '+1-555-0145'
             }
@@ -101,10 +133,8 @@ class Command(BaseCommand):
         Payroll.objects.get_or_create(
             employee=emp1,
             defaults={
-                'basic_salary': Decimal('6500.00'),
-                'allowances': Decimal('1000.00'),
-                'deductions': Decimal('750.00'),
-                'currency': 'USD'
+                'monthly_wage': Decimal('6500.00'),
+                'effective_from': date(2023, 6, 1)
             }
         )
 
@@ -127,25 +157,22 @@ class Command(BaseCommand):
         emp2, _ = Employee.objects.get_or_create(
             user=emp2_user,
             defaults={
-                'emp_code': 'EMP-003',
+                'company': company,
                 'first_name': 'Jane',
                 'last_name': 'Smith',
                 'email': 'jane.smith@dayflow.internal',
-                'phone': '+1-555-0188',
+                'mobile': '+1-555-0188',
                 'address': '221B Baker Street, Suite 2B',
-                'department': 'Product & Design',
-                'designation': 'Lead UI/UX Designer',
-                'joining_date': date(2024, 2, 1),
-                'employment_type': EmploymentType.FULL_TIME
+                'department': dept_des,
+                'designation': desig_lead_des,
+                'joining_date': date(2024, 2, 1)
             }
         )
         Payroll.objects.get_or_create(
             employee=emp2,
             defaults={
-                'basic_salary': Decimal('5800.00'),
-                'allowances': Decimal('800.00'),
-                'deductions': Decimal('600.00'),
-                'currency': 'USD'
+                'monthly_wage': Decimal('5800.00'),
+                'effective_from': date(2024, 2, 1)
             }
         )
 

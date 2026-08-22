@@ -4,11 +4,11 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from apps.authentication.models import User, UserRole
-from apps.employees.models import Employee
-from apps.attendance.models import Attendance, AttendanceStatus
-from apps.leaves.models import LeaveRequest, LeaveType, LeaveStatus
-from apps.payroll.models import Payroll
+from authentication.models import User, UserRole
+from employees.models import Employee
+from attendance.models import Attendance, AttendanceStatus
+from leaves.models import LeaveRequest, LeaveType, LeaveStatus
+from payroll.models import Payroll
 
 class DayflowHRMSTestCase(TestCase):
     def setUp(self):

@@ -72,3 +72,6 @@ class Attendance(models.Model):
         if self.check_in and self.check_out:
             self.calculate_work_hours()
         super().save(*args, **kwargs)
+
+
+AttendanceStatus = Attendance.Status

@@ -1,7 +1,7 @@
 from decimal import Decimal
 from rest_framework import serializers
 from .models import Payroll
-from apps.employees.models import Employee
+from employees.models import Employee
 
 class PayrollSerializer(serializers.ModelSerializer):
     employee_code = serializers.ReadOnlyField(source='employee.emp_code')

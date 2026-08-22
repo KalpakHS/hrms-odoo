@@ -247,3 +247,6 @@ class Payslip(models.Model):
 
     def __str__(self):
         return f"Payslip {self.month:02d}/{self.year} - {self.employee.full_name} ({self.get_payment_status_display()})"
+
+
+Payroll = SalaryStructure

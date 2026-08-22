@@ -46,7 +46,7 @@ export async function apiRequest<T>(
   const headers = new Headers(options.headers || {});
   headers.set('Content-Type', 'application/json');
   if (token) {
-    headers.set('Authorization', `Bearer ${token}`);
+    headers.set('Authorization', token.startsWith('Token ') || token.startsWith('Bearer ') ? token : `Token ${token}`);
   }
 
   try {

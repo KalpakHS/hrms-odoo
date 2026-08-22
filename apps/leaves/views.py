@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from common.permissions import IsAdminOrHR, IsSelfOrAdmin
 from .models import LeaveRequest, LeaveStatus
-from apps.employees.models import Employee
+from employees.models import Employee
 from .serializers import (
     LeaveRequestSerializer,
     LeaveApplySerializer,

@@ -67,6 +67,13 @@ class Designation(models.Model):
         return f"{self.title} ({self.department.name})"
 
 
+class EmploymentType(models.TextChoices):
+    FULL_TIME = 'FULL_TIME', 'Full-Time'
+    PART_TIME = 'PART_TIME', 'Part-Time'
+    CONTRACT = 'CONTRACT', 'Contract'
+    INTERN = 'INTERN', 'Intern'
+
+
 class Employee(models.Model):
     """
     Main Employee Profile model for Dayflow HRMS.
@@ -190,7 +197,15 @@ class Employee(models.Model):
 
     @property
     def login_id(self):
-        return self.user.login_id if self.user_id else ""
+        return self.user.username if self.user_id else ""
+
+    @property
+    def emp_code(self):
+        return self.user.username if self.user_id else ""
+
+    @property
+    def phone(self):
+        return self.mobile
 
 
 class Skill(models.Model):

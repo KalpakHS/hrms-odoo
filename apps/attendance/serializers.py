@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Attendance, AttendanceStatus
-from apps.employees.models import Employee
+from employees.models import Employee
 
 class AttendanceSerializer(serializers.ModelSerializer):
     employee_code = serializers.ReadOnlyField(source='employee.emp_code')

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.db import transaction
-from apps.authentication.models import User, UserRole
+from authentication.models import User, UserRole
 from .models import Employee
 
 class EmployeeListSerializer(serializers.ModelSerializer):
@@ -120,7 +120,7 @@ class EmployeeCreateSerializer(serializers.ModelSerializer):
         employee = Employee.objects.create(user=user, **validated_data)
 
         # 3. Initialize default blank Payroll record
-        from apps.payroll.models import Payroll
+        from payroll.models import Payroll
         Payroll.objects.create(employee=employee)
 
         return employee

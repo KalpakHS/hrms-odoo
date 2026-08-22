@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, status, views
 from rest_framework.response import Response
 from common.permissions import IsAdminOrHR
 from .models import Payroll
-from apps.employees.models import Employee
+from employees.models import Employee
 from .serializers import PayrollSerializer, AdminPayrollUpdateSerializer
 
 class PayrollViewSet(viewsets.ModelViewSet):

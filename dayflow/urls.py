@@ -6,6 +6,14 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    
+    # Dayflow REST API Endpoints
+    path('api/auth/', include('authentication.urls')),
+    path('api/employees/', include('employees.urls')),
+    path('api/attendance/', include('attendance.urls')),
+    path('api/leaves/', include('leaves.urls')),
+    path('api/payroll/', include('payroll.urls')),
+    
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('', lambda request: redirect('accounts:login'), name='root'),
 ]

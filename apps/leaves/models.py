@@ -3,7 +3,7 @@ Leave Management Models for Dayflow HRMS.
 """
 from django.db import models
 from django.conf import settings
-from apps.employees.models import Employee
+from employees.models import Employee
 
 class LeaveType(models.TextChoices):
     PAID = 'PAID', 'Paid Leave'
