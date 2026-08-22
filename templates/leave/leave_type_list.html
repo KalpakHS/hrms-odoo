@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Types - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Leave Types Catalog</h2>
+    <div style="display: flex; gap: 10px;">
+        {% if user.role == 'ADMIN' or user.is_superuser %}
+            <a href="{% url 'leave:leave_type_create' %}" class="btn">+ New Leave Type</a>
+        {% endif %}
+        <a href="{% url 'leave:leave_list' %}" class="btn btn-secondary">Leave Directory</a>
+    </div>
+</div>
+
+<div class="card">
+    {% if leave_types %}
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Max Days / Year</th>
+                <th>Is Paid</th>
+                <th>Requires Attachment</th>
+                <th>Description</th>
+                {% if user.role == 'ADMIN' or user.is_superuser %}<th>Actions</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for lt in leave_types %}
+            <tr>
+                <td><strong>{{ lt.code }}</strong></td>
+                <td>{{ lt.name }}</td>
+                <td>{{ lt.max_days_per_year }} days</td>
+                <td>
+                    {% if lt.is_paid %}
+                        <span class="badge badge-approved">Paid</span>
+                    {% else %}
+                        <span class="badge badge-cancelled">Unpaid</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if lt.requires_attachment %}
+                        <span class="badge badge-pending">Required</span>
+                    {% else %}
+                        <span style="color: #64748b; font-size: 13px;">Optional</span>
+                    {% endif %}
+                </td>
+                <td>{{ lt.description|default:"-" }}</td>
+                {% if user.role == 'ADMIN' or user.is_superuser %}
+                <td>
+                    <a href="{% url 'leave:leave_type_edit' lt.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No leave types defined yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

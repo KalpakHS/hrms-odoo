@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Dashboard - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Leave Management Dashboard</h2>
+    <div style="display: flex; gap: 10px;">
+        {% if employee %}
+            <a href="{% url 'leave:leave_apply' %}" class="btn">+ Apply for Leave</a>
+            <a href="{% url 'leave:my_leave' %}" class="btn btn-secondary">My Leave Requests</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if employee %}
+<!-- Employee Leave Balances Summary -->
+<div class="card" style="border-left: 4px solid #2563eb;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <div>
+            <h3 style="margin: 0;">My Annual Leave Balances ({{ today.year }})</h3>
+            <p style="color: #64748b; margin: 4px 0 0 0; font-size: 13px;">{{ employee.full_name }} | {{ employee.user.login_id }}</p>
+        </div>
+        <div>
+            {% if pending_count > 0 %}
+                <span class="badge badge-pending">{{ pending_count }} Pending Application(s)</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="grid-4">
+        {% for b in balances %}
+        <div class="stat-card">
+            <div class="stat-label">{{ b.leave_type.name }} ({{ b.leave_type.code }})</div>
+            <div class="stat-num" style="color: {% if b.remaining_days > 0 %}#16a34a{% else %}#dc2626{% endif %};">
+                {{ b.remaining_days }}
+            </div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                Used: {{ b.used_days }} / {{ b.total_allocated }} days
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% if my_recent_requests %}
+<!-- Employee Recent Requests -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0;">My Recent Leave Applications</h3>
+        <a href="{% url 'leave:my_leave' %}" class="btn btn-secondary btn-sm">View All &raquo;</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Dates</th>
+                <th>Days</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in my_recent_requests %}
+            <tr>
+                <td><strong>{{ r.leave_type.name }}</strong> ({{ r.leave_type.code }})</td>
+                <td>{{ r.start_date|date:"Y-m-d" }} to {{ r.end_date|date:"Y-m-d" }}</td>
+                <td><strong>{{ r.total_days }}</strong></td>
+                <td>{{ r.reason|truncatewords:8 }}</td>
+                <td>
+                    {% if r.status == 'APPROVED' %}<span class="badge badge-approved">Approved</span>
+                    {% elif r.status == 'PENDING' %}<span class="badge badge-pending">Pending Approval</span>
+                    {% elif r.status == 'REJECTED' %}<span class="badge badge-rejected">Rejected</span>
+                    {% elif r.status == 'CANCELLED' %}<span class="badge badge-cancelled">Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.applied_on|date:"Y-m-d H:i" }}</td>
+                <td>
+                    <a href="{% url 'leave:leave_detail' r.id %}" class="btn btn-sm">Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endif %}
+
+{% if is_admin_or_hr and stats %}
+<!-- Admin / HR Summary Cards -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0;">Organizational Leave Overview</h3>
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'leave:leave_list' %}" class="btn btn-secondary btn-sm">All Requests Directory &raquo;</a>
+            <a href="{% url 'leave:leave_type_list' %}" class="btn btn-secondary btn-sm">Leave Types &raquo;</a>
+        </div>
+    </div>
+
+    <div class="grid-4">
+        <div class="stat-card">
+            <div class="stat-label">Pending Approval</div>
+            <div class="stat-num" style="color: #d97706;">{{ stats.total_pending }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Approved</div>
+            <div class="stat-num" style="color: #16a34a;">{{ stats.total_approved }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">On Leave Today</div>
+            <div class="stat-num" style="color: #9333ea;">{{ stats.on_leave_today }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Rejected</div>
+            <div class="stat-num" style="color: #dc2626;">{{ stats.total_rejected }}</div>
+        </div>
+    </div>
+
+    {% if recent_org_requests %}
+    <h4 style="margin-top: 25px; margin-bottom: 10px;">Recent Leave Applications</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Leave Type</th>
+                <th>Dates</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in recent_org_requests %}
+            <tr>
+                <td><strong>{{ r.employee.full_name }}</strong> ({{ r.employee.user.login_id }})</td>
+                <td>{{ r.employee.department.name|default:"-" }}</td>
+                <td>{{ r.leave_type.code }}</td>
+                <td>{{ r.start_date|date:"Y-m-d" }} to {{ r.end_date|date:"Y-m-d" }}</td>
+                <td>{{ r.total_days }}</td>
+                <td>
+                    {% if r.status == 'APPROVED' %}<span class="badge badge-approved">Approved</span>
+                    {% elif r.status == 'PENDING' %}<span class="badge badge-pending">Pending</span>
+                    {% elif r.status == 'REJECTED' %}<span class="badge badge-rejected">Rejected</span>
+                    {% elif r.status == 'CANCELLED' %}<span class="badge badge-cancelled">Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.applied_on|date:"Y-m-d" }}</td>
+                <td>
+                    <a href="{% url 'leave:leave_detail' r.id %}" class="btn btn-sm">Review</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Request #{{ leave_request.id }} Details - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 700px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2 style="margin: 0;">Leave Application #{{ leave_request.id }}</h2>
+        <div>
+            {% if leave_request.status == 'APPROVED' %}<span class="badge badge-approved" style="font-size: 14px; padding: 6px 12px;">Approved</span>
+            {% elif leave_request.status == 'PENDING' %}<span class="badge badge-pending" style="font-size: 14px; padding: 6px 12px;">Pending Approval</span>
+            {% elif leave_request.status == 'REJECTED' %}<span class="badge badge-rejected" style="font-size: 14px; padding: 6px 12px;">Rejected</span>
+            {% elif leave_request.status == 'CANCELLED' %}<span class="badge badge-cancelled" style="font-size: 14px; padding: 6px 12px;">Cancelled</span>
+            {% endif %}
+        </div>
+    </div>
+
+    <table>
+        <tr>
+            <th>Employee Name</th>
+            <td><strong>{{ leave_request.employee.full_name }}</strong></td>
+        </tr>
+        <tr>
+            <th>Login ID</th>
+            <td><strong>{{ leave_request.employee.user.login_id }}</strong></td>
+        </tr>
+        <tr>
+            <th>Department</th>
+            <td>{{ leave_request.employee.department.name|default:"Not Assigned" }}</td>
+        </tr>
+        <tr>
+            <th>Leave Type</th>
+            <td><strong>{{ leave_request.leave_type.name }}</strong> ({{ leave_request.leave_type.code }})</td>
+        </tr>
+        <tr>
+            <th>Leave Duration</th>
+            <td>
+                <strong>{{ leave_request.start_date|date:"Y-m-d (D)" }}</strong> to <strong>{{ leave_request.end_date|date:"Y-m-d (D)" }}</strong>
+                <span style="color: #2563eb; margin-left: 10px; font-weight: 600;">({{ leave_request.total_days }} day{{ leave_request.total_days|pluralize }})</span>
+            </td>
+        </tr>
+        <tr>
+            <th>Reason for Leave</th>
+            <td>{{ leave_request.reason }}</td>
+        </tr>
+        <tr>
+            <th>Attachment / Document</th>
+            <td>
+                {% if leave_request.attachment %}
+                    <a href="{% url 'leave:leave_attachment_download' leave_request.id %}" class="btn btn-secondary btn-sm">
+                        📥 Download Supporting File
+                    </a>
+                {% else %}
+                    <span style="color: #64748b;">No attachment uploaded</span>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <th>Application Date</th>
+            <td>{{ leave_request.applied_on|date:"F d, Y H:i" }}</td>
+        </tr>
+        {% if leave_request.approver %}
+        <tr>
+            <th>Reviewed By</th>
+            <td>{{ leave_request.approver.get_full_name|default:leave_request.approver.login_id }} ({{ leave_request.approver.role }})</td>
+        </tr>
+        <tr>
+            <th>Action Taken At</th>
+            <td>{{ leave_request.action_taken_at|date:"F d, Y H:i" }}</td>
+        </tr>
+        {% endif %}
+        {% if leave_request.rejection_reason %}
+        <tr>
+            <th>Remarks / Reason</th>
+            <td style="color: #dc2626; font-weight: 500;">{{ leave_request.rejection_reason }}</td>
+        </tr>
+        {% endif %}
+    </table>
+
+    <!-- Action Buttons -->
+    <div style="margin-top: 25px; display: flex; gap: 10px; align-items: center;">
+        {% if is_admin_or_hr and leave_request.status == 'PENDING' %}
+            <form method="POST" action="{% url 'leave:leave_approve' leave_request.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">✔ Approve Application</button>
+            </form>
+            <a href="{% url 'leave:leave_reject' leave_request.id %}" class="btn btn-danger">✖ Reject Application</a>
+        {% endif %}
+
+        {% if is_owner and leave_request.status == 'PENDING' %}
+            <form method="POST" action="{% url 'leave:leave_cancel' leave_request.id %}" onsubmit="return confirm('Are you sure you want to cancel this application?');">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Cancel My Application</button>
+            </form>
+        {% endif %}
+
+        <div style="margin-left: auto; display: flex; gap: 8px;">
+            {% if is_admin_or_hr %}
+                <a href="{% url 'leave:leave_list' %}" class="btn btn-secondary">&laquo; All Requests</a>
+            {% endif %}
+            {% if employee %}
+                <a href="{% url 'leave:my_leave' %}" class="btn btn-secondary">&laquo; My Leaves</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

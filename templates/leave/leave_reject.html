@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Reject Leave Application - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto; border-top: 4px solid #dc2626;">
+    <h2 style="color: #dc2626;">Reject Leave Application #{{ leave_request.id }}</h2>
+    
+    <div style="background: #fef2f2; padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #fee2e2;">
+        <p style="margin: 4px 0;"><strong>Employee:</strong> {{ leave_request.employee.full_name }} ({{ leave_request.employee.user.login_id }})</p>
+        <p style="margin: 4px 0;"><strong>Leave Type:</strong> {{ leave_request.leave_type.name }} ({{ leave_request.leave_type.code }})</p>
+        <p style="margin: 4px 0;"><strong>Duration:</strong> {{ leave_request.start_date }} to {{ leave_request.end_date }} ({{ leave_request.total_days }} days)</p>
+        <p style="margin: 4px 0;"><strong>Reason:</strong> {{ leave_request.reason }}</p>
+    </div>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong> <span style="color: #dc2626;">*</span></label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+            <a href="{% url 'leave:leave_detail' leave_request.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

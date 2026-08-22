@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Leave Requests Directory - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Organizational Leave Directory ({{ total_count }})</h2>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'leave:leave_type_list' %}" class="btn btn-secondary">Leave Types</a>
+        <a href="{% url 'leave:dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+</div>
+
+<form method="GET" class="filter-bar">
+    <input type="text" name="q" value="{{ selected_q }}" placeholder="Search name, login ID, email..." style="min-width: 180px;">
+
+    <select name="status">
+        <option value="">All Statuses</option>
+        {% for code, label in status_choices %}
+            <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="leave_type">
+        <option value="">All Types</option>
+        {% for lt in leave_types %}
+            <option value="{{ lt.id }}" {% if selected_type == lt.id|stringformat:"s" %}selected{% endif %}>{{ lt.name }} ({{ lt.code }})</option>
+        {% endfor %}
+    </select>
+
+    <select name="department">
+        <option value="">All Departments</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}" {% if selected_dept == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="company">
+        <option value="">All Companies</option>
+        {% for c in companies %}
+            <option value="{{ c.id }}" {% if selected_company == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>From: <input type="date" name="date_from" value="{{ selected_from }}"></label>
+    <label>To: <input type="date" name="date_to" value="{{ selected_to }}"></label>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'leave:leave_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Login ID</th>
+                <th>Department</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Days</th>
+                <th>Status</th>
+                <th>Applied Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in page_obj %}
+            <tr>
+                <td><strong>{{ r.employee.full_name }}</strong></td>
+                <td>{{ r.employee.user.login_id }}</td>
+                <td>{{ r.employee.department.name|default:"-" }}</td>
+                <td>{{ r.leave_type.code }}</td>
+                <td>{{ r.start_date|date:"Y-m-d" }}</td>
+                <td>{{ r.end_date|date:"Y-m-d" }}</td>
+                <td><strong>{{ r.total_days }}</strong></td>
+                <td>
+                    {% if r.status == 'APPROVED' %}<span class="badge badge-approved">Approved</span>
+                    {% elif r.status == 'PENDING' %}<span class="badge badge-pending">Pending</span>
+                    {% elif r.status == 'REJECTED' %}<span class="badge badge-rejected">Rejected</span>
+                    {% elif r.status == 'CANCELLED' %}<span class="badge badge-cancelled">Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.applied_on|date:"Y-m-d" }}</td>
+                <td style="display: flex; gap: 4px;">
+                    <a href="{% url 'leave:leave_detail' r.id %}" class="btn btn-sm">Review</a>
+                    {% if r.status == 'PENDING' %}
+                        <form method="POST" action="{% url 'leave:leave_approve' r.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <a href="{% url 'leave:leave_reject' r.id %}" class="btn btn-danger btn-sm">Reject</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_type %}&leave_type={{ selected_type }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_type %}&leave_type={{ selected_type }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No leave requests matched your search or filters.</p>
+    {% endif %}
+</div>
+{% endblock %}

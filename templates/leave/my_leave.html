@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}My Leave Requests - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>My Leave Applications ({{ total_count }})</h2>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'leave:leave_apply' %}" class="btn">+ Apply for Leave</a>
+        <a href="{% url 'leave:dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+</div>
+
+<form method="GET" class="filter-bar">
+    <select name="status">
+        <option value="">All Statuses</option>
+        {% for code, label in status_choices %}
+            <option value="{{ code }}" {% if selected_status == code %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="leave_type">
+        <option value="">All Leave Types</option>
+        {% for lt in leave_types %}
+            <option value="{{ lt.id }}" {% if selected_type == lt.id|stringformat:"s" %}selected{% endif %}>{{ lt.name }} ({{ lt.code }})</option>
+        {% endfor %}
+    </select>
+
+    <label>From: <input type="date" name="date_from" value="{{ selected_from }}"></label>
+    <label>To: <input type="date" name="date_to" value="{{ selected_to }}"></label>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'leave:my_leave' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Leave Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Days</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Applied On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in page_obj %}
+            <tr>
+                <td><strong>{{ r.leave_type.name }}</strong> ({{ r.leave_type.code }})</td>
+                <td>{{ r.start_date|date:"Y-m-d" }}</td>
+                <td>{{ r.end_date|date:"Y-m-d" }}</td>
+                <td><strong>{{ r.total_days }}</strong></td>
+                <td>{{ r.reason|truncatewords:8 }}</td>
+                <td>
+                    {% if r.status == 'APPROVED' %}<span class="badge badge-approved">Approved</span>
+                    {% elif r.status == 'PENDING' %}<span class="badge badge-pending">Pending Approval</span>
+                    {% elif r.status == 'REJECTED' %}<span class="badge badge-rejected">Rejected</span>
+                    {% elif r.status == 'CANCELLED' %}<span class="badge badge-cancelled">Cancelled</span>
+                    {% endif %}
+                </td>
+                <td>{{ r.applied_on|date:"Y-m-d" }}</td>
+                <td style="display: flex; gap: 6px;">
+                    <a href="{% url 'leave:leave_detail' r.id %}" class="btn btn-sm">Details</a>
+                    {% if r.status == 'PENDING' %}
+                        <form method="POST" action="{% url 'leave:leave_cancel' r.id %}" onsubmit="return confirm('Are you sure you want to cancel this leave application?');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                        </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_type %}&leave_type={{ selected_type }}{% endif %}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_status %}&status={{ selected_status }}{% endif %}{% if selected_type %}&leave_type={{ selected_type }}{% endif %}{% if selected_from %}&date_from={{ selected_from }}{% endif %}{% if selected_to %}&date_to={{ selected_to }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No leave requests found.</p>
+    {% endif %}
+</div>
+{% endblock %}

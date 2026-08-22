@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Apply for Leave - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 650px; margin: 0 auto;">
+    <h2>Apply for Leave</h2>
+
+    {% if balances %}
+    <div style="background: #f8fafc; padding: 12px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #e2e8f0;">
+        <h4 style="margin: 0 0 8px 0; font-size: 13px; color: #475569; text-transform: uppercase;">Your Current Leave Balances:</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+            {% for b in balances %}
+                <span style="font-size: 13px;">
+                    <strong>{{ b.leave_type.code }}:</strong> {{ b.remaining_days }} day{{ b.remaining_days|pluralize }} remaining
+                </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="errors">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div>
+                <label for="{{ field.id_for_label }}">
+                    <strong>{{ field.label }}</strong>{% if field.field.required %} <span style="color: #dc2626;">*</span>{% endif %}
+                </label>
+                {{ field }}
+                {% if field.help_text %}
+                    <p style="color: #64748b; font-size: 12px; margin-top: -10px;">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn">Submit Leave Application</button>
+            <a href="{% url 'leave:dashboard' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

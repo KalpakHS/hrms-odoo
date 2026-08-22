@@ -8,6 +8,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls', namespace='accounts')),
     path('attendance/', include('attendance.urls', namespace='attendance')),
+    path('leave/', include('leave.urls', namespace='leave')),
     path('', lambda request: redirect('accounts:login'), name='root'),
 ]
 
