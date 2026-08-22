@@ -20,7 +20,6 @@ export const Header: React.FC = () => {
     currentRole,
     activeView,
     setActiveView,
-    switchRole,
     logout,
     checkIn,
     checkOut,
@@ -134,18 +133,13 @@ export const Header: React.FC = () => {
 
         {/* Right Suite: Role Switcher & User Systray Dropdown */}
         <div className="flex items-center gap-3">
-          {/* Soft Lavender Role Switcher */}
+          {/* Static Locked Session Role Badge (Pre-login selection locked) */}
           <div className="hidden sm:flex items-center gap-1.5 bg-[#F3E8FF] border border-[#E9D5FF] px-3.5 py-1.5 rounded-full text-xs shadow-xs">
             <ShieldAlert className="w-3.5 h-3.5 text-[#9333EA]" />
             <span className="text-[#9333EA] font-semibold">Role:</span>
-            <select
-              value={currentRole}
-              onChange={(e) => switchRole(e.target.value as 'admin' | 'employee')}
-              className="bg-transparent font-bold text-slate-900 focus:outline-none cursor-pointer"
-            >
-              <option value="admin">Admin / HR Officer</option>
-              <option value="employee">Standard Employee</option>
-            </select>
+            <span className="font-bold text-slate-900">
+              {currentRole === 'admin' ? 'Admin / HR Officer' : 'Standard Employee'}
+            </span>
           </div>
 
           {/* User Profile Systray Dropdown */}
