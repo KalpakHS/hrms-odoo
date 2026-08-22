@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block title %}Payroll Dashboard - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Payroll & Compensation Dashboard</h2>
+    <div style="display: flex; gap: 10px;">
+        {% if employee %}
+            <a href="{% url 'payroll:salary_detail' employee.id %}" class="btn btn-secondary">My Salary Structure</a>
+            <a href="{% url 'payroll:my_payslips' %}" class="btn btn-secondary">My Payslips</a>
+        {% endif %}
+        {% if is_admin_or_hr %}
+            <a href="{% url 'payroll:payslip_generate' %}" class="btn">+ Generate Payslips</a>
+            <a href="{% url 'payroll:salary_list' %}" class="btn btn-secondary">Salary Directory</a>
+        {% endif %}
+    </div>
+</div>
+
+{% if employee and salary_structure %}
+<!-- Employee Salary Summary -->
+<div class="card" style="border-left: 4px solid #16a34a;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <div>
+            <h3 style="margin: 0;">My Active Compensation Package</h3>
+            <p style="color: #64748b; margin: 4px 0 0 0; font-size: 13px;">{{ employee.full_name }} | {{ employee.user.login_id }} | Effective: {{ salary_structure.effective_from }}</p>
+        </div>
+        <a href="{% url 'payroll:salary_detail' employee.id %}" class="btn btn-sm">Full Breakdown &raquo;</a>
+    </div>
+
+    <div class="grid-4">
+        <div class="stat-card">
+            <div class="stat-label">Monthly CTC</div>
+            <div class="stat-num" style="color: #2563eb;">₹{{ salary_structure.monthly_wage|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Gross Salary</div>
+            <div class="stat-num" style="color: #1e293b;">₹{{ salary_structure.gross_salary|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Deductions</div>
+            <div class="stat-num" style="color: #dc2626;">₹{{ salary_structure.total_deductions|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Net Take-Home</div>
+            <div class="stat-num" style="color: #16a34a;">₹{{ salary_structure.net_salary|floatformat:2 }}</div>
+        </div>
+    </div>
+</div>
+
+{% if my_recent_payslips %}
+<!-- Employee Recent Payslips -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h3 style="margin: 0;">Recent Payslips</h3>
+        <a href="{% url 'payroll:my_payslips' %}" class="btn btn-secondary btn-sm">All My Payslips &raquo;</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Gross Salary</th>
+                <th>Deductions</th>
+                <th>Net Take-Home</th>
+                <th>Status</th>
+                <th>Payment Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in my_recent_payslips %}
+            <tr>
+                <td><strong>{{ p.month|stringformat:"02d" }}/{{ p.year }}</strong></td>
+                <td>₹{{ p.gross_salary|floatformat:2 }}</td>
+                <td style="color: #dc2626;">-₹{{ p.total_deductions|floatformat:2 }}</td>
+                <td><strong>₹{{ p.net_pay|floatformat:2 }}</strong></td>
+                <td>
+                    {% if p.payment_status == 'PAID' %}<span class="badge badge-paid">Paid</span>
+                    {% elif p.payment_status == 'GENERATED' %}<span class="badge badge-generated">Generated</span>
+                    {% else %}<span class="badge badge-unpaid">Unpaid</span>
+                    {% endif %}
+                </td>
+                <td>{{ p.payment_date|default:"-" }}</td>
+                <td style="display: flex; gap: 6px;">
+                    <a href="{% url 'payroll:payslip_detail' p.id %}" class="btn btn-sm">View</a>
+                    <a href="{% url 'payroll:payslip_pdf' p.id %}" class="btn btn-secondary btn-sm">PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endif %}
+
+{% if is_admin_or_hr and stats %}
+<!-- Admin / HR Summary Cards -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0;">Organizational Payroll Metrics</h3>
+        <div style="display: flex; gap: 10px;">
+            <a href="{% url 'payroll:payslip_list' %}" class="btn btn-secondary btn-sm">Payslips Directory &raquo;</a>
+            <a href="{% url 'payroll:salary_list' %}" class="btn btn-secondary btn-sm">Employee Salaries &raquo;</a>
+        </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom: 15px;">
+        <div class="stat-card">
+            <div class="stat-label">Configured Salaries</div>
+            <div class="stat-num" style="color: #2563eb;">{{ stats.total_active_structures }}</div>
+            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">Active structures</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Monthly Gross Payroll</div>
+            <div class="stat-num" style="color: #1e293b;">₹{{ stats.total_gross_payroll|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Monthly Deductions</div>
+            <div class="stat-num" style="color: #dc2626;">₹{{ stats.total_deductions|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Monthly Net Payout</div>
+            <div class="stat-num" style="color: #16a34a;">₹{{ stats.total_net_payroll|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <div class="grid-3">
+        <div class="stat-card">
+            <div class="stat-label">Payslips This Month ({{ today|date:"M Y" }})</div>
+            <div class="stat-num" style="color: #0284c7;">{{ stats.current_month_payslips }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Disbursed / Paid</div>
+            <div class="stat-num" style="color: #16a34a;">{{ stats.current_month_paid }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Pending Disbursement</div>
+            <div class="stat-num" style="color: #dc2626;">{{ stats.current_month_unpaid }}</div>
+        </div>
+    </div>
+
+    {% if recent_org_payslips %}
+    <h4 style="margin-top: 25px; margin-bottom: 10px;">Recently Generated Payslips</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Period</th>
+                <th>Gross</th>
+                <th>Net Pay</th>
+                <th>Status</th>
+                <th>Generated At</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in recent_org_payslips %}
+            <tr>
+                <td><strong>{{ p.employee.full_name }}</strong></td>
+                <td>{{ p.employee.department.name|default:"-" }}</td>
+                <td><strong>{{ p.month|stringformat:"02d" }}/{{ p.year }}</strong></td>
+                <td>₹{{ p.gross_salary|floatformat:2 }}</td>
+                <td><strong>₹{{ p.net_pay|floatformat:2 }}</strong></td>
+                <td>
+                    {% if p.payment_status == 'PAID' %}<span class="badge badge-paid">Paid</span>
+                    {% elif p.payment_status == 'GENERATED' %}<span class="badge badge-generated">Generated</span>
+                    {% else %}<span class="badge badge-unpaid">Unpaid</span>
+                    {% endif %}
+                </td>
+                <td>{{ p.generated_at|date:"Y-m-d H:i" }}</td>
+                <td style="display: flex; gap: 4px;">
+                    <a href="{% url 'payroll:payslip_detail' p.id %}" class="btn btn-sm">Review</a>
+                    <a href="{% url 'payroll:payslip_pdf' p.id %}" class="btn btn-secondary btn-sm">PDF</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endif %}
+
+{% endblock %}

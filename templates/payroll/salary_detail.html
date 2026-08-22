@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Salary Structure - {{ target_employee.full_name }} - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 750px; margin: 0 auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+            <h2 style="margin: 0;">Salary Structure: {{ target_employee.full_name }}</h2>
+            <p style="color: #64748b; margin: 4px 0 0 0;">{{ target_employee.user.login_id }} | {{ target_employee.department.name|default:"Not Assigned" }} | {{ target_employee.designation.title|default:"Staff" }}</p>
+        </div>
+        <div>
+            {% if salary and salary.is_active %}
+                <span class="badge badge-approved" style="font-size: 14px; padding: 6px 12px;">Active</span>
+            {% elif salary %}
+                <span class="badge badge-cancelled" style="font-size: 14px; padding: 6px 12px;">Inactive</span>
+            {% else %}
+                <span class="badge badge-rejected" style="font-size: 14px; padding: 6px 12px;">Not Configured</span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if salary %}
+    <div class="grid-2" style="margin-bottom: 20px;">
+        <div class="stat-card">
+            <div class="stat-label">Monthly Cost to Company (CTC)</div>
+            <div class="stat-num" style="color: #2563eb;">₹{{ salary.monthly_wage|floatformat:2 }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Annual CTC (Yearly Wage)</div>
+            <div class="stat-num" style="color: #1e293b;">₹{{ salary.yearly_wage|floatformat:2 }}</div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <!-- Earnings Section -->
+        <div>
+            <h4 style="color: #166534; margin-bottom: 8px; text-transform: uppercase; font-size: 13px;">Earnings Breakdown</h4>
+            <table>
+                <tr>
+                    <th>Basic Salary (50%)</th>
+                    <td style="text-align: right;">₹{{ salary.basic_salary|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>HRA (50% of Basic)</th>
+                    <td style="text-align: right;">₹{{ salary.hra|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Standard Allowance</th>
+                    <td style="text-align: right;">₹{{ salary.standard_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Performance Bonus</th>
+                    <td style="text-align: right;">₹{{ salary.performance_bonus|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Leave Travel Allowance (LTA)</th>
+                    <td style="text-align: right;">₹{{ salary.leave_travel_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Fixed / Special Allowance</th>
+                    <td style="text-align: right;">₹{{ salary.fixed_allowance|floatformat:2 }}</td>
+                </tr>
+                <tr style="background: #f1f5f9; font-weight: 700;">
+                    <td>Gross Monthly Earnings</td>
+                    <td style="text-align: right; color: #166534;">₹{{ salary.gross_salary|floatformat:2 }}</td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Deductions Section -->
+        <div>
+            <h4 style="color: #991b1b; margin-bottom: 8px; text-transform: uppercase; font-size: 13px;">Deductions Breakdown</h4>
+            <table>
+                <tr>
+                    <th>Provident Fund (12% of Basic)</th>
+                    <td style="text-align: right; color: #dc2626;">₹{{ salary.provident_fund|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Professional Tax (PT)</th>
+                    <td style="text-align: right; color: #dc2626;">₹{{ salary.professional_tax|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <th>Other Deductions</th>
+                    <td style="text-align: right; color: #dc2626;">₹{{ salary.other_deductions|floatformat:2 }}</td>
+                </tr>
+                <tr style="background: #fef2f2; font-weight: 700;">
+                    <td>Total Monthly Deductions</td>
+                    <td style="text-align: right; color: #dc2626;">₹{{ salary.total_deductions|floatformat:2 }}</td>
+                </tr>
+            </table>
+
+            <div class="stat-card" style="margin-top: 20px; background: #dcfce7; border-color: #16a34a;">
+                <div class="stat-label" style="color: #166534;">Net Take-Home Salary (Monthly)</div>
+                <div class="stat-num" style="color: #166534;">₹{{ salary.net_salary|floatformat:2 }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 25px; display: flex; gap: 10px; align-items: center;">
+        {% if is_admin_or_hr %}
+            <a href="{% url 'payroll:salary_edit' target_employee.id %}" class="btn">Edit Salary Structure</a>
+            <a href="{% url 'payroll:salary_list' %}" class="btn btn-secondary">&laquo; Salary Directory</a>
+        {% else %}
+            <a href="{% url 'payroll:dashboard' %}" class="btn btn-secondary">&laquo; Dashboard</a>
+        {% endif %}
+    </div>
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 30px;">
+        No salary structure configured for this employee yet.
+    </p>
+    {% if is_admin_or_hr %}
+        <div style="text-align: center;">
+            <a href="{% url 'payroll:salary_create' target_employee.id %}" class="btn">+ Configure Salary Structure Now</a>
+        </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

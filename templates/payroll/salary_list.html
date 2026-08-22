@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block title %}Salary Structures Directory - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Employee Salary Directory ({{ total_count }})</h2>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'payroll:payslip_generate' %}" class="btn">+ Generate Payslips</a>
+        <a href="{% url 'payroll:dashboard' %}" class="btn btn-secondary">Dashboard</a>
+    </div>
+</div>
+
+<form method="GET" class="filter-bar">
+    <input type="text" name="q" value="{{ selected_q }}" placeholder="Search name, login ID, email..." style="min-width: 180px;">
+
+    <select name="company">
+        <option value="">All Companies</option>
+        {% for c in companies %}
+            <option value="{{ c.id }}" {% if selected_company == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="department">
+        <option value="">All Departments</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}" {% if selected_dept == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="designation">
+        <option value="">All Designations</option>
+        {% for des in designations %}
+            <option value="{{ des.id }}" {% if selected_desig == des.id|stringformat:"s" %}selected{% endif %}>{{ des.title }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="has_salary">
+        <option value="">All Statuses</option>
+        <option value="yes" {% if selected_has_salary == 'yes' %}selected{% endif %}>Configured & Active</option>
+        <option value="no" {% if selected_has_salary == 'no' %}selected{% endif %}>Missing / Inactive</option>
+    </select>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'payroll:salary_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Login ID</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Monthly CTC</th>
+                <th>Gross Salary</th>
+                <th>Net Salary</th>
+                <th>Effective From</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in page_obj %}
+            <tr>
+                <td><strong>{{ emp.full_name }}</strong></td>
+                <td>{{ emp.user.login_id }}</td>
+                <td>{{ emp.department.name|default:"-" }}</td>
+                <td>{{ emp.designation.title|default:"-" }}</td>
+                <td>
+                    {% if emp.salary_structure %}
+                        ₹{{ emp.salary_structure.monthly_wage|floatformat:2 }}
+                    {% else %}
+                        <span style="color: #64748b;">Not Set</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if emp.salary_structure %}
+                        ₹{{ emp.salary_structure.gross_salary|floatformat:2 }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if emp.salary_structure %}
+                        <strong>₹{{ emp.salary_structure.net_salary|floatformat:2 }}</strong>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ emp.salary_structure.effective_from|default:"-" }}</td>
+                <td>
+                    {% if emp.salary_structure and emp.salary_structure.is_active %}
+                        <span class="badge badge-approved">Active</span>
+                    {% elif emp.salary_structure %}
+                        <span class="badge badge-cancelled">Inactive</span>
+                    {% else %}
+                        <span class="badge badge-rejected">Missing</span>
+                    {% endif %}
+                </td>
+                <td style="display: flex; gap: 4px;">
+                    {% if emp.salary_structure %}
+                        <a href="{% url 'payroll:salary_detail' emp.id %}" class="btn btn-sm">View</a>
+                        <a href="{% url 'payroll:salary_edit' emp.id %}" class="btn btn-secondary btn-sm">Edit</a>
+                    {% else %}
+                        <a href="{% url 'payroll:salary_create' emp.id %}" class="btn btn-success btn-sm">+ Configure</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_desig %}&designation={{ selected_desig }}{% endif %}{% if selected_has_salary %}&has_salary={{ selected_has_salary }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_dept %}&department={{ selected_dept }}{% endif %}{% if selected_desig %}&designation={{ selected_desig }}{% endif %}{% if selected_has_salary %}&has_salary={{ selected_has_salary }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No employees matched your criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

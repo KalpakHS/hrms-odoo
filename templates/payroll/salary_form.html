@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 650px; margin: 0 auto;">
+    <h2>{{ title }}</h2>
+    <p style="color: #64748b; margin-top: -10px; margin-bottom: 20px;">
+        Basic Salary (50%), HRA (50% of Basic), PF (12% of Basic), Gross, and Net are automatically calculated server-side.
+    </p>
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="errors">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div style="margin-bottom: 12px;">
+                {% if field.field.widget.input_type == "checkbox" %}
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        {{ field }}
+                        <strong>{{ field.label }}</strong>
+                    </label>
+                {% else %}
+                    <label for="{{ field.id_for_label }}"><strong>{{ field.label }}</strong>{% if field.field.required %} <span style="color: #dc2626;">*</span>{% endif %}</label>
+                    {{ field }}
+                {% endif %}
+                {% if field.help_text %}
+                    <p style="color: #64748b; font-size: 12px; margin-top: -10px;">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <div class="errors">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <div style="display: flex; gap: 10px; margin-top: 25px;">
+            <button type="submit" class="btn">Save Salary Structure</button>
+            <a href="{% url 'payroll:salary_detail' target_employee.id %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

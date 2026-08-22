@@ -7,10 +7,10 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 0; }
         .navbar { background: #1e293b; color: #ffffff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
-        .navbar a { color: #cbd5e1; text-decoration: none; margin-right: 16px; font-weight: 500; font-size: 14px; }
+        .navbar a { color: #cbd5e1; text-decoration: none; margin-right: 14px; font-weight: 500; font-size: 13.5px; }
         .navbar a:hover { color: #ffffff; }
-        .navbar .brand { font-size: 18px; font-weight: 700; color: #38bdf8; margin-right: 24px; }
-        .main-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .navbar .brand { font-size: 18px; font-weight: 700; color: #38bdf8; margin-right: 20px; }
+        .main-container { max-width: 1120px; margin: 30px auto; padding: 0 20px; }
         .card { background: #ffffff; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
         .form-control { width: 100%; padding: 8px 12px; margin: 6px 0 16px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         .btn { display: inline-block; background: #2563eb; color: #ffffff; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; text-align: center; }
@@ -44,6 +44,9 @@
         .badge-approved { background: #dcfce7; color: #166534; }
         .badge-rejected { background: #fee2e2; color: #991b1b; }
         .badge-cancelled { background: #f1f5f9; color: #64748b; }
+        .badge-paid { background: #dcfce7; color: #166534; }
+        .badge-generated { background: #e0f2fe; color: #075985; }
+        .badge-unpaid { background: #fee2e2; color: #991b1b; }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
         .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
@@ -57,18 +60,21 @@
 <body>
     {% if user.is_authenticated %}
     <nav class="navbar">
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; align-items: center; flex-wrap: wrap;">
             <a href="{% url 'accounts:dashboard' %}" class="brand">Dayflow HRMS</a>
             <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
             <a href="{% url 'attendance:dashboard' %}">Attendance</a>
             <a href="{% url 'leave:dashboard' %}">Leave</a>
+            <a href="{% url 'payroll:dashboard' %}">Payroll</a>
             {% if user.role == 'ADMIN' or user.role == 'HR' or user.is_superuser %}
                 <a href="{% url 'attendance:attendance_list' %}">Attendance Records</a>
-                <a href="{% url 'leave:leave_list' %}">Leave Requests</a>
-                <a href="{% url 'leave:leave_type_list' %}">Leave Types</a>
+                <a href="{% url 'leave:leave_list' %}">Leaves</a>
+                <a href="{% url 'payroll:salary_list' %}">Salary Structures</a>
+                <a href="{% url 'payroll:payslip_list' %}">Payslips</a>
             {% elif user.employee_profile %}
                 <a href="{% url 'attendance:my_attendance' %}">My Attendance</a>
-                <a href="{% url 'leave:my_leave' %}">My Leave</a>
+                <a href="{% url 'leave:my_leave' %}">My Leaves</a>
+                <a href="{% url 'payroll:my_payslips' %}">My Payslips</a>
             {% endif %}
         </div>
         <div>
