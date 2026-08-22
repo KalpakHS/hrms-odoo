@@ -48,29 +48,48 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section id="home" className="relative min-h-[95vh] flex flex-col items-center justify-center pt-40 pb-36 text-center select-none overflow-hidden bg-[#0A071E]">
+    <section id="home" className="relative min-h-[95vh] flex flex-col items-center justify-center pt-40 pb-36 text-center select-none overflow-hidden bg-[#050212]">
       
       {/* 
-        Premium Animated Mesh-Gradient Background
-        Smooth liquid motion with colors: Deep navy, electric violet, magenta, warm orange, bright red.
+        Premium Animated Fluid Mesh-Gradient Background
+        Oversized, highly saturated color clouds with 3 fluid light trails.
       */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* White base gradient layer */}
-        <div className="absolute inset-0 bg-[#0A071E]" />
+        {/* Base dark canvas */}
+        <div className="absolute inset-0 bg-[#050212]" />
 
-        {/* Blob 1: Violet/Purple */}
-        <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] bg-[#7C3AED] rounded-full filter blur-[120px] opacity-[0.26] animate-mesh-1" />
-        {/* Blob 2: Magenta */}
-        <div className="absolute top-[20%] left-[-15%] w-[45vw] h-[45vw] bg-[#EC4899] rounded-full filter blur-[120px] opacity-[0.24] animate-mesh-3" />
-        {/* Blob 3: Warm Orange */}
-        <div className="absolute bottom-[10%] left-[20%] w-[50vw] h-[50vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.24] animate-mesh-2" />
-        {/* Blob 4: Deep Burgundy/Red */}
-        <div className="absolute bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] bg-[#881337] rounded-full filter blur-[140px] opacity-[0.26] animate-mesh-4" />
-        {/* Blob 5: Bright Orange/Red */}
-        <div className="absolute top-[10%] right-[-10%] w-[45vw] h-[45vw] bg-[#EF4444] rounded-full filter blur-[110px] opacity-[0.2] animate-mesh-1" />
+        {/* Ambient Color Blobs Container with Screen blend for luminous additive lighting */}
+        <div className="absolute inset-0 mix-blend-screen opacity-90">
+          {/* Blob 1: Violet/Purple (Left Side) */}
+          <div className="absolute top-[-10%] left-[-20%] w-[75vw] h-[75vw] bg-[#5B21F5] rounded-full filter blur-[160px] opacity-[0.45] animate-mesh-1" />
+          
+          {/* Blob 2: Magenta/Pink (Lower Left) */}
+          <div className="absolute bottom-[-15%] left-[-15%] w-[65vw] h-[65vw] bg-[#D946EF] rounded-full filter blur-[150px] opacity-[0.42] animate-mesh-3" />
+          
+          {/* Blob 3: Central Deep Purple + Burgundy Base */}
+          <div className="absolute top-[10%] left-[10%] w-[80vw] h-[80vw] bg-[#21005F] rounded-full filter blur-[180px] opacity-[0.38] animate-mesh-2" />
+          
+          {/* Blob 4: Bright Orange (Right Side) */}
+          <div className="absolute top-[-5%] right-[-20%] w-[75vw] h-[75vw] bg-[#FF6A00] rounded-full filter blur-[160px] opacity-[0.42] animate-mesh-2" />
+          
+          {/* Blob 5: Orange/Red (Lower Right) */}
+          <div className="absolute bottom-[-15%] right-[-15%] w-[65vw] h-[65vw] bg-[#EF4444] rounded-full filter blur-[150px] opacity-[0.45] animate-mesh-4" />
+        </div>
 
-        {/* Subtle dark/transparent vignette overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#0A071E]/30" />
+        {/* Luminous Curved Light Streaks / Trails */}
+        <div className="absolute inset-0 mix-blend-plus-lighter opacity-80">
+          {/* Violet/Purple Trail sweeping from left-bottom to center */}
+          <div className="absolute bottom-[-5%] left-[-20%] w-[85vw] h-[25vw] bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent rounded-full filter blur-[110px] opacity-[0.32] rotate-[-25deg] animate-streak-1" />
+          
+          {/* Bright Orange Trail sweeping from right to center */}
+          <div className="absolute top-[20%] right-[-20%] w-[80vw] h-[25vw] bg-gradient-to-r from-transparent via-[#FF8A00] to-transparent rounded-full filter blur-[120px] opacity-[0.28] rotate-[20deg] animate-streak-2" />
+          
+          {/* Magenta Trail near the bottom center */}
+          <div className="absolute bottom-[8%] left-[5%] w-[70vw] h-[20vw] bg-gradient-to-r from-transparent via-[#EC4899] to-transparent rounded-full filter blur-[100px] opacity-[0.25] rotate-[-10deg] animate-streak-3" />
+        </div>
+
+        {/* Subtle localized dark vignette filter behind main text content for optimal contrast & readability */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-video bg-[radial-gradient(circle_at_center,rgba(5,2,18,0.35)_0%,rgba(5,2,18,0)_70%)] pointer-events-none z-0" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-8">
