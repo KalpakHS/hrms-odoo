@@ -12,7 +12,6 @@ export const TimeOffRequestModal: React.FC = () => {
   const [attachmentName, setAttachmentName] = useState<string | undefined>(undefined);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Calculate duration directly during render
   let durationDays = 0;
   let invalidRange = false;
   if (startDate && endDate) {
@@ -60,50 +59,50 @@ export const TimeOffRequestModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-[#111827] border border-slate-800 rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
+      <div className="bg-white border border-slate-200/80 rounded-[32px] w-full max-w-lg shadow-floating-lg overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-[#1E293B]/50">
-          <h3 className="font-bold text-lg text-white">Time Off Type Request</h3>
+        <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <h3 className="font-extrabold text-xl text-slate-900 font-heading">Time Off Type Request</h3>
           <button
             onClick={closeTimeOffModal}
-            className="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition cursor-pointer"
+            className="p-2 text-slate-400 hover:text-slate-900 rounded-full hover:bg-slate-100 transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-8 space-y-5">
           {(errorMsg || invalidRange) && (
-            <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-400 rounded-xl text-xs font-semibold flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-700 rounded-full text-xs font-semibold flex items-center gap-2 px-5">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{errorMsg || 'End Date cannot be before Start Date'}</span>
             </div>
           )}
 
           {/* Employee */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 ml-1">
               Employee
             </label>
             <input
               type="text"
               value={currentUser?.name || 'Employee'}
               disabled
-              className="w-full bg-[#1E293B]/60 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-slate-300 font-semibold cursor-not-allowed"
+              className="w-full bg-slate-100 border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-700 font-bold cursor-not-allowed"
             />
           </div>
 
           {/* Time Off Type */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 ml-1">
               Time Off Type
             </label>
             <select
               value={timeOffType}
               onChange={(e) => setTimeOffType(e.target.value as TimeOffType)}
-              className="w-full bg-[#1E293B] border border-slate-700 rounded-xl py-2.5 px-4 text-sm text-white focus:outline-none focus:border-blue-500 cursor-pointer"
+              className="w-full bg-white border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-900 font-semibold focus:outline-none focus:border-black shadow-floating cursor-pointer"
             >
               <option value="Paid Time Off">Paid Time Off</option>
               <option value="Sick Leave">Sick Leave</option>
@@ -114,80 +113,80 @@ export const TimeOffRequestModal: React.FC = () => {
           {/* Validity Period */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 ml-1">
                 Start Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                <Calendar className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                 <input
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full bg-[#1E293B] border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-200 rounded-full py-2.5 pl-11 pr-4 text-sm text-slate-900 font-semibold focus:outline-none focus:border-black shadow-floating"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 ml-1">
                 End Date
               </label>
               <div className="relative">
-                <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                <Calendar className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                 <input
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="w-full bg-[#1E293B] border border-slate-700 rounded-xl py-2 pl-9 pr-3 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-200 rounded-full py-2.5 pl-11 pr-4 text-sm text-slate-900 font-semibold focus:outline-none focus:border-black shadow-floating"
                   required
                 />
               </div>
             </div>
           </div>
 
-          {/* Duration Calculation */}
-          <div className="p-3.5 bg-blue-950/40 border border-blue-500/30 rounded-xl flex items-center justify-between text-xs">
-            <span className="text-slate-300 font-semibold uppercase tracking-wider">
+          {/* Duration Calculation Banner */}
+          <div className="p-4 bg-[#FEF08A]/40 border border-yellow-300 rounded-full flex items-center justify-between text-xs px-6 shadow-xs">
+            <span className="text-slate-800 font-bold uppercase tracking-wider">
               Allocation / Duration:
             </span>
-            <span className="font-mono font-bold text-base text-blue-400">
+            <span className="font-mono font-black text-base text-slate-900 bg-white px-3 py-1 rounded-full border border-slate-200">
               {!invalidRange && durationDays > 0 ? `${durationDays} Days` : 'Invalid Range'}
             </span>
           </div>
 
           {/* Attachment Upload */}
           <div>
-            <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5 ml-1">
               Attachment {timeOffType === 'Sick Leave' && '(Required for Sick Leave certificate)'}
             </label>
-            <label className="flex items-center justify-between bg-[#1E293B] hover:bg-slate-800 border border-slate-700/80 border-dashed rounded-xl p-3.5 cursor-pointer transition">
-              <div className="flex items-center gap-2 text-sm text-slate-300">
-                <Paperclip className="w-4 h-4 text-blue-400" />
-                <span className="truncate max-w-[240px]">
+            <label className="flex items-center justify-between bg-slate-50 hover:bg-slate-100/80 border border-slate-200/80 border-dashed rounded-2xl p-4 cursor-pointer transition">
+              <div className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
+                <Paperclip className="w-4 h-4 text-slate-500" />
+                <span className="truncate max-w-[220px]">
                   {attachmentName || 'Click to attach medical certificate or document'}
                 </span>
               </div>
-              <div className="flex items-center gap-1 bg-blue-600/20 text-blue-400 text-xs px-2.5 py-1 rounded-lg border border-blue-500/30 font-semibold shrink-0">
-                <Upload className="w-3.5 h-3.5" />
+              <div className="flex items-center gap-1 bg-black text-white text-xs px-3 py-1.5 rounded-full font-bold shadow-xs shrink-0">
+                <Upload className="w-3.5 h-3.5 text-yellow-300" />
                 <span>Upload</span>
               </div>
               <input type="file" onChange={handleFileUpload} className="hidden" />
             </label>
           </div>
 
-          {/* Buttons */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          {/* Action Buttons */}
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
             <button
               type="button"
               onClick={closeTimeOffModal}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold rounded-xl text-sm transition cursor-pointer"
+              className="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-full text-xs transition cursor-pointer"
             >
               Discard
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl text-sm shadow-lg shadow-blue-600/20 transition cursor-pointer"
+              className="px-6 py-2.5 bg-black hover:bg-slate-800 text-white font-bold rounded-full text-xs shadow-md transition cursor-pointer"
             >
               Save Request
             </button>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useProjectContext } from '../../context/useProjectContext';
 import { generateLoginId } from '../../utils/salaryCalculator';
-import { Upload, Shield, Building2, User, Mail, Phone, Lock, ArrowRight } from 'lucide-react';
+import { Upload, Mail, Phone, Lock, ArrowRight, Sparkles, User, Building2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const AuthPages: React.FC = () => {
@@ -68,38 +68,67 @@ export const AuthPages: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#090D16] text-slate-100 flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Background glow effects */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex items-center justify-center p-6 relative overflow-hidden font-sans">
+      {/* Soft Decorative Ambient Accents */}
+      <div className="absolute top-12 left-12 w-80 h-80 bg-purple-200/40 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-12 right-12 w-80 h-80 bg-yellow-200/40 rounded-full blur-3xl pointer-events-none" />
 
+      {/* Centralized Card */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-xl bg-[#111827]/90 backdrop-blur-xl border border-slate-800 rounded-2xl shadow-2xl p-8 relative z-10"
+        className="w-full max-w-lg bg-white rounded-[32px] shadow-floating-lg border border-slate-200/70 p-8 sm:p-10 relative z-10 space-y-8"
       >
-        {/* Logo / Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-600/20 border border-blue-500/30 text-blue-400 mb-4">
-            <Shield className="w-8 h-8" />
+        {/* Brand Logo & Editorial Header */}
+        <div className="text-center space-y-3">
+          {/* Top Soft Lavender Banner Pill */}
+          <div className="inline-flex items-center gap-2 bg-[#F3E8FF] border border-[#E9D5FF] text-[#9333EA] px-4 py-1.5 rounded-full text-xs font-semibold shadow-sm">
+            <span className="w-5 h-5 rounded-full bg-[#E9D5FF] flex items-center justify-center text-[10px]">
+              <Sparkles className="w-3 h-3 text-[#9333EA]" />
+            </span>
+            <span>PulseFlow Enterprise HRMS</span>
           </div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">PulseFlow Enterprise</h2>
-          <p className="text-sm text-slate-400 mt-1">Human Resource Management System</p>
+
+          {/* Primary Editorial Serif Heading with Luminous Yellow Circle Highlight */}
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading tracking-tight pt-2">
+            {authMode === 'signin' ? (
+              <>
+                <span className="relative inline-block px-2 z-10">
+                  Login
+                  <span className="absolute inset-0 bg-[#FEF08A] -rotate-2 rounded-2xl -z-10 shadow-sm border border-yellow-300/60" />
+                </span>{' '}
+                to Your Account
+              </>
+            ) : (
+              <>
+                Create Your{' '}
+                <span className="relative inline-block px-2 z-10">
+                  Account
+                  <span className="absolute inset-0 bg-[#FEF08A] rotate-1 rounded-2xl -z-10 shadow-sm border border-yellow-300/60" />
+                </span>
+              </>
+            )}
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto font-sans leading-relaxed">
+            {authMode === 'signin'
+              ? 'Enter your employee credentials or system login ID to access your dashboard.'
+              : 'Register your company organization and auto-generate system employee IDs.'}
+          </p>
         </div>
 
-        {/* Tab Toggle */}
-        <div className="flex bg-[#1E293B] p-1 rounded-xl mb-8 border border-slate-800">
+        {/* Pill-shaped Mode Switcher */}
+        <div className="flex bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 shadow-inner">
           <button
             type="button"
             onClick={() => {
               setAuthMode('signin');
               setErrorMsg('');
             }}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
               authMode === 'signin'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white shadow-md'
+                : 'text-slate-600 hover:text-black'
             }`}
           >
             Sign In
@@ -110,10 +139,10 @@ export const AuthPages: React.FC = () => {
               setAuthMode('signup');
               setErrorMsg('');
             }}
-            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all ${
+            className={`flex-1 py-2.5 text-xs font-bold rounded-full transition-all duration-200 cursor-pointer ${
               authMode === 'signup'
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-400 hover:text-white'
+                ? 'bg-black text-white shadow-md'
+                : 'text-slate-600 hover:text-black'
             }`}
           >
             Sign Up
@@ -121,7 +150,7 @@ export const AuthPages: React.FC = () => {
         </div>
 
         {errorMsg && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-medium text-center">
+          <div className="p-3.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-medium text-center shadow-sm">
             {errorMsg}
           </div>
         )}
@@ -130,34 +159,34 @@ export const AuthPages: React.FC = () => {
         {authMode === 'signin' && (
           <form onSubmit={handleSignInSubmit} className="space-y-5">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Login ID / Email
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 ml-1">
+                Phone / Email / Login ID
               </label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+                <Mail className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
                   value={signInId}
                   onChange={(e) => setSignInId(e.target.value)}
                   placeholder="e.g. OIJODO20220001 or email@company.com"
-                  className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-white border border-slate-200/80 rounded-full py-3.5 pl-11 pr-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 shadow-floating transition-all"
                   required
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2">
-                Password
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 ml-1">
+                Passcode
               </label>
               <div className="relative">
-                <Lock className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
+                <Lock className="absolute left-4 top-3.5 w-4 h-4 text-slate-400" />
                 <input
                   type="password"
                   value={signInPassword}
                   onChange={(e) => setSignInPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2.5 pl-10 pr-4 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 transition"
+                  className="w-full bg-white border border-slate-200/80 rounded-full py-3.5 pl-11 pr-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black focus:ring-2 focus:ring-black/10 shadow-floating transition-all"
                 />
               </div>
             </div>
@@ -165,21 +194,21 @@ export const AuthPages: React.FC = () => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition duration-200 flex items-center justify-center gap-2 cursor-pointer text-sm"
+                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-4 px-6 rounded-full shadow-lg shadow-black/10 transition duration-200 flex items-center justify-center gap-2 text-sm cursor-pointer"
               >
-                SIGN IN
-                <ArrowRight className="w-4 h-4" />
+                Login to Your Account
+                <ArrowRight className="w-4 h-4 text-yellow-300" />
               </button>
             </div>
 
             <div className="text-center pt-2">
-              <span className="text-xs text-slate-400">Don't have an account? </span>
+              <span className="text-xs text-slate-500">Don't have an account? </span>
               <button
                 type="button"
                 onClick={() => setAuthMode('signup')}
-                className="text-xs text-blue-400 hover:text-blue-300 font-semibold cursor-pointer"
+                className="text-xs text-black font-bold hover:underline cursor-pointer ml-1"
               >
-                Sign Up
+                Sign Up Now
               </button>
             </div>
           </form>
@@ -188,10 +217,10 @@ export const AuthPages: React.FC = () => {
         {/* SIGN UP FORM */}
         {authMode === 'signup' && (
           <form onSubmit={handleSignUpSubmit} className="space-y-4">
-            {/* Auto Generated Login ID Banner */}
-            <div className="p-3 bg-blue-950/60 border border-blue-500/30 rounded-xl flex items-center justify-between text-xs">
-              <span className="text-slate-300 font-medium">System Auto-Generated Login ID:</span>
-              <span className="font-mono font-bold text-blue-400 bg-blue-900/50 px-2.5 py-1 rounded border border-blue-400/30">
+            {/* Auto Generated Login ID Pill Banner */}
+            <div className="p-3.5 bg-[#FEF08A]/40 border border-yellow-300/80 rounded-full flex items-center justify-between text-xs px-5 shadow-sm">
+              <span className="text-slate-800 font-semibold">Auto Login ID:</span>
+              <span className="font-mono font-bold text-slate-900 bg-white px-3 py-1 rounded-full border border-slate-200 shadow-xs">
                 {generatedId}
               </span>
             </div>
@@ -199,112 +228,101 @@ export const AuthPages: React.FC = () => {
             {/* Company Name & Logo Upload */}
             <div className="grid grid-cols-3 gap-3 items-end">
               <div className="col-span-2">
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">
                   Company Name
                 </label>
                 <div className="relative">
-                  <Building2 className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <Building2 className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                     placeholder="Company Name"
-                    className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Company Logo
-                </label>
-                <label className="flex items-center justify-center gap-1.5 bg-[#1E293B] hover:bg-slate-700 border border-slate-700 rounded-xl py-2 px-3 text-xs text-slate-300 cursor-pointer transition">
-                  <Upload className="w-3.5 h-3.5 text-blue-400" />
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Logo</label>
+                <label className="flex items-center justify-center gap-1.5 bg-white hover:bg-slate-50 border border-slate-200 rounded-full py-3 px-3 text-xs text-slate-700 font-semibold cursor-pointer shadow-floating transition">
+                  <Upload className="w-3.5 h-3.5 text-slate-500" />
                   <span className="truncate">{companyLogo ? 'Uploaded' : 'Upload'}</span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleLogoUpload}
-                    className="hidden"
-                  />
+                  <input type="file" accept="image/*" onChange={handleLogoUpload} className="hidden" />
                 </label>
               </div>
             </div>
 
             {/* Name */}
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Full Name</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                <User className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                   required
                 />
               </div>
             </div>
 
             {/* Email & Phone */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Email</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <Mail className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@company.com"
-                    className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                     required
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Phone</label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Phone</label>
                 <div className="relative">
-                  <Phone className="absolute left-3 top-2.5 w-4 h-4 text-slate-500" />
+                  <Phone className="absolute left-4 top-3 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                    className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-4 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                   />
                 </div>
               </div>
             </div>
 
             {/* Passwords */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Password
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Password</label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 px-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                  Confirm Password
-                </label>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Confirm</label>
                 <input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#1E293B]/70 border border-slate-700/80 rounded-xl py-2 px-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                  className="w-full bg-white border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
                 />
               </div>
             </div>
@@ -312,18 +330,18 @@ export const AuthPages: React.FC = () => {
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-4 rounded-xl shadow-lg shadow-blue-600/30 transition duration-200 cursor-pointer text-sm"
+                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-full shadow-lg shadow-black/10 transition cursor-pointer text-sm"
               >
                 Sign Up & Generate Profile
               </button>
             </div>
 
             <div className="text-center pt-1">
-              <span className="text-xs text-slate-400">Already have an account? </span>
+              <span className="text-xs text-slate-500">Already registered? </span>
               <button
                 type="button"
                 onClick={() => setAuthMode('signin')}
-                className="text-xs text-blue-400 hover:text-blue-300 font-semibold cursor-pointer"
+                className="text-xs text-black font-bold hover:underline cursor-pointer ml-1"
               >
                 Sign In
               </button>

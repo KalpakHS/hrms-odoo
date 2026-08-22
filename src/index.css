@@ -1,19 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Enterprise Blue/White Palette */
-  --color-brand-primary: #2563EB;
-  --color-brand-dark: #0F1F4B;
-  --color-brand-accent: #3B82F6;
-  --color-brand-light: #EFF6FF;
-  --color-brand-bg: #FFFFFF;
-  --color-brand-sec-bg: #F8FAFC;
-  --color-brand-border: #E2E8F0;
-  --color-brand-text: #0F172A;
-  --color-brand-muted: #64748B;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Minimalist Monochromatic Editorial Palette */
+  --color-brand-bg: #F8FAFC;          /* Soft off-white background */
+  --color-brand-card: #FFFFFF;        /* Stark white interactive card containers */
+  --color-brand-dark: #0F172A;        /* Deep charcoal / black primary text */
+  
+  /* Accents */
+  --color-luminous-yellow: #FEF08A;  /* Luminous Yellow accent */
+  --color-luminous-yellow-hover: #FDE047;
+  --color-luminous-yellow-dark: #EAB308;
+  
+  --color-soft-lavender: #F3E8FF;     /* Soft Lavender accent */
+  --color-soft-lavender-border: #E9D5FF;
+  --color-soft-lavender-text: #9333EA;
 }
 
-/* Smooth transitions and scrollbars */
 html {
   scroll-behavior: smooth;
 }
@@ -21,149 +26,40 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #FFFFFF; /* Pure White background */
-  color: #0F172A; /* Deep Slate text */
+  background-color: #F8FAFC; /* Soft off-white */
+  color: #0F172A;             /* Deep charcoal */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
-/* Custom grid patterns or animation overlays */
-.grid-pattern {
-  background-image: radial-gradient(rgba(37, 99, 235, 0.05) 1px, transparent 0);
-  background-size: 24px 24px;
+/* Custom Serif Heading Utility */
+.font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
 }
 
-.dark-grid-pattern {
-  background-image: radial-gradient(rgba(59, 130, 246, 0.06) 1px, transparent 0);
-  background-size: 24px 24px;
+/* Brand Lowercase Bold Geometric Logo */
+.font-brand-logo {
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  text-transform: lowercase;
 }
 
-/* Custom text outline styling for high-contrast white text on white bg */
-.text-outline-navy {
-  color: #FFFFFF;
-  -webkit-text-stroke: 1.5px #0F1F4B;
-  text-stroke: 1.5px #0F1F4B;
+/* Soft Diffuse Floating Drop Shadow for Inputs & Cards */
+.shadow-floating {
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.04), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
 }
 
-.text-outline-blue {
-  color: #FFFFFF;
-  -webkit-text-stroke: 1.5px #2563EB;
-  text-stroke: 1.5px #2563EB;
+.shadow-floating-lg {
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.06), 0 8px 16px -4px rgba(0, 0, 0, 0.03);
 }
 
-/* Premium mesh gradient blob animations - organic morphing border-radius and slow rotation for fluid liquid flow */
-@keyframes meshFloat1 {
-  0% {
-    border-radius: 40% 60% 60% 40% / 40% 60% 40% 60%;
-    transform: translate(0px, 0px) rotate(0deg) scale(1);
-  }
-  33% {
-    border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%;
-    transform: translate(10%, -6%) rotate(120deg) scale(1.1);
-  }
-  66% {
-    border-radius: 50% 50% 30% 70% / 40% 30% 70% 60%;
-    transform: translate(-5%, 8%) rotate(240deg) scale(0.92);
-  }
-  100% {
-    border-radius: 40% 60% 60% 40% / 40% 60% 40% 60%;
-    transform: translate(0px, 0px) rotate(360deg) scale(1);
-  }
+.shadow-pill-hover {
+  transition: all 0.2s ease-in-out;
 }
 
-@keyframes meshFloat2 {
-  0% {
-    border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%;
-    transform: translate(0px, 0px) rotate(0deg) scale(1.05);
-  }
-  50% {
-    border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
-    transform: translate(-8%, 10%) rotate(-180deg) scale(0.93);
-  }
-  100% {
-    border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%;
-    transform: translate(0px, 0px) rotate(-360deg) scale(1.05);
-  }
-}
-
-@keyframes meshFloat3 {
-  0% {
-    border-radius: 60% 40% 60% 40% / 50% 50% 50% 50%;
-    transform: translate(0px, 0px) rotate(0deg) scale(0.92);
-  }
-  33% {
-    border-radius: 40% 60% 30% 70% / 40% 60% 40% 60%;
-    transform: translate(-6%, -10%) rotate(120deg) scale(1.06);
-  }
-  66% {
-    border-radius: 50% 50% 70% 30% / 60% 40% 60% 40%;
-    transform: translate(10%, 5%) rotate(240deg) scale(1);
-  }
-  100% {
-    border-radius: 60% 40% 60% 40% / 50% 50% 50% 50%;
-    transform: translate(0px, 0px) rotate(360deg) scale(0.92);
-  }
-}
-
-@keyframes meshFloat4 {
-  0% {
-    border-radius: 40% 60% 40% 60% / 40% 40% 60% 60%;
-    transform: translate(0px, 0px) rotate(0deg) scale(1);
-  }
-  50% {
-    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
-    transform: translate(8%, 12%) rotate(180deg) scale(1.12);
-  }
-  100% {
-    border-radius: 40% 60% 40% 60% / 40% 40% 60% 60%;
-    transform: translate(0px, 0px) rotate(360deg) scale(1);
-  }
-}
-
-.animate-mesh-1 {
-  animation: meshFloat1 30s infinite linear;
-}
-
-.animate-mesh-2 {
-  animation: meshFloat2 35s infinite linear;
-}
-
-.animate-mesh-3 {
-  animation: meshFloat3 32s infinite linear;
-}
-
-.animate-mesh-4 {
-  animation: meshFloat4 40s infinite linear;
-}
-
-/* Light Trail animations for background */
-@keyframes streak1 {
-  0% { transform: translate(0px, 0px) rotate(-25deg) scale(0.95); }
-  50% { transform: translate(15%, 8%) rotate(-15deg) scale(1.05); }
-  100% { transform: translate(0px, 0px) rotate(-25deg) scale(0.95); }
-}
-
-@keyframes streak2 {
-  0% { transform: translate(0px, 0px) rotate(20deg) scale(1); }
-  50% { transform: translate(-12%, -8%) rotate(30deg) scale(1.1); }
-  100% { transform: translate(0px, 0px) rotate(20deg) scale(1); }
-}
-
-@keyframes streak3 {
-  0% { transform: translate(0px, 0px) rotate(-10deg) scale(1); }
-  50% { transform: translate(8%, -5%) rotate(-5deg) scale(1.05); }
-  100% { transform: translate(0px, 0px) rotate(-10deg) scale(1); }
-}
-
-.animate-streak-1 {
-  animation: streak1 22s infinite alternate ease-in-out;
-}
-
-.animate-streak-2 {
-  animation: streak2 26s infinite alternate ease-in-out;
-}
-
-.animate-streak-3 {
-  animation: streak3 24s infinite alternate ease-in-out;
+.shadow-pill-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.08);
 }

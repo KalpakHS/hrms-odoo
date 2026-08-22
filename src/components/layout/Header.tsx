@@ -10,6 +10,7 @@ import {
   Plane,
   Circle,
   Building2,
+  Sparkles,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -41,14 +42,14 @@ export const Header: React.FC = () => {
       case 'present':
         return (
           <span
-            className="w-3 h-3 rounded-full bg-emerald-500 border-2 border-[#111827] shadow-sm animate-pulse"
+            className="w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow-sm animate-pulse"
             title="Present"
           />
         );
       case 'leave':
         return (
           <div
-            className="w-3.5 h-3.5 rounded-full bg-rose-500 flex items-center justify-center border-2 border-[#111827]"
+            className="w-3.5 h-3.5 rounded-full bg-rose-500 flex items-center justify-center border-2 border-white"
             title="On Leave"
           >
             <Plane className="w-2 h-2 text-white" />
@@ -58,74 +59,72 @@ export const Header: React.FC = () => {
       default:
         return (
           <span title="Absent">
-            <Circle className="w-3 h-3 fill-amber-500 text-amber-500 border-2 border-[#111827]" />
+            <Circle className="w-3.5 h-3.5 fill-amber-400 text-amber-400 border-2 border-white" />
           </span>
         );
     }
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#090D16]/95 backdrop-blur-md border-b border-slate-800 text-slate-100 font-sans shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        {/* Brand Logo & Name */}
+    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80 text-slate-900 font-sans shadow-xs">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
+        {/* Brand Logo & Name: Bold Lowercase Geometric Sans */}
         <div className="flex items-center gap-6">
           <button
             onClick={() => setActiveView('home')}
-            className="flex items-center gap-2.5 group cursor-pointer"
+            className="flex items-center gap-2.5 group cursor-pointer text-left"
           >
-            <div className="flex items-end gap-1 h-5.5">
-              <div className="w-1.5 h-3.5 bg-blue-500 rounded-full group-hover:h-4.5 transition-all duration-300" />
-              <div className="w-1.5 h-5.5 bg-blue-600 rounded-full" />
-              <div className="w-1.5 h-2.5 bg-purple-500 rounded-full group-hover:h-3.5 transition-all duration-300" />
+            <div className="w-9 h-9 rounded-full bg-[#FEF08A] border border-yellow-300 flex items-center justify-center font-black text-slate-900 text-lg shadow-sm group-hover:scale-105 transition duration-200">
+              d.
             </div>
-            <div className="text-left">
-              <span className="text-lg font-black tracking-tight text-white block leading-none">
-                Dayflow
+            <div>
+              <span className="text-2xl font-extrabold tracking-tight text-slate-900 font-brand-logo block leading-none">
+                dayflow.
               </span>
-              <span className="text-[10px] text-blue-400 font-semibold uppercase tracking-widest leading-none">
-                PulseFlow HRMS
+              <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase block leading-none mt-0.5">
+                PulseFlow Enterprise
               </span>
             </div>
           </button>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-1 bg-[#111827] p-1 rounded-xl border border-slate-800">
+          {/* Navigation Links: Pill-Shaped Container */}
+          <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/70">
             <button
               onClick={() => setActiveView('home')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full transition ${
                 activeView === 'home'
-                  ? 'bg-slate-800 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-white text-slate-900 shadow-sm border border-slate-200/60'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Home
             </button>
             <button
               onClick={() => setActiveView('employees')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full transition ${
                 activeView === 'employees'
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-black text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Employees
             </button>
             <button
               onClick={() => setActiveView('attendance')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full transition ${
                 activeView === 'attendance'
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-black text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Attendance
             </button>
             <button
               onClick={() => setActiveView('timeoff')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-lg transition ${
+              className={`px-4 py-1.5 text-xs font-bold rounded-full transition ${
                 activeView === 'timeoff'
-                  ? 'bg-blue-600 text-white shadow'
-                  : 'text-slate-400 hover:text-white'
+                  ? 'bg-black text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               Time Off
@@ -133,46 +132,42 @@ export const Header: React.FC = () => {
           </nav>
         </div>
 
-        {/* Right Suite: Demo Role Switcher + Systray Avatar */}
-        <div className="flex items-center gap-4">
-          {/* Role Switcher Demo Control */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-[#111827] px-3 py-1 rounded-xl border border-slate-800 text-xs">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
-            <span className="text-slate-400 font-medium">Role:</span>
+        {/* Right Suite: Role Switcher & User Systray Dropdown */}
+        <div className="flex items-center gap-3">
+          {/* Soft Lavender Role Switcher */}
+          <div className="hidden sm:flex items-center gap-1.5 bg-[#F3E8FF] border border-[#E9D5FF] px-3.5 py-1.5 rounded-full text-xs shadow-xs">
+            <ShieldAlert className="w-3.5 h-3.5 text-[#9333EA]" />
+            <span className="text-[#9333EA] font-semibold">Role:</span>
             <select
               value={currentRole}
               onChange={(e) => switchRole(e.target.value as 'admin' | 'employee')}
-              className="bg-transparent font-bold text-blue-400 focus:outline-none cursor-pointer"
+              className="bg-transparent font-bold text-slate-900 focus:outline-none cursor-pointer"
             >
-              <option value="admin" className="bg-slate-900 text-white">
-                Admin / HR Officer
-              </option>
-              <option value="employee" className="bg-slate-900 text-white">
-                Standard Employee
-              </option>
+              <option value="admin">Admin / HR Officer</option>
+              <option value="employee">Standard Employee</option>
             </select>
           </div>
 
-          {/* User Profile Avatar Dropdown */}
+          {/* User Profile Systray Dropdown */}
           {currentUser ? (
             <div className="relative">
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center gap-2.5 bg-[#111827] hover:bg-slate-800 border border-slate-800 p-1.5 pr-3 rounded-2xl transition cursor-pointer"
+                className="flex items-center gap-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 p-1.5 pr-3.5 rounded-full shadow-floating transition cursor-pointer"
               >
                 <div className="relative">
                   <img
                     src={currentUser.avatar}
                     alt={currentUser.name}
-                    className="w-8 h-8 rounded-xl object-cover border border-slate-700"
+                    className="w-8 h-8 rounded-full object-cover border border-slate-200 shadow-xs"
                   />
                   <div className="absolute -top-1 -right-1">{renderStatusDot()}</div>
                 </div>
                 <div className="text-left hidden lg:block">
-                  <span className="text-xs font-bold text-white block leading-tight">
+                  <span className="text-xs font-bold text-slate-900 block leading-tight">
                     {currentUser.name}
                   </span>
-                  <span className="text-[10px] text-slate-400 block leading-tight">
+                  <span className="text-[10px] text-slate-500 font-mono block leading-tight">
                     {currentUser.loginId}
                   </span>
                 </div>
@@ -187,24 +182,24 @@ export const Header: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-2 w-64 bg-[#111827] border border-slate-800 rounded-2xl shadow-2xl p-3 z-50 space-y-3"
+                    className="absolute right-0 mt-2 w-72 bg-white border border-slate-200 rounded-[28px] shadow-floating-lg p-4 z-50 space-y-3"
                   >
-                    {/* User Card */}
-                    <div className="p-3 bg-[#1E293B] rounded-xl border border-slate-800 flex items-center gap-3">
+                    {/* User Summary Card */}
+                    <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/70 flex items-center gap-3">
                       <img
                         src={currentUser.avatar}
                         alt={currentUser.name}
-                        className="w-10 h-10 rounded-xl object-cover border border-blue-500"
+                        className="w-11 h-11 rounded-full object-cover border-2 border-white shadow-xs"
                       />
                       <div className="overflow-hidden">
-                        <h4 className="font-bold text-xs text-white truncate">
+                        <h4 className="font-bold text-xs text-slate-900 truncate">
                           {currentUser.name}
                         </h4>
-                        <p className="text-[10px] text-blue-400 font-mono font-semibold">
+                        <p className="text-[10px] text-slate-600 font-mono font-semibold">
                           {currentUser.loginId}
                         </p>
-                        <div className="flex items-center gap-1 text-[10px] text-slate-400 mt-0.5">
-                          <Building2 className="w-3 h-3 text-slate-500" />
+                        <div className="flex items-center gap-1 text-[10px] text-slate-500 mt-0.5">
+                          <Building2 className="w-3 h-3 text-slate-400" />
                           <span className="truncate">{currentUser.department}</span>
                         </div>
                       </div>
@@ -218,10 +213,10 @@ export const Header: React.FC = () => {
                           setIsDropdownOpen(false);
                         }}
                         disabled={isCheckedIn}
-                        className={`py-2 px-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                        className={`py-2.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition ${
                           isCheckedIn
-                            ? 'bg-slate-800 text-slate-500 border border-slate-800 cursor-not-allowed'
-                            : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md shadow-emerald-600/20 cursor-pointer'
+                            ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                            : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm cursor-pointer'
                         }`}
                       >
                         <CheckCircle className="w-3.5 h-3.5" />
@@ -234,10 +229,10 @@ export const Header: React.FC = () => {
                           setIsDropdownOpen(false);
                         }}
                         disabled={!todayAttendance?.checkIn || !!todayAttendance?.checkOut}
-                        className={`py-2 px-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition ${
+                        className={`py-2.5 px-3 rounded-full text-xs font-bold flex items-center justify-center gap-1.5 transition ${
                           !todayAttendance?.checkIn || !!todayAttendance?.checkOut
-                            ? 'bg-slate-800 text-slate-500 border border-slate-800 cursor-not-allowed'
-                            : 'bg-rose-600 hover:bg-rose-500 text-white shadow-md shadow-rose-600/20 cursor-pointer'
+                            ? 'bg-slate-100 text-slate-400 border border-slate-200 cursor-not-allowed'
+                            : 'bg-rose-600 hover:bg-rose-500 text-white shadow-sm cursor-pointer'
                         }`}
                       >
                         <LogOutIcon className="w-3.5 h-3.5" />
@@ -245,18 +240,18 @@ export const Header: React.FC = () => {
                       </button>
                     </div>
 
-                    <div className="h-px bg-slate-800" />
+                    <div className="h-px bg-slate-200/80" />
 
-                    {/* Navigation Menu Options */}
+                    {/* Dropdown Action Items */}
                     <div className="space-y-1">
                       <button
                         onClick={() => {
                           openProfileModal(currentUser, false);
                           setIsDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-semibold text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl flex items-center gap-2 transition cursor-pointer"
+                        className="w-full text-left px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 rounded-full flex items-center gap-2.5 transition cursor-pointer"
                       >
-                        <User className="w-4 h-4 text-blue-400" />
+                        <User className="w-4 h-4 text-slate-500" />
                         My Profile
                       </button>
                       <button
@@ -264,7 +259,7 @@ export const Header: React.FC = () => {
                           logout();
                           setIsDropdownOpen(false);
                         }}
-                        className="w-full text-left px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/10 rounded-xl flex items-center gap-2 transition cursor-pointer"
+                        className="w-full text-left px-3.5 py-2.5 text-xs font-semibold text-rose-600 hover:bg-rose-50 rounded-full flex items-center gap-2.5 transition cursor-pointer"
                       >
                         <LogOut className="w-4 h-4" />
                         Log Out
@@ -275,11 +270,13 @@ export const Header: React.FC = () => {
               </AnimatePresence>
             </div>
           ) : (
+            /* Luminous Yellow Header Accent Button */
             <button
               onClick={() => setActiveView('auth')}
-              className="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl shadow cursor-pointer transition"
+              className="bg-[#FEF08A] hover:bg-[#FDE047] text-slate-900 font-bold text-xs px-5 py-2.5 rounded-full border border-yellow-300 shadow-sm transition cursor-pointer flex items-center gap-1.5"
             >
-              Sign In
+              <Sparkles className="w-3.5 h-3.5 text-slate-900" />
+              Get Started
             </button>
           )}
         </div>

@@ -4,110 +4,110 @@ import { User, CreditCard, Calendar, Mail, MapPin, Globe, Building } from 'lucid
 
 export const PrivateInfoTab: React.FC<{ employee: Employee }> = ({ employee }) => {
   return (
-    <div className="space-y-6 text-slate-300 font-sans">
+    <div className="space-y-6 text-slate-800 font-sans">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Personal Details Section */}
-        <div className="bg-[#1E293B]/60 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <h4 className="font-bold text-sm text-white uppercase tracking-wider border-b border-slate-800 pb-3 flex items-center gap-2">
-            <User className="w-4 h-4 text-blue-400" />
+        <div className="bg-white border border-slate-200/80 p-6 rounded-[28px] space-y-4 shadow-floating">
+          <h4 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2 font-heading">
+            <User className="w-4 h-4 text-slate-700" />
             Personal Details
           </h4>
 
           <div className="space-y-3 text-xs">
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">Date of Birth:</span>
-              <span className="font-semibold text-white font-mono">{employee.dob}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">Date of Birth:</span>
+              <span className="font-semibold text-slate-900 font-mono">{employee.dob}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">Gender:</span>
-              <span className="font-semibold text-white">{employee.gender}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">Gender:</span>
+              <span className="font-semibold text-slate-900">{employee.gender}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">Marital Status:</span>
-              <span className="font-semibold text-white">{employee.maritalStatus}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">Marital Status:</span>
+              <span className="font-semibold text-slate-900">{employee.maritalStatus}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium flex items-center gap-1">
-                <Globe className="w-3 h-3 text-slate-500" />
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <Globe className="w-3.5 h-3.5 text-slate-400" />
                 Nationality:
               </span>
-              <span className="font-semibold text-white">{employee.nationality}</span>
+              <span className="font-semibold text-slate-900">{employee.nationality}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium flex items-center gap-1">
-                <Mail className="w-3 h-3 text-slate-500" />
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <Mail className="w-3.5 h-3.5 text-slate-400" />
                 Personal Email:
               </span>
-              <span className="font-semibold text-blue-400 truncate max-w-[200px]">
+              <span className="font-semibold text-slate-900 truncate max-w-[200px]">
                 {employee.personalEmail}
               </span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-slate-500" />
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <Calendar className="w-3.5 h-3.5 text-slate-400" />
                 Date of Joining:
               </span>
-              <span className="font-semibold text-white font-mono">{employee.dateOfJoining}</span>
+              <span className="font-semibold text-slate-900 font-mono">{employee.dateOfJoining}</span>
             </div>
 
             <div className="pt-2">
-              <span className="text-slate-400 font-medium block mb-1 flex items-center gap-1">
-                <MapPin className="w-3 h-3 text-slate-500" />
+              <span className="text-slate-500 font-bold block mb-1 flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 Residing Address:
               </span>
-              <p className="text-slate-300 bg-[#111827] p-2.5 rounded-xl border border-slate-800 leading-normal">
+              <p className="text-slate-700 bg-slate-50 p-3 rounded-2xl border border-slate-200/70 leading-relaxed font-medium">
                 {employee.address}
               </p>
             </div>
           </div>
         </div>
 
-        {/* Bank & Identification Details */}
-        <div className="bg-[#1E293B]/60 border border-slate-800 p-6 rounded-2xl space-y-4">
-          <h4 className="font-bold text-sm text-white uppercase tracking-wider border-b border-slate-800 pb-3 flex items-center gap-2">
-            <CreditCard className="w-4 h-4 text-emerald-400" />
+        {/* Bank & Identity Details */}
+        <div className="bg-white border border-slate-200/80 p-6 rounded-[28px] space-y-4 shadow-floating">
+          <h4 className="font-extrabold text-sm text-slate-900 uppercase tracking-wider border-b border-slate-100 pb-3 flex items-center gap-2 font-heading">
+            <CreditCard className="w-4 h-4 text-emerald-600" />
             Bank & Identity Information
           </h4>
 
           <div className="space-y-3 text-xs">
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium flex items-center gap-1">
-                <Building className="w-3 h-3 text-slate-500" />
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold flex items-center gap-1">
+                <Building className="w-3.5 h-3.5 text-slate-400" />
                 Bank Name:
               </span>
-              <span className="font-semibold text-white">{employee.bankName}</span>
+              <span className="font-semibold text-slate-900">{employee.bankName}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">Account Number:</span>
-              <span className="font-mono font-semibold text-emerald-400">
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">Account Number:</span>
+              <span className="font-mono font-extrabold text-emerald-700">
                 {employee.accountNumber}
               </span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">IFSC Code:</span>
-              <span className="font-mono font-semibold text-white">{employee.ifscCode}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">IFSC Code:</span>
+              <span className="font-mono font-semibold text-slate-900">{employee.ifscCode}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">PAN Card No:</span>
-              <span className="font-mono font-semibold text-white">{employee.panNo}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">PAN Card No:</span>
+              <span className="font-mono font-semibold text-slate-900">{employee.panNo}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">UAN Number:</span>
-              <span className="font-mono font-semibold text-white">{employee.uanNo}</span>
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">UAN Number:</span>
+              <span className="font-mono font-semibold text-slate-900">{employee.uanNo}</span>
             </div>
 
-            <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400 font-medium">Employee Code:</span>
-              <span className="font-mono font-semibold text-blue-400 bg-blue-950/50 px-2 py-0.5 rounded border border-blue-500/20">
+            <div className="flex justify-between py-2 border-b border-slate-100">
+              <span className="text-slate-500 font-bold">Employee Code:</span>
+              <span className="font-mono font-bold text-slate-900 bg-[#FEF08A] px-2.5 py-0.5 rounded-full border border-yellow-300 shadow-xs">
                 {employee.employeeCode}
               </span>
             </div>
