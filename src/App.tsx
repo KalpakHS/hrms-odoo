@@ -13,7 +13,7 @@ import { EmployeeProfileModal } from './components/profile/EmployeeProfileModal'
 
 function AppContent() {
   const [showIntro, setShowIntro] = useState(true);
-  const { activeView } = useProjectContext();
+  const { activeView, setActiveView, setAuthMode } = useProjectContext();
 
   if (showIntro) {
     return (
@@ -25,7 +25,19 @@ function AppContent() {
 
   // Preserve team member's landing page when activeView is 'home'
   if (activeView === 'home') {
-    return <Home key="home" />;
+    return (
+      <Home
+        key="home"
+        onSignIn={() => {
+          setActiveView('auth');
+          setAuthMode('signin');
+        }}
+        onGetStarted={() => {
+          setActiveView('auth');
+          setAuthMode('signup');
+        }}
+      />
+    );
   }
 
   // Auth pages view
