@@ -88,7 +88,7 @@ export const Header: React.FC = () => {
           </button>
 
           {/* Navigation Links: Pill-Shaped Container */}
-          <nav className="hidden md:flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/70">
+          <nav className="flex items-center gap-1 sm:gap-1.5 bg-slate-100/80 p-1 sm:p-1.5 rounded-full border border-slate-200/70 overflow-x-auto">
             <button
               onClick={() => setActiveView('home')}
               className={`px-4 py-1.5 text-xs font-bold rounded-full transition ${
