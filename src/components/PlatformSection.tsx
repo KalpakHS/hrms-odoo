@@ -166,8 +166,8 @@ export const PlatformSection: React.FC = () => {
 
       {/* Subtle background mesh blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[110px] opacity-[0.06] animate-mesh-1" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.05] animate-mesh-2" />
+        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[110px] opacity-[0.06]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.05]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">

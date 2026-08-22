@@ -62,8 +62,8 @@ export const WorkflowSection: React.FC = () => {
 
       {/* Subtle background mesh blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.05] animate-mesh-3" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.05] animate-mesh-4" />
+        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.05]" />
+        <div className="absolute bottom-[10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.05]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
