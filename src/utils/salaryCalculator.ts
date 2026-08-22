@@ -2,30 +2,32 @@ import type { SalaryBreakdown } from '../types/hrms';
 
 /**
  * Live Salary Calculator Utility
- * Recalculates all salary components based on Monthly Wage according to specification rules:
+ * Recalculates all salary components based on Monthly Wage according to exact specification rules:
+ * - Yearly Wage = Monthly Wage * 12
  * - Basic Salary = 50% of Monthly Wage
  * - HRA = 50% of Basic Salary
+ * - Performance Bonus = 8.33% of Basic Salary
+ * - Leave Travel Allowance (LTA) = 8.33% of Basic Salary
  * - Standard Allowance = 8.33% of Monthly Wage
- * - Performance Bonus = 4.17% of Monthly Wage
- * - LTA = 4.17% of Monthly Wage
  * - Fixed Allowance = Monthly Wage - (Basic + HRA + Standard + Bonus + LTA)
- * - Employee PF = 12% of Basic
- * - Employer PF = 12% of Basic
+ * - Employee PF = 12% of Basic Salary
+ * - Employer PF = 12% of Basic Salary
  * - Professional Tax = ₹200
  */
 export function calculateSalary(monthlyWage: number): SalaryBreakdown {
   const wage = Math.max(0, monthlyWage || 0);
   const yearlyWage = wage * 12;
-  
-  const basicSalary = wage * 0.50;
-  const hra = basicSalary * 0.50; // 50% of Basic
-  const standardAllowance = Math.round(wage * 0.0833 * 100) / 100;
-  const performanceBonus = Math.round(wage * 0.0417 * 100) / 100;
-  const lta = Math.round(wage * 0.0417 * 100) / 100;
-  
+
+  const basicSalary = Math.round(wage * 0.50 * 100) / 100;
+  const hra = Math.round(basicSalary * 0.50 * 100) / 100; // 50% of Basic
+
+  const performanceBonus = Math.round(basicSalary * 0.0833 * 100) / 100; // 8.33% of Basic
+  const lta = Math.round(basicSalary * 0.0833 * 100) / 100;              // 8.33% of Basic
+  const standardAllowance = Math.round(wage * 0.0833 * 100) / 100;     // 8.33% of Wage
+
   const sumOtherComponents = basicSalary + hra + standardAllowance + performanceBonus + lta;
   const fixedAllowance = Math.max(0, Math.round((wage - sumOtherComponents) * 100) / 100);
-  
+
   const employeePf = Math.round(basicSalary * 0.12 * 100) / 100;
   const employerPf = Math.round(basicSalary * 0.12 * 100) / 100;
   const professionalTax = 200;
@@ -43,11 +45,11 @@ export function calculateSalary(monthlyWage: number): SalaryBreakdown {
     hra,
     hraPercentOfBasic: 50.00,
     standardAllowance,
-    standardAllowancePercent: 8.33,
+    standardAllowancePercent: getPercent(standardAllowance, wage),
     performanceBonus,
-    performanceBonusPercent: 4.17,
+    performanceBonusPercent: getPercent(performanceBonus, basicSalary),
     lta,
-    ltaPercent: 4.17,
+    ltaPercent: getPercent(lta, basicSalary),
     fixedAllowance,
     fixedAllowancePercent: getPercent(fixedAllowance, wage),
     employeePf,
@@ -59,9 +61,9 @@ export function calculateSalary(monthlyWage: number): SalaryBreakdown {
 }
 
 /**
- * Generate automatic Login ID matching wireframe format:
- * OI + JODO + 2022 + 0001
- * [Comp 2 chars] + [First 2 of First & Last name] + [Year] + [Serial 4 digits]
+ * Generate automatic Login ID matching exact spec:
+ * [CompanyInitials][First2First+First2Last][Year][4DigitSerial]
+ * Example: Odoo India + John Doe + 2022 + 0001 -> OIJODO20220001
  */
 export function generateLoginId(
   companyName: string,

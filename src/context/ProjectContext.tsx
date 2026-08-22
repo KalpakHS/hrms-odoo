@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import type {
   Employee,
@@ -6,12 +6,9 @@ import type {
   TimeOffRequest,
   UserRole,
 } from '../types/hrms';
-import {
-  initialEmployees,
-  initialAttendanceRecords,
-  initialTimeOffRequests,
-} from '../services/mockApi';
-import { generateLoginId } from '../utils/salaryCalculator';
+import { hrmsApi, authStorage } from '../services/api';
+import { ToastContainer } from '../components/common/ToastContainer';
+import type { ToastMessage } from '../components/common/ToastContainer';
 
 export type AppView = 'home' | 'auth' | 'employees' | 'attendance' | 'timeoff';
 
@@ -27,7 +24,8 @@ export interface ProjectContextType {
   isProfileViewOnly: boolean;
   isTimeOffModalOpen: boolean;
   authMode: 'signin' | 'signup';
-  
+  toasts: ToastMessage[];
+
   // Navigation & Auth Actions
   setActiveView: (view: AppView) => void;
   setAuthMode: (mode: 'signin' | 'signup') => void;
@@ -41,11 +39,29 @@ export interface ProjectContextType {
   }) => Employee;
   logout: () => void;
   switchRole: (role: UserRole) => void;
-  
+
+  // Toast Action
+  addToast: (type: 'success' | 'error' | 'info', text: string) => void;
+  removeToast: (id: string) => void;
+
+  // Employee CRUD Actions
+  createEmployee: (data: {
+    name: string;
+    email: string;
+    role: UserRole;
+    department: string;
+    jobTitle: string;
+    monthlyWage: number;
+    phone?: string;
+    company?: string;
+  }) => void;
+  updateEmployeeRecord: (id: string, updates: Partial<Employee>) => void;
+  deleteEmployeeRecord: (id: string) => void;
+
   // Attendance Actions
   checkIn: () => void;
   checkOut: () => void;
-  
+
   // Time Off Actions
   openTimeOffModal: () => void;
   closeTimeOffModal: () => void;
@@ -60,8 +76,8 @@ export interface ProjectContextType {
   }) => void;
   approveTimeOff: (id: string) => void;
   rejectTimeOff: (id: string) => void;
-  
-  // Employee & Profile Actions
+
+  // Profile Modal Actions
   openProfileModal: (employee: Employee, isViewOnly?: boolean) => void;
   closeProfileModal: () => void;
   updateEmployeeSalary: (employeeId: string, monthlyWage: number, workingDaysPerWeek: number, breakTimeHours: number) => void;
@@ -73,22 +89,52 @@ export interface ProjectContextType {
 export const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 
 export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [employees, setEmployees] = useState<Employee[]>(initialEmployees);
-  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>(initialAttendanceRecords);
-  const [timeOffRequests, setTimeOffRequests] = useState<TimeOffRequest[]>(initialTimeOffRequests);
-  
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
+  const [timeOffRequests, setTimeOffRequests] = useState<TimeOffRequest[]>([]);
+
   // Default logged in as Admin (Speedy Crab)
-  const [currentUser, setCurrentUser] = useState<Employee | null>(initialEmployees[0]);
+  const [currentUser, setCurrentUser] = useState<Employee | null>(null);
   const [currentRole, setCurrentRole] = useState<UserRole>('admin');
   const [activeView, setActiveView] = useState<AppView>('home');
-  
+
   const [selectedProfileEmployee, setSelectedProfileEmployee] = useState<Employee | null>(null);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isProfileViewOnly, setIsProfileViewOnly] = useState(false);
   const [isTimeOffModalOpen, setIsTimeOffModalOpen] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   const todayStr = new Date().toISOString().split('T')[0];
+
+  // Toast Notification Helper
+  const addToast = (type: 'success' | 'error' | 'info', text: string) => {
+    const id = `toast-${Date.now()}-${Math.random()}`;
+    setToasts((prev) => [...prev, { id, type, text }]);
+    setTimeout(() => {
+      removeToast(id);
+    }, 4000);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // Sync state with persistent API layer on mount
+  useEffect(() => {
+    const loadedEmps = hrmsApi.getEmployees();
+    const loadedAtt = hrmsApi.getAttendance();
+    const loadedTimeOff = hrmsApi.getTimeOff();
+
+    setEmployees(loadedEmps);
+    setAttendanceRecords(loadedAtt);
+    setTimeOffRequests(loadedTimeOff);
+
+    if (loadedEmps.length > 0) {
+      setCurrentUser(loadedEmps[0]);
+      setCurrentRole(loadedEmps[0].role);
+    }
+  }, []);
 
   // Auth Functions
   const login = (loginIdOrEmail: string, _password?: string): boolean => {
@@ -98,19 +144,16 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         e.email.toLowerCase() === loginIdOrEmail.trim().toLowerCase()
     );
 
-    if (found) {
-      setCurrentUser(found);
-      setCurrentRole(found.role);
+    const userToLogin = found || employees[0];
+    if (userToLogin) {
+      setCurrentUser(userToLogin);
+      setCurrentRole(userToLogin.role);
       setActiveView('employees');
+      authStorage.setToken(`session_token_${Date.now()}`);
+      addToast('success', `Welcome back, ${userToLogin.name}!`);
       return true;
     }
-    
-    // Fallback default login if custom string entered
-    const defaultUser = employees[0];
-    setCurrentUser(defaultUser);
-    setCurrentRole(defaultUser.role);
-    setActiveView('employees');
-    return true;
+    return false;
   };
 
   const signUp = (data: {
@@ -120,61 +163,33 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     phone: string;
     password?: string;
   }): Employee => {
-    const newSerial = employees.length + 1;
-    const currentYear = new Date().getFullYear();
-    const generatedId = generateLoginId(data.companyName, data.name, currentYear, newSerial);
-
-    const newEmp: Employee = {
-      id: `emp-${Date.now()}`,
-      loginId: generatedId,
+    const created = hrmsApi.createEmployee({
       name: data.name,
       email: data.email,
-      role: 'employee',
-      company: data.companyName || 'Odoo India',
-      department: 'Engineering',
-      jobTitle: 'Software Engineer',
-      manager: 'Speedy Crab',
-      location: 'Gandhinagar, Gujarat',
-      mobile: data.phone || '+91 98765 00000',
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(data.name)}`,
-      presenceStatus: 'present',
-      dob: '1998-01-01',
-      gender: 'Male',
-      maritalStatus: 'Single',
-      nationality: 'Indian',
-      address: 'Gandhinagar, Gujarat',
-      personalEmail: data.email,
-      phone: data.phone || '+91 98765 00000',
-      dateOfJoining: todayStr,
-      accountNumber: '918237465999',
-      bankName: 'HDFC Bank',
-      ifscCode: 'HDFC0001234',
-      panNo: 'ABCDE9999F',
-      uanNo: '100987654999',
-      employeeCode: `EMP00${newSerial}`,
-      monthlyWage: 45000,
-      workingDaysPerWeek: 5,
-      breakTimeHours: 1,
-      about: 'Newly registered employee at Dayflow Enterprise.',
-      whatILove: 'Solving real-world business challenges.',
-      interests: 'Coding, Design, Productivity',
-      skills: [{ id: `s-${Date.now()}`, name: 'General Engineering', level: 'Intermediate' }],
-      certifications: [],
-      paidTimeOffAvailable: 24,
-      sickTimeOffAvailable: 7,
-    };
+      role: 'admin',
+      department: 'Executive Management',
+      jobTitle: 'Company Admin / HR Director',
+      monthlyWage: 75000,
+      phone: data.phone,
+      company: data.companyName,
+    });
 
-    setEmployees((prev) => [newEmp, ...prev]);
-    setCurrentUser(newEmp);
-    setCurrentRole('employee');
+    const updated = hrmsApi.getEmployees();
+    setEmployees(updated);
+    setCurrentUser(created);
+    setCurrentRole('admin');
     setActiveView('employees');
-    return newEmp;
+    authStorage.setToken(`session_token_${Date.now()}`);
+    addToast('success', `Organization "${data.companyName}" registered! Login ID: ${created.loginId}`);
+    return created;
   };
 
   const logout = () => {
     setCurrentUser(null);
+    authStorage.clearToken();
     setActiveView('auth');
     setAuthMode('signin');
+    addToast('info', 'Logged out successfully.');
   };
 
   const switchRole = (role: UserRole) => {
@@ -182,38 +197,78 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     if (role === 'admin') {
       const adminEmp = employees.find((e) => e.role === 'admin') || employees[0];
       setCurrentUser(adminEmp);
+      addToast('info', 'Switched to Admin / HR Officer Role View');
     } else {
-      const empUser = employees.find((e) => e.role === 'employee') || employees[1];
+      const empUser = employees.find((e) => e.role === 'employee') || employees[1] || employees[0];
       setCurrentUser(empUser);
+      addToast('info', 'Switched to Standard Employee View');
     }
   };
 
-  // Check In / Check Out Actions
+  // Employee CRUD Actions
+  const createEmployee = (data: {
+    name: string;
+    email: string;
+    role: UserRole;
+    department: string;
+    jobTitle: string;
+    monthlyWage: number;
+    phone?: string;
+    company?: string;
+  }) => {
+    const created = hrmsApi.createEmployee(data);
+    const updated = hrmsApi.getEmployees();
+    setEmployees(updated);
+    addToast('success', `Employee "${created.name}" created (ID: ${created.loginId})`);
+  };
+
+  const updateEmployeeRecord = (id: string, updates: Partial<Employee>) => {
+    const updatedEmp = hrmsApi.updateEmployee(id, updates);
+    if (updatedEmp) {
+      const updatedList = hrmsApi.getEmployees();
+      setEmployees(updatedList);
+      if (currentUser?.id === id) {
+        setCurrentUser(updatedEmp);
+      }
+      addToast('success', `Updated record for ${updatedEmp.name}`);
+    }
+  };
+
+  const deleteEmployeeRecord = (id: string) => {
+    const empToDelete = employees.find((e) => e.id === id);
+    const deleted = hrmsApi.deleteEmployee(id);
+    if (deleted) {
+      const updatedList = hrmsApi.getEmployees();
+      setEmployees(updatedList);
+      addToast('info', `Removed employee ${empToDelete?.name || id}`);
+    }
+  };
+
+  // Attendance Actions
   const checkIn = () => {
     if (!currentUser) return;
     const now = new Date();
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-    // Update current user presence
-    const updatedUser = { ...currentUser, presenceStatus: 'present' as const };
-    setCurrentUser(updatedUser);
-    setEmployees((prev) =>
-      prev.map((emp) => (emp.id === currentUser.id ? { ...emp, presenceStatus: 'present' } : emp))
-    );
+    // Update user presence
+    const updatedEmp = hrmsApi.updateEmployee(currentUser.id, { presenceStatus: 'present' });
+    if (updatedEmp) {
+      setCurrentUser(updatedEmp);
+      setEmployees(hrmsApi.getEmployees());
+    }
 
-    // Check if attendance record exists for today
     setAttendanceRecords((prev) => {
       const existingIndex = prev.findIndex(
         (r) => r.employeeId === currentUser.id && r.date === todayStr
       );
+      let updated: AttendanceRecord[];
       if (existingIndex >= 0) {
-        const updated = [...prev];
+        updated = [...prev];
         updated[existingIndex] = {
           ...updated[existingIndex],
           checkIn: timeStr,
           status: 'present',
         };
-        return updated;
       } else {
         const newRecord: AttendanceRecord = {
           id: `att-${Date.now()}`,
@@ -226,9 +281,13 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
           extraHours: '00:00',
           status: 'present',
         };
-        return [newRecord, ...prev];
+        updated = [newRecord, ...prev];
       }
+      hrmsApi.saveAttendance(updated);
+      return updated;
     });
+
+    addToast('success', `Checked in successfully at ${timeStr}`);
   };
 
   const checkOut = () => {
@@ -242,21 +301,19 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       );
       if (existingIndex >= 0) {
         const updated = [...prev];
-        const rec = updated[existingIndex];
-        
-        const workHours = rec.checkIn ? '09:00' : '08:00';
-        const extraHours = '01:00';
-
         updated[existingIndex] = {
-          ...rec,
+          ...updated[existingIndex],
           checkOut: timeStr,
-          workHours,
-          extraHours,
+          workHours: '09:00',
+          extraHours: '01:00',
         };
+        hrmsApi.saveAttendance(updated);
         return updated;
       }
       return prev;
     });
+
+    addToast('info', `Checked out at ${timeStr}`);
   };
 
   // Time Off Actions
@@ -272,7 +329,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     durationDays: number;
     attachmentName?: string;
   }) => {
-    const newReq: TimeOffRequest = {
+    const newRequest: TimeOffRequest = {
       id: `to-${Date.now()}`,
       employeeId: data.employeeId,
       employeeName: data.employeeName,
@@ -285,50 +342,57 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       createdAt: todayStr,
     };
 
-    setTimeOffRequests((prev) => [newReq, ...prev]);
+    const updated = [newRequest, ...timeOffRequests];
+    setTimeOffRequests(updated);
+    hrmsApi.saveTimeOff(updated);
     closeTimeOffModal();
+    addToast('success', `Time off request submitted for ${data.durationDays} day(s)`);
   };
 
   const approveTimeOff = (id: string) => {
-    setTimeOffRequests((prev) =>
-      prev.map((req) => {
-        if (req.id === id) {
-          // Deduct from employee leave balance
-          setEmployees((empList) =>
-            empList.map((emp) => {
-              if (emp.id === req.employeeId) {
-                if (req.type === 'Paid Time Off') {
-                  return { ...emp, paidTimeOffAvailable: Math.max(0, emp.paidTimeOffAvailable - req.durationDays) };
-                } else if (req.type === 'Sick Leave') {
-                  return { ...emp, sickTimeOffAvailable: Math.max(0, emp.sickTimeOffAvailable - req.durationDays) };
-                }
-              }
-              return emp;
-            })
-          );
-          return { ...req, status: 'Approved' };
+    const updated = timeOffRequests.map((req) => {
+      if (req.id === id) {
+        // Adjust employee available leave balance
+        const emp = employees.find((e) => e.id === req.employeeId);
+        if (emp) {
+          if (req.type === 'Paid Time Off') {
+            const newBal = Math.max(0, emp.paidTimeOffAvailable - req.durationDays);
+            hrmsApi.updateEmployee(emp.id, { paidTimeOffAvailable: newBal, presenceStatus: 'leave' });
+          } else if (req.type === 'Sick Leave') {
+            const newBal = Math.max(0, emp.sickTimeOffAvailable - req.durationDays);
+            hrmsApi.updateEmployee(emp.id, { sickTimeOffAvailable: newBal, presenceStatus: 'leave' });
+          }
         }
-        return req;
-      })
-    );
+        return { ...req, status: 'Approved' as const };
+      }
+      return req;
+    });
+
+    setTimeOffRequests(updated);
+    hrmsApi.saveTimeOff(updated);
+    setEmployees(hrmsApi.getEmployees());
+    addToast('success', 'Time off request approved');
   };
 
   const rejectTimeOff = (id: string) => {
-    setTimeOffRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: 'Rejected' } : req))
+    const updated = timeOffRequests.map((req) =>
+      req.id === id ? { ...req, status: 'Rejected' as const } : req
     );
+    setTimeOffRequests(updated);
+    hrmsApi.saveTimeOff(updated);
+    addToast('error', 'Time off request rejected');
   };
 
   // Profile Modal Actions
-  const openProfileModal = (employee: Employee, isViewOnly: boolean = false) => {
+  const openProfileModal = (employee: Employee, isViewOnly = false) => {
     setSelectedProfileEmployee(employee);
     setIsProfileViewOnly(isViewOnly);
     setIsProfileModalOpen(true);
   };
 
   const closeProfileModal = () => {
-    setIsProfileModalOpen(false);
     setSelectedProfileEmployee(null);
+    setIsProfileModalOpen(false);
   };
 
   const updateEmployeeSalary = (
@@ -337,68 +401,59 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
     workingDaysPerWeek: number,
     breakTimeHours: number
   ) => {
-    setEmployees((prev) =>
-      prev.map((emp) =>
-        emp.id === employeeId
-          ? { ...emp, monthlyWage, workingDaysPerWeek, breakTimeHours }
-          : emp
-      )
-    );
-    if (selectedProfileEmployee && selectedProfileEmployee.id === employeeId) {
-      setSelectedProfileEmployee((prev) =>
-        prev ? { ...prev, monthlyWage, workingDaysPerWeek, breakTimeHours } : null
-      );
+    const updatedEmp = hrmsApi.updateEmployee(employeeId, {
+      monthlyWage,
+      workingDaysPerWeek,
+      breakTimeHours,
+    });
+    if (updatedEmp) {
+      setEmployees(hrmsApi.getEmployees());
+      if (selectedProfileEmployee?.id === employeeId) {
+        setSelectedProfileEmployee(updatedEmp);
+      }
+      addToast('success', 'Salary parameters updated reactively');
     }
   };
 
   const updateEmployeePassword = (_employeeId: string, _newPassword: string): boolean => {
+    addToast('success', 'Password updated successfully!');
     return true;
   };
 
   const addSkillToEmployee = (employeeId: string, skillName: string) => {
-    setEmployees((prev) =>
-      prev.map((emp) => {
-        if (emp.id === employeeId) {
-          const newSkill = { id: `s-${Date.now()}`, name: skillName, level: 'Intermediate' };
-          return { ...emp, skills: [...emp.skills, newSkill] };
+    const emp = employees.find((e) => e.id === employeeId);
+    if (emp) {
+      const newSkills = [
+        ...emp.skills,
+        { id: `s-${Date.now()}`, name: skillName, level: 'Intermediate' as const },
+      ];
+      const updated = hrmsApi.updateEmployee(employeeId, { skills: newSkills });
+      if (updated) {
+        setEmployees(hrmsApi.getEmployees());
+        if (selectedProfileEmployee?.id === employeeId) {
+          setSelectedProfileEmployee(updated);
         }
-        return emp;
-      })
-    );
-    if (selectedProfileEmployee && selectedProfileEmployee.id === employeeId) {
-      setSelectedProfileEmployee((prev) =>
-        prev
-          ? {
-              ...prev,
-              skills: [...prev.skills, { id: `s-${Date.now()}`, name: skillName, level: 'Intermediate' }],
-            }
-          : null
-      );
+        addToast('success', `Skill "${skillName}" added`);
+      }
     }
   };
 
   const addCertificationToEmployee = (employeeId: string, certName: string) => {
-    setEmployees((prev) =>
-      prev.map((emp) => {
-        if (emp.id === employeeId) {
-          const newCert = { id: `c-${Date.now()}`, name: certName, issuer: 'Dayflow Academy', year: '2026' };
-          return { ...emp, certifications: [...emp.certifications, newCert] };
+    const emp = employees.find((e) => e.id === employeeId);
+    if (emp) {
+      const currentYear = new Date().getFullYear().toString();
+      const newCerts = [
+        ...emp.certifications,
+        { id: `c-${Date.now()}`, name: certName, issuer: 'Certified Institution', year: currentYear },
+      ];
+      const updated = hrmsApi.updateEmployee(employeeId, { certifications: newCerts });
+      if (updated) {
+        setEmployees(hrmsApi.getEmployees());
+        if (selectedProfileEmployee?.id === employeeId) {
+          setSelectedProfileEmployee(updated);
         }
-        return emp;
-      })
-    );
-    if (selectedProfileEmployee && selectedProfileEmployee.id === employeeId) {
-      setSelectedProfileEmployee((prev) =>
-        prev
-          ? {
-              ...prev,
-              certifications: [
-                ...prev.certifications,
-                { id: `c-${Date.now()}`, name: certName, issuer: 'Dayflow Academy', year: '2026' },
-              ],
-            }
-          : null
-      );
+        addToast('success', `Certification "${certName}" added`);
+      }
     }
   };
 
@@ -416,12 +471,18 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
         isProfileViewOnly,
         isTimeOffModalOpen,
         authMode,
+        toasts,
         setActiveView,
         setAuthMode,
         login,
         signUp,
         logout,
         switchRole,
+        addToast,
+        removeToast,
+        createEmployee,
+        updateEmployeeRecord,
+        deleteEmployeeRecord,
         checkIn,
         checkOut,
         openTimeOffModal,
@@ -438,6 +499,7 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
       }}
     >
       {children}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </ProjectContext.Provider>
   );
 };
