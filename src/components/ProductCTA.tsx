@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 
 export const ProductCTA: React.FC = () => {
   return (
-    <section className="py-24 bg-[#FAF8F5] relative overflow-hidden">
+    <section className="py-24 bg-[#FFFDF2] relative overflow-hidden">
       {/* Top separator line */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
@@ -16,19 +16,19 @@ export const ProductCTA: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-50px' }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="bg-gradient-to-br from-[#0F1F4B] to-[#0A071E] border border-blue-950 rounded-3xl p-8 sm:p-12 md:p-16 text-center text-white relative overflow-hidden shadow-2xl"
+          className="bg-gradient-to-br from-[#182018] to-[#0A0D0A] border border-emerald-950 rounded-3xl p-8 sm:p-12 md:p-16 text-center text-white relative overflow-hidden shadow-2xl"
         >
           {/* Inner Grid Pattern overlay */}
           <div className="absolute inset-0 dark-grid-pattern opacity-10 pointer-events-none" />
 
           {/* Decorative radial glows */}
-          <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#3B82F6]/15 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -top-24 -left-24 w-80 h-80 bg-violet-650/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#63B64F]/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -top-24 -left-24 w-80 h-80 bg-[#A8DFA0]/10 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-6">
             
             {/* Tag label */}
-            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#3B82F6] block mb-1 font-mono">
+            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#63B64F] block mb-1 font-mono">
               Aligned HR Operations
             </span>
 
@@ -44,7 +44,7 @@ export const ProductCTA: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-              <button className="bg-gradient-to-r from-[#3B82F6] to-[#7C3AED] hover:from-[#2563EB] hover:to-[#6D28D9] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#3B82F6]/50">
+              <button className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#63B64F]">
                 Get Started
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
