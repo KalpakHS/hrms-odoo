@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { 
   Users, 
@@ -6,226 +6,262 @@ import {
   Calendar, 
   GitPullRequest, 
   Coins, 
-  Check, 
-  X, 
-  FileText
+  FileText, 
+  Download
 } from 'lucide-react';
 
-export const PlatformSection: React.FC = () => {
-  const features = [
-    {
-      id: 1,
-      title: 'Employee Management',
-      desc: 'Employee profiles, job details, documents and essential information.',
-      icon: Users,
-      iconColor: 'text-blue-600',
-      iconBg: 'bg-blue-50',
-      preview: (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 w-full flex flex-col gap-2 mt-4 text-left select-none">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center font-bold text-[9px] text-blue-700">CO</div>
-            <div>
-              <div className="text-[10px] font-black text-slate-800 leading-none">Clara Oswald</div>
-              <span className="text-[8px] text-slate-400 font-semibold leading-none mt-0.5 block">Senior Product PM</span>
-            </div>
-          </div>
-          <div className="flex items-center justify-between text-[8px] font-semibold bg-white p-1.5 rounded border border-slate-100">
-            <span className="text-slate-650 truncate max-w-[110px]">employment_contract.pdf</span>
-            <FileText className="w-3 h-3 text-blue-600 flex-shrink-0" />
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 2,
-      title: 'Attendance',
-      desc: 'Daily and weekly attendance with check-in and check-out.',
-      icon: Clock,
-      iconColor: 'text-emerald-600',
-      iconBg: 'bg-emerald-50',
-      preview: (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 w-full flex flex-col gap-2.5 mt-4 text-left select-none">
-          <div className="flex justify-between items-center text-[9px] font-bold text-slate-400 uppercase tracking-wider">
-            <span>Shift Attendance</span>
-            <span className="text-emerald-600 font-mono">Present</span>
-          </div>
-          <div className="flex items-center justify-between gap-1.5 pt-1">
-            {['M', 'T', 'W', 'T', 'F'].map((day, idx) => (
-              <div key={idx} className="flex-1 flex flex-col items-center gap-1.5">
-                <span className="text-[8px] text-slate-450 font-bold font-mono">{day}</span>
-                <span className={`w-3.5 h-3.5 rounded-full flex items-center justify-center text-white text-[7px] ${
-                  idx === 3 ? 'bg-amber-400' : 'bg-emerald-500'
-                }`}>
-                  <Check className="w-2.5 h-2.5" />
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 3,
-      title: 'Leave & Time-Off',
-      desc: 'Employees can request leave while HR reviews and approves or rejects requests.',
-      icon: Calendar,
-      iconColor: 'text-indigo-600',
-      iconBg: 'bg-indigo-50',
-      preview: (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 w-full flex flex-col gap-2 mt-4 text-left select-none">
-          <div className="flex items-center justify-between text-[9px] font-extrabold text-slate-500 uppercase tracking-wider pb-1.5 border-b border-slate-150">
-            <span>Paid Leave</span>
-            <span className="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-100/50">Approved</span>
-          </div>
-          <div className="text-[9px] font-semibold text-slate-700 leading-tight mt-1">
-            <div><span className="text-slate-450 font-medium">Dates:</span> Aug 25 - Aug 27</div>
-            <div className="mt-0.5"><span className="text-slate-450 font-medium">Reason:</span> Personal work</div>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 4,
-      title: 'Approval Workflows',
-      desc: 'Connect employee requests with HR/Admin approval.',
-      icon: GitPullRequest,
-      iconColor: 'text-violet-600',
-      iconBg: 'bg-violet-50',
-      preview: (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 w-full flex flex-col gap-2 mt-4 text-left select-none">
-          <div className="flex justify-between items-center text-[9px] font-extrabold text-slate-500 uppercase tracking-wider mb-0.5">
-            <span>Review Request</span>
-            <span className="text-amber-600 font-mono text-[9px] animate-pulse font-bold">Pending HR</span>
-          </div>
-          <div className="flex gap-2">
-            <button className="flex-1 bg-emerald-600 text-white text-[8px] font-bold uppercase tracking-wider py-1.5 px-2.5 rounded hover:bg-emerald-700 transition-colors flex items-center justify-center gap-0.5 cursor-pointer">
-              <Check className="w-2.5 h-2.5" /> Approve
-            </button>
-            <button className="flex-1 bg-white border border-rose-350 text-rose-600 text-[8px] font-bold uppercase tracking-wider py-1.5 px-2.5 rounded hover:bg-rose-50 transition-colors flex items-center justify-center gap-0.5 cursor-pointer">
-              <X className="w-2.5 h-2.5" /> Reject
-            </button>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 5,
-      title: 'Payroll Visibility',
-      desc: 'Employee payroll visibility and HR salary structure management.',
-      icon: Coins,
-      iconColor: 'text-amber-650',
-      iconBg: 'bg-amber-50',
-      preview: (
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 w-full flex flex-col gap-1.5 mt-4 text-left select-none font-semibold text-[9px]">
-          <div className="flex justify-between text-slate-500 border-b border-slate-150 pb-1.5 mb-1.5">
-            <span>Basic Base Salary</span>
-            <span className="font-mono text-slate-800">$6,500.00</span>
-          </div>
-          <div className="flex justify-between text-slate-400 font-medium">
-            <span>Housing Allowance</span>
-            <span className="font-mono text-slate-700">+$800.00</span>
-          </div>
-          <div className="flex justify-between text-rose-500 font-medium">
-            <span>Tax Deductions</span>
-            <span className="font-mono">-$980.00</span>
-          </div>
-          <div className="flex justify-between text-slate-800 font-extrabold border-t border-slate-150 pt-1.5 mt-1">
-            <span>Net Disbursed</span>
-            <span className="font-mono text-emerald-600">$6,345.00</span>
-          </div>
-        </div>
-      )
-    }
-  ];
+// Custom Interactive Tilt & Glow Card Component
+const FeatureCard: React.FC<{
+  index: number;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}> = ({ index, icon, title, description, children }) => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+  const [rect, setRect] = useState<DOMRect | null>(null);
 
-  const containerVariants: Variants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.08,
-      },
-    },
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const currentRect = e.currentTarget.getBoundingClientRect();
+    setRect(currentRect);
+    setMousePos({
+      x: e.clientX - currentRect.left,
+      y: e.clientY - currentRect.top
+    });
   };
 
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+  // Stagger reveal variants
+  const cardVariants: Variants = {
+    hidden: { opacity: 0, y: 40, scale: 0.96 },
     visible: {
       opacity: 1,
       y: 0,
+      scale: 1,
       transition: {
-        duration: 0.6,
-        ease: [0.16, 1, 0.3, 1] as const,
-      },
-    },
+        duration: 0.7,
+        delay: index * 0.1,
+        ease: [0.16, 1, 0.3, 1] as const
+      }
+    }
   };
 
+  // Calculate rotation angles for 3D tilt
+  const rotateX = isHovered && rect ? ((mousePos.y - rect.height / 2) / (rect.height / 2)) * -3.5 : 0;
+  const rotateY = isHovered && rect ? ((mousePos.x - rect.width / 2) / (rect.width / 2)) * 3.5 : 0;
+
+  return (
+    <motion.div
+      variants={cardVariants}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: '-60px' }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        transform: isHovered 
+          ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)` 
+          : 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)',
+        transition: isHovered ? 'none' : 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
+      className={`relative bg-white border rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-sm transition-shadow duration-300 ${
+        isHovered ? 'shadow-lg border-slate-300' : 'border-slate-200/80'
+      }`}
+    >
+      {/* Background Hover Radial Glow */}
+      {isHovered && (
+        <div 
+          className="absolute inset-0 pointer-events-none transition-opacity duration-300"
+          style={{
+            background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(124, 58, 237, 0.08), transparent 80%)`
+          }}
+        />
+      )}
+
+      <div>
+        {/* Header Icon & Title */}
+        <div className="flex items-start justify-between mb-4">
+          <div className={`p-3 rounded-xl transition-all duration-300 ${
+            isHovered ? 'bg-[#0F1F4B] text-white shadow-md' : 'bg-slate-50 text-slate-650'
+          }`}>
+            {icon}
+          </div>
+          <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#2563EB]/80 font-mono">
+            Platform Unit
+          </span>
+        </div>
+
+        <h3 className="text-xl font-black text-[#0F172A] tracking-tight mb-2">
+          {title}
+        </h3>
+        <p className="text-xs sm:text-sm text-slate-500 font-semibold leading-relaxed mb-6">
+          {description}
+        </p>
+      </div>
+
+      {/* Unique Mini UI Preview Render Container */}
+      <div className="bg-slate-50/50 border border-slate-200/50 rounded-xl p-4 text-left font-sans shadow-2xs select-none">
+        {children}
+      </div>
+    </motion.div>
+  );
+};
+
+export const PlatformSection: React.FC = () => {
   return (
     <section id="features" className="py-24 bg-[#F8FAFC] relative overflow-hidden">
-      {/* Top separator line */}
+      {/* Top boundary separator */}
       <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
 
-      {/* Subtle background mesh blobs */}
+      {/* Static mesh grid decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[110px] opacity-[0.06]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.05]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#6D28D9] rounded-full filter blur-[120px] opacity-[0.05]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.04]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3 font-mono">
+          <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3 font-mono">
             Platform Operations
           </span>
-          <h2 className="text-3xl sm:text-4.5xl font-black text-[#0F172A] tracking-tight leading-tight">
+          <h2 className="text-3.5xl sm:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
             Everything you need to manage HR
           </h2>
-          <p className="mt-4 text-sm sm:text-base text-[#64748B] font-medium leading-relaxed">
+          <p className="mt-4 text-[18px] text-[#64748B] font-semibold leading-relaxed">
             Powerful features to simplify HR operations and empower your team.
           </p>
         </div>
 
-        {/* Feature Cards Grid */}
-        <motion.div 
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6"
-        >
-          {features.map((feat) => {
-            const Icon = feat.icon;
-            return (
-              <motion.div
-                key={feat.id}
-                variants={itemVariants}
-                className="group bg-white border border-[#E2E8F0] p-6 rounded-xl hover:shadow-lg hover:border-[#2563EB]/35 transition-all duration-300 flex flex-col justify-between"
-              >
-                <div>
-                  {/* Icon Block */}
-                  <div className={`w-9.5 h-9.5 rounded-lg flex items-center justify-center ${feat.iconBg} ${feat.iconColor} mb-4`}>
-                    <Icon className="w-5 h-5" />
+        {/* Feature Grid: 3-column on row 1, 2-column on row 2 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+          
+          {/* Card 1: Employee Management */}
+          <FeatureCard
+            index={0}
+            icon={<Users className="w-5.5 h-5.5" />}
+            title="Employee Management"
+            description="Consolidate staff profiles, files, and contracts inside a secure corporate directory."
+            children={
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-2.5 pb-2.5 border-b border-slate-200/50">
+                  <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center font-bold text-[9px] text-[#2563EB]">
+                    CO
                   </div>
-
-                  {/* Title */}
-                  <h3 className="text-sm font-bold text-[#0F172A] group-hover:text-[#2563EB] transition-colors leading-tight">
-                    {feat.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="mt-2.5 text-xs text-[#64748B] leading-relaxed font-semibold">
-                    {feat.desc}
-                  </p>
+                  <div>
+                    <span className="text-[10px] font-bold text-[#0F172A] block leading-none">Clara Oswald</span>
+                    <span className="text-[8px] text-slate-400 mt-1 block font-semibold leading-none">Senior PM</span>
+                  </div>
                 </div>
-
-                {/* Miniature UI View */}
-                <div className="w-full mt-4">
-                  {feat.preview}
+                <div className="flex items-center justify-between text-[9px] bg-white border border-slate-100 p-2 rounded shadow-3xs">
+                  <div className="flex items-center gap-1.5 overflow-hidden">
+                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+                    <span className="font-bold text-[#0F172A] truncate">contract_signed.pdf</span>
+                  </div>
+                  <Download className="w-3 h-3 text-slate-400" />
                 </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+              </div>
+            }
+          />
+
+          {/* Card 2: Attendance */}
+          <FeatureCard
+            index={1}
+            icon={<Clock className="w-5.5 h-5.5" />}
+            title="Attendance Tracker"
+            description="Track daily shift times, login durations, and check-in milestones in real time."
+            children={
+              <div className="flex flex-col gap-2.5">
+                <div className="flex justify-between items-center text-[10px] font-semibold text-slate-500">
+                  <span>Shift Status</span>
+                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#2563EB] text-[8px] font-black uppercase tracking-wider border border-blue-100">
+                    Present
+                  </span>
+                </div>
+                <div className="bg-white border border-slate-100 p-2.5 rounded shadow-3xs flex items-center justify-between text-[9px] font-mono">
+                  <div className="flex flex-col">
+                    <span className="text-[8px] text-slate-450 font-bold uppercase font-sans">Check-In</span>
+                    <span className="font-bold text-[#0F172A] mt-0.5">09:02:14 AM</span>
+                  </div>
+                  <div className="w-px h-6 bg-slate-100" />
+                  <div className="flex flex-col">
+                    <span className="text-[8px] text-slate-450 font-bold uppercase font-sans">Daily Hours</span>
+                    <span className="font-bold text-[#2563EB] mt-0.5">8.5 Hrs Logged</span>
+                  </div>
+                </div>
+              </div>
+            }
+          />
+
+          {/* Card 3: Leave & Time-Off */}
+          <FeatureCard
+            index={2}
+            icon={<Calendar className="w-5.5 h-5.5" />}
+            title="Leave & Time-Off"
+            description="Manage annual leave and medical leaves with integrated manager approval paths."
+            children={
+              <div className="flex flex-col gap-2.5">
+                <div className="flex justify-between items-center text-[10px] font-semibold">
+                  <span className="font-bold text-[#0F172A]">Annual Paid Leave</span>
+                  <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase tracking-wider border border-indigo-100">
+                    Approved
+                  </span>
+                </div>
+                <div className="bg-white border border-slate-100 p-2.5 rounded shadow-3xs text-[9px]">
+                  <div className="font-bold text-[#0F172A]">Aug 25 - Aug 27</div>
+                  <div className="text-slate-400 mt-1 font-semibold leading-none">Employee: Sarah Vance · 3 Days</div>
+                </div>
+              </div>
+            }
+          />
+
+          {/* Card 4: Approval Workflows */}
+          <FeatureCard
+            index={3}
+            icon={<GitPullRequest className="w-5.5 h-5.5" />}
+            title="Approval Workflows"
+            description="Route employee request notifications directly to managers for quick sign-offs."
+            children={
+              <div className="flex items-center justify-between text-[9px] bg-white border border-slate-200/50 p-2.5 rounded shadow-3xs">
+                <div>
+                  <span className="font-bold text-[#0F172A] block leading-none">Sick Leave Request</span>
+                  <span className="text-[8px] text-slate-400 font-semibold block mt-1 leading-none font-mono">ID: WF-9284</span>
+                </div>
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer border border-[#2563EB]">
+                    Approve
+                  </button>
+                  <button className="bg-transparent hover:bg-slate-50 text-slate-500 border border-slate-200 text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer">
+                    Reject
+                  </button>
+                </div>
+              </div>
+            }
+          />
+
+          {/* Card 5: Payroll Visibility */}
+          <FeatureCard
+            index={4}
+            icon={<Coins className="w-5.5 h-5.5" />}
+            title="Payroll Visibility"
+            description="Review basic salary scales, standard allowances, and tax withholding summaries."
+            children={
+              <div className="flex flex-col gap-2 font-mono text-[9px] font-semibold text-slate-500">
+                <div className="flex justify-between border-b border-slate-100 pb-1.5">
+                  <span>Basic Pay</span>
+                  <span className="text-[#0F172A] font-bold">$6,500.00</span>
+                </div>
+                <div className="flex justify-between text-[#2563EB] font-bold">
+                  <span>Net Payout</span>
+                  <span>$6,345.00</span>
+                </div>
+              </div>
+            }
+          />
+
+        </div>
 
       </div>
     </section>
