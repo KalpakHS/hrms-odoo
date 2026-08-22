@@ -41,22 +41,17 @@ function AppContent() {
     );
   }
 
-  // Auth pages view
-  if (activeView === 'auth') {
-    return (
-      <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col font-sans">
-        <Header />
-        <AuthPages />
-      </div>
-    );
+  // Unauthenticated / Auth view: Render clean AuthPages WITHOUT global header or navigation tabs
+  if (activeView === 'auth' || !currentUser) {
+    return <AuthPages />;
   }
 
-  // HRMS Application Workspace views (Employees, Attendance, Time Off)
+  // Protected Authenticated Workspace Views (Employees, Attendance, Time Off)
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col font-sans">
       <Header />
       <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-        {/* Workspace Module Bar */}
+        {/* Workspace Module Navigation Bar */}
         <div className="bg-white p-3 rounded-full border border-slate-200/80 shadow-floating flex flex-col sm:flex-row items-center justify-between gap-4 px-6">
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <span className="text-xs font-extrabold text-slate-500 uppercase tracking-wider shrink-0">
@@ -99,14 +94,12 @@ function AppContent() {
             </div>
           </div>
 
-          {currentUser && (
-            <div className="text-xs text-slate-500 font-medium hidden md:flex items-center gap-2">
-              <span>Logged in as:</span>
-              <span className="font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
-                {currentUser.name} ({currentUser.loginId})
-              </span>
-            </div>
-          )}
+          <div className="text-xs text-slate-500 font-medium hidden md:flex items-center gap-2">
+            <span>Logged in as:</span>
+            <span className="font-bold text-slate-900 bg-slate-100 px-3 py-1 rounded-full border border-slate-200">
+              {currentUser.name} ({currentUser.loginId})
+            </span>
+          </div>
         </div>
 
         {activeView === 'employees' && <EmployeeCardsGrid />}
