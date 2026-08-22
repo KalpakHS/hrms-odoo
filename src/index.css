@@ -52,45 +52,87 @@ body {
   text-stroke: 1.5px #2563EB;
 }
 
-/* Premium mesh gradient blob animations */
+/* Premium mesh gradient blob animations - organic morphing border-radius and slow rotation for fluid liquid flow */
 @keyframes meshFloat1 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  33% { transform: translate(8%, -8%) scale(1.08); }
-  66% { transform: translate(-4%, 6%) scale(0.93); }
-  100% { transform: translate(0px, 0px) scale(1); }
+  0% {
+    border-radius: 40% 60% 60% 40% / 40% 60% 40% 60%;
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+  33% {
+    border-radius: 60% 40% 50% 50% / 50% 50% 60% 40%;
+    transform: translate(10%, -6%) rotate(120deg) scale(1.1);
+  }
+  66% {
+    border-radius: 50% 50% 30% 70% / 40% 30% 70% 60%;
+    transform: translate(-5%, 8%) rotate(240deg) scale(0.92);
+  }
+  100% {
+    border-radius: 40% 60% 60% 40% / 40% 60% 40% 60%;
+    transform: translate(0px, 0px) rotate(360deg) scale(1);
+  }
 }
 
 @keyframes meshFloat2 {
-  0% { transform: translate(0px, 0px) scale(1.05); }
-  50% { transform: translate(-10%, 10%) scale(0.92); }
-  100% { transform: translate(0px, 0px) scale(1.05); }
+  0% {
+    border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%;
+    transform: translate(0px, 0px) rotate(0deg) scale(1.05);
+  }
+  50% {
+    border-radius: 30% 70% 70% 30% / 60% 40% 60% 40%;
+    transform: translate(-8%, 10%) rotate(-180deg) scale(0.93);
+  }
+  100% {
+    border-radius: 50% 50% 30% 70% / 50% 60% 40% 50%;
+    transform: translate(0px, 0px) rotate(-360deg) scale(1.05);
+  }
 }
 
 @keyframes meshFloat3 {
-  0% { transform: translate(0px, 0px) scale(0.92); }
-  33% { transform: translate(-6%, -10%) scale(1.06); }
-  66% { transform: translate(10%, 4%) scale(1); }
-  100% { transform: translate(0px, 0px) scale(0.92); }
+  0% {
+    border-radius: 60% 40% 60% 40% / 50% 50% 50% 50%;
+    transform: translate(0px, 0px) rotate(0deg) scale(0.92);
+  }
+  33% {
+    border-radius: 40% 60% 30% 70% / 40% 60% 40% 60%;
+    transform: translate(-6%, -10%) rotate(120deg) scale(1.06);
+  }
+  66% {
+    border-radius: 50% 50% 70% 30% / 60% 40% 60% 40%;
+    transform: translate(10%, 5%) rotate(240deg) scale(1);
+  }
+  100% {
+    border-radius: 60% 40% 60% 40% / 50% 50% 50% 50%;
+    transform: translate(0px, 0px) rotate(360deg) scale(0.92);
+  }
 }
 
 @keyframes meshFloat4 {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(8%, 12%) scale(1.12); }
-  100% { transform: translate(0px, 0px) scale(1); }
+  0% {
+    border-radius: 40% 60% 40% 60% / 40% 40% 60% 60%;
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+  50% {
+    border-radius: 60% 40% 60% 40% / 60% 60% 40% 40%;
+    transform: translate(8%, 12%) rotate(180deg) scale(1.12);
+  }
+  100% {
+    border-radius: 40% 60% 40% 60% / 40% 40% 60% 60%;
+    transform: translate(0px, 0px) rotate(360deg) scale(1);
+  }
 }
 
 .animate-mesh-1 {
-  animation: meshFloat1 28s infinite alternate ease-in-out;
+  animation: meshFloat1 30s infinite linear;
 }
 
 .animate-mesh-2 {
-  animation: meshFloat2 32s infinite alternate ease-in-out;
+  animation: meshFloat2 35s infinite linear;
 }
 
 .animate-mesh-3 {
-  animation: meshFloat3 30s infinite alternate ease-in-out;
+  animation: meshFloat3 32s infinite linear;
 }
 
 .animate-mesh-4 {
-  animation: meshFloat4 36s infinite alternate ease-in-out;
+  animation: meshFloat4 40s infinite linear;
 }
