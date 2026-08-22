@@ -1,6 +1,51 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, type Variants } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
+
+// Custom Typewriter Text Animation Component
+const TypingText: React.FC = () => {
+  const words = ["perfectly aligned.", "automatically synced.", "simply managed."];
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [blink, setBlink] = useState(true);
+  const [reverse, setReverse] = useState(false);
+
+  // Blinking cursor cycle
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setBlink((prev) => !prev);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [blink]);
+
+  // Typing state machine logic
+  useEffect(() => {
+    if (subIndex === words[index].length + 1 && !reverse) {
+      // Pause at the end of word before reversing
+      const timeout = setTimeout(() => setReverse(true), 2200);
+      return () => clearTimeout(timeout);
+    }
+
+    if (subIndex === 0 && reverse) {
+      setReverse(false);
+      setIndex((prev) => (prev + 1) % words.length);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + (reverse ? -1 : 1));
+    }, reverse ? 60 : 120);
+
+    return () => clearTimeout(timeout);
+  }, [subIndex, reverse, index]);
+
+  return (
+    <span className="text-[#163A2B] font-bold">
+      {words[index].substring(0, subIndex)}
+      <span className={`inline-block w-[2.5px] h-[0.9em] ml-1 bg-[#D9A036] align-middle ${blink ? 'opacity-100' : 'opacity-0'}`} />
+    </span>
+  );
+};
 
 export const Hero: React.FC = () => {
   // Staggered heading reveal setup
@@ -152,7 +197,7 @@ export const Hero: React.FC = () => {
           </span>
         </motion.h1>
 
-        {/* Tagline */}
+        {/* Tagline with Typewriter Text Animation */}
         <motion.div
           custom={0.45}
           variants={itemVariants}
@@ -160,7 +205,7 @@ export const Hero: React.FC = () => {
           animate="visible"
           className="text-lg sm:text-2xl md:text-3.5xl font-bold tracking-tight text-[#182018] leading-tight font-sans mt-2"
         >
-          Every workday, <span className="text-[#163A2B]">perfectly aligned.</span>
+          Every workday, <TypingText />
         </motion.div>
 
         {/* Description */}
