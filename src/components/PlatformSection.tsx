@@ -174,14 +174,14 @@ export const PlatformSection: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3">
-            Platform
+          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3 font-mono">
+            Platform Operations
           </span>
           <h2 className="text-3xl sm:text-4.5xl font-black text-[#0F172A] tracking-tight leading-tight">
-            Everything HR. One platform.
+            Everything you need to manage HR
           </h2>
           <p className="mt-4 text-sm sm:text-base text-[#64748B] font-medium leading-relaxed">
-            Core HR operations connected through one streamlined workspace.
+            Powerful features to simplify HR operations and empower your team.
           </p>
         </div>
 

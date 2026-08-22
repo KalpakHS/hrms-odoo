@@ -1,172 +1,188 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowRight, CheckCircle } from 'lucide-react';
+import React from 'react';
+import { motion, type Variants } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 
 export const Hero: React.FC = () => {
-  // Typewriter text state variables
-  const [text1, setText1] = useState("");
-  const [text2, setText2] = useState("");
-  const [isDone1, setIsDone1] = useState(false);
-  const [isDone2, setIsDone2] = useState(false);
+  // Staggered heading reveal setup
+  const headingLine1 = "HUMAN RESOURCE".split(" ");
+  const headingLine2 = "MANAGEMENT SYSTEM".split(" ");
 
-  useEffect(() => {
-    const fullText1 = "HUMAN RESOURCE";
-    let i = 0;
-    
-    // Type Line 1 character-by-character
-    const timer1 = setInterval(() => {
-      if (i < fullText1.length) {
-        setText1(fullText1.slice(0, i + 1));
-        i++;
-      } else {
-        clearInterval(timer1);
-        setIsDone1(true);
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.15
       }
-    }, 70); // 70ms step speed
+    }
+  };
 
-    return () => clearInterval(timer1);
-  }, []);
+  const wordVariants: Variants = {
+    hidden: { 
+      opacity: 0, 
+      y: 25, 
+      filter: 'blur(5px)', 
+      scale: 0.95,
+      letterSpacing: '-0.02em'
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)', 
+      scale: 1,
+      letterSpacing: '0em',
+      transition: { 
+        duration: 0.75, 
+        ease: [0.16, 1, 0.3, 1] as const 
+      }
+    }
+  };
 
-  useEffect(() => {
-    if (!isDone1) return;
-    const fullText2 = "MANAGEMENT SYSTEM";
-    let i = 0;
-    
-    // Pause before typing Line 2
-    const delay = setTimeout(() => {
-      const timer2 = setInterval(() => {
-        if (i < fullText2.length) {
-          setText2(fullText2.slice(0, i + 1));
-          i++;
-        } else {
-          clearInterval(timer2);
-          setIsDone2(true);
-        }
-      }, 65); // 65ms step speed
-      
-      return () => clearInterval(timer2);
-    }, 200);
-
-    return () => clearTimeout(delay);
-  }, [isDone1]);
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: (delay: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, delay, ease: 'easeOut' as const }
+    })
+  };
 
   return (
-    <section id="home" className="relative min-h-[90vh] flex items-center justify-center pt-40 pb-32 bg-white text-center select-none overflow-hidden border-b border-slate-100/60">
+    <section id="home" className="relative min-h-[95vh] flex flex-col items-center justify-center pt-40 pb-36 text-center select-none overflow-hidden bg-[#0A071E]">
       
       {/* 
         Premium Animated Mesh-Gradient Background
-        Slow-moving blobs: Deep purple, warm orange, magenta, coral/red, and electric blue.
+        Smooth liquid motion with colors: Deep navy, electric violet, magenta, warm orange, bright red.
       */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* White base */}
-        <div className="absolute inset-0 bg-white" />
-        
-        {/* Very subtle light-blue base radial gradient */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(239,246,255,0.8)_0%,rgba(255,255,255,0)_100%)]" />
+        {/* White base gradient layer */}
+        <div className="absolute inset-0 bg-[#0A071E]" />
 
-        {/* Blob 1: Deep Purple */}
-        <div className="absolute top-[-15%] left-[-15%] w-[60vw] h-[60vw] bg-[#6D28D9] rounded-full filter blur-[120px] opacity-[0.14] animate-mesh-1" />
-        {/* Blob 2: Warm Orange */}
-        <div className="absolute bottom-[-15%] right-[-10%] w-[65vw] h-[65vw] bg-[#F97316] rounded-full filter blur-[140px] opacity-[0.12] animate-mesh-2" />
-        {/* Blob 3: Magenta */}
-        <div className="absolute top-[20%] right-[-15%] w-[50vw] h-[50vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.13] animate-mesh-3" />
-        {/* Blob 4: Coral / Red */}
-        <div className="absolute bottom-[10%] left-[-15%] w-[55vw] h-[55vw] bg-[#EF4444] rounded-full filter blur-[130px] opacity-[0.12] animate-mesh-4" />
-        {/* Blob 5: Electric Blue Hint */}
-        <div className="absolute top-[35%] left-[20%] w-[40vw] h-[40vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.1] animate-mesh-1" />
+        {/* Blob 1: Violet/Purple */}
+        <div className="absolute top-[-10%] left-[-10%] w-[55vw] h-[55vw] bg-[#7C3AED] rounded-full filter blur-[120px] opacity-[0.26] animate-mesh-1" />
+        {/* Blob 2: Magenta */}
+        <div className="absolute top-[20%] left-[-15%] w-[45vw] h-[45vw] bg-[#EC4899] rounded-full filter blur-[120px] opacity-[0.24] animate-mesh-3" />
+        {/* Blob 3: Warm Orange */}
+        <div className="absolute bottom-[10%] left-[20%] w-[50vw] h-[50vw] bg-[#F97316] rounded-full filter blur-[130px] opacity-[0.24] animate-mesh-2" />
+        {/* Blob 4: Deep Burgundy/Red */}
+        <div className="absolute bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] bg-[#881337] rounded-full filter blur-[140px] opacity-[0.26] animate-mesh-4" />
+        {/* Blob 5: Bright Orange/Red */}
+        <div className="absolute top-[10%] right-[-10%] w-[45vw] h-[45vw] bg-[#EF4444] rounded-full filter blur-[110px] opacity-[0.2] animate-mesh-1" />
 
-        {/* Extremely subtle blue radial glow overlay behind centered typography */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-5xl aspect-square bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.06)_0%,rgba(255,255,255,0)_70%)] pointer-events-none z-0" />
+        {/* Subtle dark/transparent vignette overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#0A071E]/30" />
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-9">
+      <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-8">
         
-        {/* 
-          HRMS-ODOO Eyebrow Badge.
-          Fade-in + slight scale.
-        */}
+        {/* Rounded Glass Badge */}
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="inline-flex items-center gap-2 px-3 py-1 bg-white/80 backdrop-blur-xs border border-blue-100/70 rounded-full shadow-2xs text-[10px] font-extrabold uppercase tracking-widest text-[#2563EB]"
+          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 backdrop-blur-md border border-white/15 rounded-full shadow-lg text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/90"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB] animate-pulse" />
-          HRMS-ODOO Platform
+          <span className="w-1.5 h-1.5 rounded-full bg-[#EC4899] animate-pulse" />
+          • HRMS • ODOO PLATFORM
         </motion.div>
 
         {/* 
-          Main HRMS Heading - significantly larger and bolder.
-          Types character-by-character with a blinking cursor at the typing edge.
+          Main Heading (Dominant Element).
+          Line 1: White, Line 2: Purple-Pink-Orange Gradient.
         */}
-        <div className="flex flex-col items-center leading-[0.96] font-sans font-black tracking-tighter uppercase w-full">
-          {/* Line 1: HUMAN RESOURCE (Deep Navy) */}
-          <h2 className="text-[#0F1F4B] text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] min-h-[1.1em] flex items-center justify-center">
-            {text1}
-            {!isDone1 && (
-              <span className="text-[#2563EB] animate-pulse ml-1 inline-block select-none font-light">|</span>
-            )}
-          </h2>
-          
-          {/* Line 2: MANAGEMENT SYSTEM (Refined Blue Gradient) */}
-          <h2 className="text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] min-h-[1.1em] mt-2.5 sm:mt-4 flex items-center justify-center">
-            <span className="bg-gradient-to-r from-[#2563EB] to-[#3B82F6] bg-clip-text text-transparent">
-              {text2}
-            </span>
-            {isDone1 && (
-              <span className="text-[#2563EB] animate-pulse ml-1 inline-block select-none font-light">|</span>
-            )}
-          </h2>
-        </div>
-
-        {/* Tagline message centered directly below heading, animated after typing finishes */}
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={isDone2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="text-2xl sm:text-3.5xl md:text-4.5xl font-extrabold tracking-tight text-[#0F1F4B] leading-tight font-sans mt-1"
+        <motion.h1
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col items-center leading-[0.96] font-sans font-black tracking-tighter uppercase w-full"
         >
-          Every workday, <span className="text-[#2563EB]">perfectly aligned.</span>
+          {/* Line 1: HUMAN RESOURCE */}
+          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 text-white text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl]">
+            {headingLine1.map((word, idx) => (
+              <motion.span key={idx} variants={wordVariants} className="inline-block">
+                {word}
+              </motion.span>
+            ))}
+          </span>
+          
+          {/* Line 2: MANAGEMENT SYSTEM */}
+          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-[#F97316] bg-clip-text text-transparent text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] mt-2.5 sm:mt-4">
+            {headingLine2.map((word, idx) => (
+              <motion.span key={idx} variants={wordVariants} className="inline-block">
+                {word}
+              </motion.span>
+            ))}
+          </span>
+        </motion.h1>
+
+        {/* Tagline */}
+        <motion.div
+          custom={0.45}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="text-xl sm:text-3xl md:text-4.5xl font-extrabold tracking-tight text-white leading-tight font-sans mt-4"
+        >
+          Every workday, <span className="bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-[#F97316] bg-clip-text text-transparent">perfectly aligned.</span>
         </motion.div>
 
-        {/* Clean supporting description, animated after typing finishes */}
+        {/* Description */}
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={isDone2 ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-sm sm:text-base md:text-lg text-[#64748B] leading-relaxed max-w-2xl mt-1 font-semibold"
+          custom={0.6}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mt-2 font-semibold"
         >
           A unified HRMS for managing employees, profiles, attendance, leave, payroll visibility, and HR workflows from one connected platform.
         </motion.p>
 
-        {/* Action buttons, animated after typing finishes */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={isDone2 ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
-          className="flex flex-wrap items-center justify-center gap-4 mt-1"
+        {/* Action Buttons */}
+        <motion.div
+          custom={0.75}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-wrap items-center justify-center gap-4 mt-6"
         >
-          <button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#2563EB]">
+          <button className="bg-gradient-to-r from-[#3B82F6] to-[#7C3AED] hover:from-[#2563EB] hover:to-[#6D28D9] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_25px_rgba(59,130,246,0.35)] transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#3B82F6]/50">
             Get Started
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
-          <button className="bg-transparent hover:bg-slate-50 text-[#0F172A] border border-[#E2E8F0] font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer">
+          <button className="bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-md">
             Explore Platform
           </button>
         </motion.div>
 
-        {/* Static Trust badge indicators */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[10px] font-extrabold uppercase tracking-widest text-[#64748B] font-mono mt-10">
-          <span className="flex items-center gap-1.5"><CheckCircle className="w-3.5 h-3.5 text-[#2563EB]" /> Role-Based Access</span>
-          <span className="text-slate-300">•</span>
-          <span>Employee Management</span>
-          <span className="text-slate-300">•</span>
-          <span>Attendance</span>
-          <span className="text-slate-300">•</span>
-          <span>Leave & Payroll</span>
-        </div>
+        {/* Horizontal Feature Strip */}
+        <motion.div
+          custom={0.85}
+          variants={itemVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 font-mono mt-12"
+        >
+          <span className="flex items-center gap-1.5 text-white/70">✓ ROLE-BASED ACCESS</span>
+          <span className="text-white/20">•</span>
+          <span>EMPLOYEE MANAGEMENT</span>
+          <span className="text-white/20">•</span>
+          <span>ATTENDANCE</span>
+          <span className="text-white/20">•</span>
+          <span>LEAVE & PAYROLL</span>
+        </motion.div>
 
       </div>
+
+      {/* 
+        Soft curved transition dividing the hero from the next section.
+        Curves downward gently, filled with the next section's background (#F8FAFC).
+      */}
+      <div className="absolute bottom-0 inset-x-0 w-full z-10 pointer-events-none">
+        <svg className="w-full h-12 text-[#F8FAFC] fill-current" viewBox="0 0 1440 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,24 Q720,48 1440,24 L1440,48 L0,48 Z" />
+        </svg>
+      </div>
+
     </section>
   );
 };
