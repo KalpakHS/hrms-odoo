@@ -48,48 +48,45 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section id="home" className="relative min-h-[95vh] flex flex-col items-center justify-center pt-40 pb-36 text-center select-none overflow-hidden bg-[#050212]">
+    <section id="home" className="relative min-h-[95vh] flex flex-col items-center justify-center pt-40 pb-36 text-center select-none overflow-hidden bg-[#FFFDF2]">
       
       {/* 
         Premium Animated Fluid Mesh-Gradient Background
-        Oversized, highly saturated color clouds with 3 fluid light trails.
+        Smooth liquid green & cream light motion.
       */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        {/* Base dark canvas */}
-        <div className="absolute inset-0 bg-[#050212]" />
+        {/* Warm cream base */}
+        <div className="absolute inset-0 bg-[#FFFDF2]" />
 
         {/* Ambient Color Blobs Container with Screen blend for luminous additive lighting */}
-        <div className="absolute inset-0 mix-blend-screen opacity-90">
-          {/* Blob 1: Violet/Purple (Left Side) */}
-          <div className="absolute top-[-10%] left-[-20%] w-[75vw] h-[75vw] bg-[#5B21F5] rounded-full filter blur-[160px] opacity-[0.45]" />
+        <div className="absolute inset-0 mix-blend-multiply opacity-[0.85]">
+          {/* Blob 1: Soft Mint/Pale Green (Left Side) */}
+          <div className="absolute top-[-10%] left-[-20%] w-[75vw] h-[75vw] bg-[#A8DFA0] rounded-full filter blur-[150px] opacity-[0.28] animate-mesh-1" />
           
-          {/* Blob 2: Magenta/Pink (Lower Left) */}
-          <div className="absolute bottom-[-15%] left-[-15%] w-[65vw] h-[65vw] bg-[#D946EF] rounded-full filter blur-[150px] opacity-[0.42]" />
+          {/* Blob 2: Stronger Green/Mint (Lower Left) */}
+          <div className="absolute bottom-[-15%] left-[-15%] w-[65vw] h-[65vw] bg-[#63B64F] rounded-full filter blur-[140px] opacity-[0.28] animate-mesh-3" />
           
-          {/* Blob 3: Central Deep Purple + Burgundy Base */}
-          <div className="absolute top-[10%] left-[10%] w-[80vw] h-[80vw] bg-[#21005F] rounded-full filter blur-[180px] opacity-[0.38]" />
+          {/* Blob 3: Lime/Yellow-Green (Right Side) */}
+          <div className="absolute top-[-5%] right-[-20%] w-[75vw] h-[75vw] bg-[#CDEB72] rounded-full filter blur-[150px] opacity-[0.28] animate-mesh-2" />
           
-          {/* Blob 4: Bright Orange (Right Side) */}
-          <div className="absolute top-[-5%] right-[-20%] w-[75vw] h-[75vw] bg-[#FF6A00] rounded-full filter blur-[160px] opacity-[0.42]" />
+          {/* Blob 4: Soft Purple Accent (Lower Right) */}
+          <div className="absolute bottom-[-15%] right-[-15%] w-[65vw] h-[65vw] bg-[#D8CBEA] rounded-full filter blur-[140px] opacity-[0.14] animate-mesh-4" />
           
-          {/* Blob 5: Orange/Red (Lower Right) */}
-          <div className="absolute bottom-[-15%] right-[-15%] w-[65vw] h-[65vw] bg-[#EF4444] rounded-full filter blur-[150px] opacity-[0.45]" />
+          {/* Blob 5: Warm Orange Accent (Center) */}
+          <div className="absolute top-[20%] left-[20%] w-[45vw] h-[45vw] bg-[#F3D3A4] rounded-full filter blur-[120px] opacity-[0.15] animate-mesh-1" />
         </div>
 
-        {/* Luminous Curved Light Streaks / Trails */}
-        <div className="absolute inset-0 mix-blend-plus-lighter opacity-80">
-          {/* Violet/Purple Trail sweeping from left-bottom to center */}
-          <div className="absolute bottom-[-5%] left-[-20%] w-[85vw] h-[25vw] bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent rounded-full filter blur-[110px] opacity-[0.32] rotate-[-25deg]" />
+        {/* Luminous Curved Light Trails / Streaks (Flowing ribbon curves) */}
+        <div className="absolute inset-0 mix-blend-multiply opacity-[0.7]">
+          {/* Fresh Green Trail sweeping bottom-left to bottom-right */}
+          <div className="absolute bottom-[-5%] left-[-20%] w-[85vw] h-[25vw] bg-gradient-to-r from-transparent via-[#63B64F] to-transparent rounded-full filter blur-[100px] opacity-[0.25] rotate-[-15deg] animate-streak-1" />
           
-          {/* Bright Orange Trail sweeping from right to center */}
-          <div className="absolute top-[20%] right-[-20%] w-[80vw] h-[25vw] bg-gradient-to-r from-transparent via-[#FF8A00] to-transparent rounded-full filter blur-[120px] opacity-[0.28] rotate-[20deg]" />
+          {/* Lime Green Trail sweeping right to center */}
+          <div className="absolute top-[25%] right-[-20%] w-[80vw] h-[25vw] bg-gradient-to-r from-transparent via-[#CDEB72] to-transparent rounded-full filter blur-[110px] opacity-[0.22] rotate-[15deg] animate-streak-2" />
           
-          {/* Magenta Trail near the bottom center */}
-          <div className="absolute bottom-[8%] left-[5%] w-[70vw] h-[20vw] bg-gradient-to-r from-transparent via-[#EC4899] to-transparent rounded-full filter blur-[100px] opacity-[0.25] rotate-[-10deg]" />
+          {/* Mint Trail near bottom center */}
+          <div className="absolute bottom-[8%] left-[5%] w-[70vw] h-[20vw] bg-gradient-to-r from-transparent via-[#A8DFA0] to-transparent rounded-full filter blur-[90px] opacity-[0.2] rotate-[-5deg] animate-streak-3" />
         </div>
-
-        {/* Subtle localized dark vignette filter behind main text content for optimal contrast & readability */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl aspect-video bg-[radial-gradient(circle_at_center,rgba(5,2,18,0.35)_0%,rgba(5,2,18,0)_70%)] pointer-events-none z-0" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 md:px-8 relative z-10 flex flex-col items-center gap-8">
@@ -99,15 +96,15 @@ export const Hero: React.FC = () => {
           initial={{ opacity: 0, scale: 0.94 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/5 backdrop-blur-md border border-white/15 rounded-full shadow-lg text-[9px] font-extrabold uppercase tracking-[0.2em] text-white/90"
+          className="inline-flex items-center gap-2 px-4 py-1.5 bg-white/40 backdrop-blur-md border border-[#63B64F]/20 rounded-full shadow-xs text-[9px] font-extrabold uppercase tracking-[0.2em] text-[#63B64F]"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#EC4899] animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#63B64F] animate-pulse" />
           • HRMS • ODOO PLATFORM
         </motion.div>
 
         {/* 
-          Main Heading (Dominant Element).
-          Line 1: White, Line 2: Purple-Pink-Orange Gradient.
+          Main Heading.
+          Line 1: Dark Charcoal, Line 2: Soft Green Gradient.
         */}
         <motion.h1
           variants={containerVariants}
@@ -116,7 +113,7 @@ export const Hero: React.FC = () => {
           className="flex flex-col items-center leading-[0.96] font-sans font-black tracking-tighter uppercase w-full"
         >
           {/* Line 1: HUMAN RESOURCE */}
-          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 text-white text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl]">
+          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 text-[#182018] text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl]">
             {headingLine1.map((word, idx) => (
               <motion.span key={idx} variants={wordVariants} className="inline-block">
                 {word}
@@ -125,7 +122,7 @@ export const Hero: React.FC = () => {
           </span>
           
           {/* Line 2: MANAGEMENT SYSTEM */}
-          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-[#F97316] bg-clip-text text-transparent text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] mt-2.5 sm:mt-4">
+          <span className="flex flex-wrap justify-center gap-x-4 sm:gap-x-6 bg-gradient-to-r from-[#182018] to-[#63B64F] bg-clip-text text-transparent text-5xl sm:text-7xl md:text-8.5xl lg:text-[10xl] mt-2.5 sm:mt-4">
             {headingLine2.map((word, idx) => (
               <motion.span key={idx} variants={wordVariants} className="inline-block">
                 {word}
@@ -140,9 +137,9 @@ export const Hero: React.FC = () => {
           variants={itemVariants}
           initial="hidden"
           animate="visible"
-          className="text-xl sm:text-3xl md:text-4.5xl font-extrabold tracking-tight text-white leading-tight font-sans mt-4"
+          className="text-xl sm:text-3xl md:text-4.5xl font-extrabold tracking-tight text-[#182018] leading-tight font-sans mt-4"
         >
-          Every workday, <span className="bg-gradient-to-r from-[#8B5CF6] via-[#EC4899] to-[#F97316] bg-clip-text text-transparent">perfectly aligned.</span>
+          Every workday, <span className="text-[#63B64F]">perfectly aligned.</span>
         </motion.div>
 
         {/* Description */}
@@ -151,7 +148,7 @@ export const Hero: React.FC = () => {
           variants={itemVariants}
           initial="hidden"
           animate="visible"
-          className="text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-2xl mt-2 font-semibold"
+          className="text-xs sm:text-sm md:text-base text-[#687067] leading-relaxed max-w-2xl mt-2 font-semibold"
         >
           A unified HRMS for managing employees, profiles, attendance, leave, payroll visibility, and HR workflows from one connected platform.
         </motion.p>
@@ -164,11 +161,11 @@ export const Hero: React.FC = () => {
           animate="visible"
           className="flex flex-wrap items-center justify-center gap-4 mt-6"
         >
-          <button className="bg-gradient-to-r from-[#3B82F6] to-[#7C3AED] hover:from-[#2563EB] hover:to-[#6D28D9] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-[0_0_20px_rgba(59,130,246,0.25)] hover:shadow-[0_0_25px_rgba(59,130,246,0.35)] transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#3B82F6]/50">
+          <button className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-205 flex items-center gap-2 group cursor-pointer border border-[#63B64F]">
             Get Started
             <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
-          <button className="bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-md">
+          <button className="bg-transparent hover:bg-[#63B64F]/5 text-[#182018] border border-[#63B64F]/35 font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer">
             Explore Platform
           </button>
         </motion.div>
@@ -179,14 +176,14 @@ export const Hero: React.FC = () => {
           variants={itemVariants}
           initial="hidden"
           animate="visible"
-          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-[9px] font-bold uppercase tracking-[0.25em] text-white/50 font-mono mt-12"
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2.5 text-[9px] font-bold uppercase tracking-[0.25em] text-[#687067]/80 font-mono mt-12"
         >
-          <span className="flex items-center gap-1.5 text-white/70">✓ ROLE-BASED ACCESS</span>
-          <span className="text-white/20">•</span>
+          <span className="flex items-center gap-1.5 text-[#63B64F]">✓ ROLE-BASED ACCESS</span>
+          <span className="text-slate-300">•</span>
           <span>EMPLOYEE MANAGEMENT</span>
-          <span className="text-white/20">•</span>
+          <span className="text-slate-300">•</span>
           <span>ATTENDANCE</span>
-          <span className="text-white/20">•</span>
+          <span className="text-slate-300">•</span>
           <span>LEAVE & PAYROLL</span>
         </motion.div>
 

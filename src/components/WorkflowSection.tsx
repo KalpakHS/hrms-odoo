@@ -89,27 +89,27 @@ export const WorkflowSection: React.FC = () => {
   };
 
   return (
-    <section id="workflow" className="py-24 bg-white relative overflow-hidden">
+    <section id="workflow" className="py-24 bg-[#FFFDF2] relative overflow-hidden">
       {/* Top separator line */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-px bg-[#63B64F]/10" />
 
       {/* Subtle background mesh blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#D946EF] rounded-full filter blur-[120px] opacity-[0.05]" />
-        <div className="absolute bottom-[10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[110px] opacity-[0.05]" />
+        <div className="absolute top-[-10%] left-[-5%] w-[40vw] h-[40vw] bg-[#A8DFA0] rounded-full filter blur-[120px] opacity-[0.08]" />
+        <div className="absolute bottom-[10%] right-[-10%] w-[35vw] h-[35vw] bg-[#CDEB72] rounded-full filter blur-[110px] opacity-[0.08]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-20">
-          <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3 font-mono">
+          <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#63B64F] block mb-3 font-mono">
             Workflow System
           </span>
-          <h2 className="text-3.5xl sm:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
+          <h2 className="text-3.5xl sm:text-5xl font-black text-[#182018] tracking-tight leading-tight">
             HR workflows, connected from request to resolution.
           </h2>
-          <p className="mt-4 text-[18px] text-[#64748B] font-semibold leading-relaxed">
+          <p className="mt-4 text-[18px] text-[#687067] font-semibold leading-relaxed">
             Every module coordinates to ensure automatic records sync and database consistency.
           </p>
         </div>
@@ -124,7 +124,7 @@ export const WorkflowSection: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-100px' }}
-              className="h-full bg-gradient-to-r from-[#2563EB] via-[#7C3AED] to-[#EC4899]"
+              className="h-full bg-gradient-to-r from-[#63B64F] via-[#A8DFA0] to-[#CDEB72]"
             />
           </div>
 
@@ -135,7 +135,7 @@ export const WorkflowSection: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: '-100px' }}
-              className="w-full bg-gradient-to-b from-[#2563EB] via-[#7C3AED] to-[#EC4899]"
+              className="w-full bg-gradient-to-b from-[#63B64F] via-[#A8DFA0] to-[#CDEB72]"
             />
           </div>
 
@@ -156,22 +156,22 @@ export const WorkflowSection: React.FC = () => {
                   {/* Circle Indicator with Icon */}
                   <div className="relative flex-shrink-0">
                     {/* Active highlight glow container */}
-                    <div className="w-16 h-16 rounded-full bg-white border-2 border-[#2563EB]/80 shadow-[0_0_20px_rgba(37,99,235,0.12)] flex items-center justify-center text-[#2563EB] transition-all duration-300 hover:shadow-[0_0_25px_rgba(124,58,237,0.2)]">
+                    <div className="w-16 h-16 rounded-full bg-white border-2 border-[#63B64F]/80 shadow-[0_0_20px_rgba(99,182,79,0.12)] flex items-center justify-center text-[#63B64F] transition-all duration-300 hover:shadow-[0_0_25px_rgba(99,182,79,0.2)]">
                       <IconComponent className="w-6.5 h-6.5" />
                     </div>
 
                     {/* Numeric Badge label */}
-                    <span className="absolute -top-1.5 -right-1.5 bg-[#0F1F4B] text-white text-[8px] font-black tracking-widest px-1.5 py-0.5 rounded-full font-mono">
+                    <span className="absolute -top-1.5 -right-1.5 bg-[#182018] text-white text-[8px] font-black tracking-widest px-1.5 py-0.5 rounded-full font-mono">
                       {step.num}
                     </span>
                   </div>
 
                   {/* Step Description Content */}
                   <div className="flex flex-col md:items-center">
-                    <span className="text-sm font-black text-[#0F172A] tracking-tight uppercase block">
+                    <span className="text-sm font-black text-[#182018] tracking-tight uppercase block">
                       {step.label}
                     </span>
-                    <span className="text-[11px] text-slate-500 font-semibold block mt-1.5 max-w-[170px] leading-normal md:text-center">
+                    <span className="text-[11px] text-[#687067] font-semibold block mt-1.5 max-w-[170px] leading-normal md:text-center">
                       {step.desc}
                     </span>
                   </div>

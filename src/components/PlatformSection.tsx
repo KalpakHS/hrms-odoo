@@ -67,7 +67,7 @@ const FeatureCard: React.FC<{
         transition: isHovered ? 'none' : 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
       }}
       className={`relative border rounded-2xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden shadow-sm transition-all duration-300 ${bgClass} ${
-        isHovered ? 'shadow-md border-slate-300' : ''
+        isHovered ? 'shadow-md border-[#63B64F]/30' : ''
       }`}
     >
       {/* Background Hover Radial Glow */}
@@ -75,7 +75,7 @@ const FeatureCard: React.FC<{
         <div 
           className="absolute inset-0 pointer-events-none transition-opacity duration-300"
           style={{
-            background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(124, 58, 237, 0.08), transparent 80%)`
+            background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(99, 182, 79, 0.08), transparent 80%)`
           }}
         />
       )}
@@ -84,25 +84,25 @@ const FeatureCard: React.FC<{
         {/* Header Icon & Title */}
         <div className="flex items-start justify-between mb-4">
           <div className={`p-3 rounded-xl transition-all duration-300 ${
-            isHovered ? 'bg-[#0F1F4B] text-white shadow-md' : 'bg-slate-50 text-slate-655'
+            isHovered ? 'bg-[#182018] text-[#FFFDF2] shadow-md' : 'bg-white/60 text-[#687067]'
           }`}>
             {icon}
           </div>
-          <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#2563EB]/80 font-mono">
+          <span className="text-[9px] font-extrabold uppercase tracking-widest text-[#63B64F]/80 font-mono">
             Platform Unit
           </span>
         </div>
 
-        <h3 className="text-xl font-black text-[#0F172A] tracking-tight mb-2">
+        <h3 className="text-xl font-black text-[#182018] tracking-tight mb-2">
           {title}
         </h3>
-        <p className="text-xs sm:text-sm text-slate-500 font-semibold leading-relaxed mb-6">
+        <p className="text-xs sm:text-sm text-[#687067] font-semibold leading-relaxed mb-6">
           {description}
         </p>
       </div>
 
       {/* Unique Mini UI Preview Render Container */}
-      <div className="bg-slate-50/50 border border-slate-200/50 rounded-xl p-4 text-left font-sans shadow-2xs select-none">
+      <div className="bg-white/80 border border-slate-200/50 rounded-xl p-4 text-left font-sans shadow-2xs select-none">
         {children}
       </div>
     </motion.div>
@@ -111,32 +111,32 @@ const FeatureCard: React.FC<{
 
 export const PlatformSection: React.FC = () => {
   return (
-    <section id="features" className="py-24 bg-[#F8FAFC] relative overflow-hidden">
+    <section id="features" className="py-24 bg-[#F8F6E8] relative overflow-hidden">
       {/* Top boundary separator */}
-      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+      <div className="absolute top-0 inset-x-0 h-px bg-[#63B64F]/10" />
 
       {/* Static mesh grid decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#3B82F6] rounded-full filter blur-[120px] opacity-[0.05]" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#2563EB] rounded-full filter blur-[130px] opacity-[0.04]" />
+        <div className="absolute top-[-10%] right-[-10%] w-[35vw] h-[35vw] bg-[#A8DFA0] rounded-full filter blur-[120px] opacity-[0.12]" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] bg-[#CDEB72] rounded-full filter blur-[130px] opacity-[0.1]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 md:px-8 relative z-10">
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
-          <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#2563EB] block mb-3 font-mono">
+          <span className="text-[13px] font-bold uppercase tracking-[0.25em] text-[#63B64F] block mb-3 font-mono">
             Platform Operations
           </span>
-          <h2 className="text-3.5xl sm:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
+          <h2 className="text-3.5xl sm:text-5xl font-black text-[#182018] tracking-tight leading-tight">
             Everything you need to manage HR
           </h2>
-          <p className="mt-4 text-[18px] text-[#64748B] font-semibold leading-relaxed">
+          <p className="mt-4 text-[18px] text-[#687067] font-semibold leading-relaxed">
             Powerful features to simplify HR operations and empower your team.
           </p>
         </div>
 
-        {/* Feature Grid: 3-column on row 1, 2-column on row 2 */}
+        {/* Feature Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           
           {/* Card 1: Employee Management */}
@@ -145,24 +145,24 @@ export const PlatformSection: React.FC = () => {
             icon={<Users className="w-5.5 h-5.5" />}
             title="Employee Management"
             description="Consolidate staff profiles, files, and contracts inside a secure corporate directory."
-            bgClass="bg-[#EFF6FF] border-[#BFDBFE]/60 hover:bg-[#EFF6FF]/95"
+            bgClass="bg-white/80 border-[#63B64F]/15 hover:bg-[#DCEFD5]/40"
             children={
               <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-2.5 pb-2.5 border-b border-slate-200/50">
-                  <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center font-bold text-[9px] text-[#2563EB]">
+                  <div className="w-7 h-7 rounded-full bg-[#DCEFD5] flex items-center justify-center font-bold text-[9px] text-[#63B64F]">
                     CO
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-[#0F172A] block leading-none">Clara Oswald</span>
-                    <span className="text-[8px] text-slate-400 mt-1 block font-semibold leading-none">Senior PM</span>
+                    <span className="text-[10px] font-bold text-[#182018] block leading-none">Clara Oswald</span>
+                    <span className="text-[8px] text-[#687067] mt-1 block font-semibold leading-none">Senior PM</span>
                   </div>
                 </div>
                 <div className="flex items-center justify-between text-[9px] bg-white border border-slate-100 p-2 rounded shadow-3xs">
                   <div className="flex items-center gap-1.5 overflow-hidden">
-                    <FileText className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
-                    <span className="font-bold text-[#0F172A] truncate">contract_signed.pdf</span>
+                    <FileText className="w-3.5 h-3.5 text-[#63B64F] flex-shrink-0" />
+                    <span className="font-bold text-[#182018] truncate">contract_signed.pdf</span>
                   </div>
-                  <Download className="w-3 h-3 text-slate-400" />
+                  <Download className="w-3 h-3 text-[#687067]" />
                 </div>
               </div>
             }
@@ -174,24 +174,24 @@ export const PlatformSection: React.FC = () => {
             icon={<Clock className="w-5.5 h-5.5" />}
             title="Attendance Tracker"
             description="Track daily shift times, login durations, and check-in milestones in real time."
-            bgClass="bg-[#EEF2F6] border-[#D1D5DB]/70 hover:bg-[#EEF2F6]/95"
+            bgClass="bg-white/80 border-[#63B64F]/15 hover:bg-[#DCEFD5]/40"
             children={
               <div className="flex flex-col gap-2.5">
-                <div className="flex justify-between items-center text-[10px] font-semibold text-slate-500">
+                <div className="flex justify-between items-center text-[10px] font-semibold text-[#687067]">
                   <span>Shift Status</span>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#2563EB] text-[8px] font-black uppercase tracking-wider border border-blue-100">
+                  <span className="px-2 py-0.5 rounded-full bg-[#DCEFD5] text-[#63B64F] text-[8px] font-black uppercase tracking-wider border border-[#63B64F]/20">
                     Present
                   </span>
                 </div>
                 <div className="bg-white border border-slate-100 p-2.5 rounded shadow-3xs flex items-center justify-between text-[9px] font-mono">
                   <div className="flex flex-col">
-                    <span className="text-[8px] text-slate-450 font-bold uppercase font-sans">Check-In</span>
-                    <span className="font-bold text-[#0F172A] mt-0.5">09:02:14 AM</span>
+                    <span className="text-[8px] text-[#687067] font-bold uppercase font-sans">Check-In</span>
+                    <span className="font-bold text-[#182018] mt-0.5">09:02:14 AM</span>
                   </div>
                   <div className="w-px h-6 bg-slate-100" />
                   <div className="flex flex-col">
-                    <span className="text-[8px] text-slate-450 font-bold uppercase font-sans">Daily Hours</span>
-                    <span className="font-bold text-[#2563EB] mt-0.5">8.5 Hrs Logged</span>
+                    <span className="text-[8px] text-[#687067] font-bold uppercase font-sans">Daily Hours</span>
+                    <span className="font-bold text-[#63B64F] mt-0.5">8.5 Hrs Logged</span>
                   </div>
                 </div>
               </div>
@@ -204,18 +204,18 @@ export const PlatformSection: React.FC = () => {
             icon={<Calendar className="w-5.5 h-5.5" />}
             title="Leave & Time-Off"
             description="Manage annual leave and medical leaves with integrated manager approval paths."
-            bgClass="bg-[#F5F3FF] border-[#DDD6FE]/70 hover:bg-[#F5F3FF]/95"
+            bgClass="bg-white/80 border-[#63B64F]/15 hover:bg-[#DCEFD5]/40"
             children={
               <div className="flex flex-col gap-2.5">
                 <div className="flex justify-between items-center text-[10px] font-semibold">
-                  <span className="font-bold text-[#0F172A]">Annual Paid Leave</span>
-                  <span className="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 text-[8px] font-black uppercase tracking-wider border border-indigo-100">
+                  <span className="font-bold text-[#182018]">Annual Paid Leave</span>
+                  <span className="px-2 py-0.5 rounded-full bg-[#DCEFD5] text-[#63B64F] text-[8px] font-black uppercase tracking-wider border border-[#63B64F]/20">
                     Approved
                   </span>
                 </div>
                 <div className="bg-white border border-slate-100 p-2.5 rounded shadow-3xs text-[9px]">
-                  <div className="font-bold text-[#0F172A]">Aug 25 - Aug 27</div>
-                  <div className="text-slate-400 mt-1 font-semibold leading-none">Employee: Sarah Vance · 3 Days</div>
+                  <div className="font-bold text-[#182018]">Aug 25 - Aug 27</div>
+                  <div className="text-[#687067] mt-1 font-semibold leading-none">Employee: Sarah Vance · 3 Days</div>
                 </div>
               </div>
             }
@@ -227,18 +227,18 @@ export const PlatformSection: React.FC = () => {
             icon={<GitPullRequest className="w-5.5 h-5.5" />}
             title="Approval Workflows"
             description="Route employee request notifications directly to managers for quick sign-offs."
-            bgClass="bg-[#F0F5FF] border-[#C7D2FE]/60 hover:bg-[#F0F5FF]/95"
+            bgClass="bg-white/80 border-[#63B64F]/15 hover:bg-[#DCEFD5]/40"
             children={
               <div className="flex items-center justify-between text-[9px] bg-white border border-slate-200/50 p-2.5 rounded shadow-3xs">
                 <div>
-                  <span className="font-bold text-[#0F172A] block leading-none">Sick Leave Request</span>
-                  <span className="text-[8px] text-slate-400 font-semibold block mt-1 leading-none font-mono">ID: WF-9284</span>
+                  <span className="font-bold text-[#182018] block leading-none">Sick Leave Request</span>
+                  <span className="text-[8px] text-[#687067] font-semibold block mt-1 leading-none font-mono">ID: WF-9284</span>
                 </div>
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <button className="bg-[#2563EB] hover:bg-[#1d4ed8] text-white text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer border border-[#2563EB]">
+                  <button className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer border border-[#63B64F]">
                     Approve
                   </button>
-                  <button className="bg-transparent hover:bg-slate-50 text-slate-500 border border-slate-200 text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer">
+                  <button className="bg-transparent hover:bg-slate-50 text-[#687067] border border-slate-200 text-[8px] font-bold uppercase tracking-wider py-1 px-2 rounded cursor-pointer">
                     Reject
                   </button>
                 </div>
@@ -252,14 +252,14 @@ export const PlatformSection: React.FC = () => {
             icon={<Coins className="w-5.5 h-5.5" />}
             title="Payroll Visibility"
             description="Review basic salary scales, standard allowances, and tax withholding summaries."
-            bgClass="bg-[#F8FAFC] border-[#E2E8F0] hover:bg-[#F1F5F9]/95"
+            bgClass="bg-white/80 border-[#63B64F]/15 hover:bg-[#DCEFD5]/40"
             children={
-              <div className="flex flex-col gap-2 font-mono text-[9px] font-semibold text-slate-500">
+              <div className="flex flex-col gap-2 font-mono text-[9px] font-semibold text-[#687067]">
                 <div className="flex justify-between border-b border-slate-100 pb-1.5">
                   <span>Basic Pay</span>
-                  <span className="text-[#0F172A] font-bold">$6,500.00</span>
+                  <span className="text-[#182018] font-bold">$6,500.00</span>
                 </div>
-                <div className="flex justify-between text-[#2563EB] font-bold">
+                <div className="flex justify-between text-[#63B64F] font-bold">
                   <span>Net Payout</span>
                   <span>$6,345.00</span>
                 </div>
