@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import type { Employee } from '../../types/hrms';
 import { useProjectContext } from '../../context/useProjectContext';
-import { KeyRound, Lock, CheckCircle2, AlertCircle } from 'lucide-react';
+import { evaluatePasswordStrength } from '../../utils/passwordStrength';
+import { KeyRound, Lock, CheckCircle2, AlertCircle, Check } from 'lucide-react';
 
 export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
   const { updateEmployeePassword } = useProjectContext();
@@ -13,15 +14,17 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
+  const strengthResult = evaluatePasswordStrength(newPassword);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentPassword.trim()) {
-      setErrorMsg('Please enter your current system-generated password');
+      setErrorMsg('Please enter your current password');
       setSuccessMsg('');
       return;
     }
-    if (!newPassword.trim() || newPassword.length < 6) {
-      setErrorMsg('New password must be at least 6 characters long');
+    if (!strengthResult.isStrong) {
+      setErrorMsg('New password MUST meet all Strong requirements (8+ chars, uppercase, lowercase, number, symbol)');
       setSuccessMsg('');
       return;
     }
@@ -48,7 +51,7 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
         <div>
           <h4 className="font-extrabold text-base text-slate-900 font-heading">Security & Password Settings</h4>
           <p className="text-xs text-slate-500 mt-0.5">
-            Change your system-generated temporary password to secure your account.
+            Change your password with strict enterprise Strong-level validation.
           </p>
         </div>
       </div>
@@ -78,7 +81,7 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
               type="password"
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
-              placeholder="System-generated temporary password"
+              placeholder="Enter current password"
               className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-5 text-slate-900 focus:outline-none focus:border-black shadow-floating"
               required
             />
@@ -95,7 +98,7 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
               type="password"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Minimum 6 characters"
+              placeholder="e.g. Strong@12345"
               className="w-full bg-white border border-slate-200 rounded-full py-3 pl-11 pr-5 text-slate-900 focus:outline-none focus:border-black shadow-floating"
               required
             />
@@ -119,12 +122,67 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
           </div>
         </div>
 
+        {/* REAL-TIME PASSWORD STRENGTH EVALUATOR METER */}
+        {newPassword && (
+          <div className="p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2 text-xs">
+            <div className="flex items-center justify-between font-bold">
+              <span className="text-slate-700">Password Strength:</span>
+              <span
+                className={`${
+                  strengthResult.score === 'Strong'
+                    ? 'text-emerald-600'
+                    : strengthResult.score === 'Medium'
+                    ? 'text-amber-600'
+                    : 'text-rose-600'
+                }`}
+              >
+                {strengthResult.score}
+              </span>
+            </div>
+
+            {/* Progress Bar */}
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div
+                className={`h-full transition-all duration-300 ${
+                  strengthResult.score === 'Strong'
+                    ? 'bg-emerald-500'
+                    : strengthResult.score === 'Medium'
+                    ? 'bg-amber-500'
+                    : 'bg-rose-500'
+                }`}
+                style={{ width: `${strengthResult.percent}%` }}
+              />
+            </div>
+
+            {/* Requirements Checklist */}
+            <div className="grid grid-cols-2 gap-1 text-[11px] pt-1 font-medium text-slate-600">
+              <div className={`flex items-center gap-1 ${strengthResult.hasMinLength ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <Check className="w-3 h-3" /> 8+ Characters
+              </div>
+              <div className={`flex items-center gap-1 ${strengthResult.hasUppercase ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <Check className="w-3 h-3" /> Uppercase (A-Z)
+              </div>
+              <div className={`flex items-center gap-1 ${strengthResult.hasNumber ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <Check className="w-3 h-3" /> Number (0-9)
+              </div>
+              <div className={`flex items-center gap-1 ${strengthResult.hasSpecialChar ? 'text-emerald-600' : 'text-slate-400'}`}>
+                <Check className="w-3 h-3" /> Symbol (@, #, $)
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="pt-3">
           <button
             type="submit"
-            className="w-full bg-black hover:bg-slate-800 text-white font-bold py-3.5 rounded-full text-sm shadow-md transition cursor-pointer"
+            disabled={!strengthResult.isStrong}
+            className={`w-full font-bold py-3.5 rounded-full text-xs shadow-md transition flex items-center justify-center gap-2 ${
+              strengthResult.isStrong
+                ? 'bg-black hover:bg-slate-800 text-white cursor-pointer'
+                : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
+            }`}
           >
-            Change Password
+            Update Password
           </button>
         </div>
       </form>

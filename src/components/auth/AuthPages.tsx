@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useProjectContext } from '../../context/useProjectContext';
 import { generateLoginId } from '../../utils/salaryCalculator';
-import { Upload, Mail, Phone, Lock, ArrowRight, Sparkles, User, Building2, ArrowLeft } from 'lucide-react';
+import { evaluatePasswordStrength } from '../../utils/passwordStrength';
+import { Upload, Mail, Phone, Lock, ArrowRight, User, Building2, ArrowLeft, ShieldCheck, Check, AlertCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
+import type { UserRole } from '../../types/hrms';
 
 export const AuthPages: React.FC = () => {
   const { authMode, setAuthMode, login, signUp, setActiveView } = useProjectContext();
@@ -10,6 +12,7 @@ export const AuthPages: React.FC = () => {
   // Sign In Form State
   const [signInId, setSignInId] = useState('speedy.crab@odoo.com');
   const [signInPassword, setSignInPassword] = useState('password123');
+  const [preLoginRole, setPreLoginRole] = useState<UserRole>('admin');
 
   // Sign Up Form State
   const [companyName, setCompanyName] = useState('Odoo India');
@@ -20,6 +23,9 @@ export const AuthPages: React.FC = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  // Password Strength Evaluation
+  const strengthResult = evaluatePasswordStrength(password);
 
   // Live Login ID Calculation directly during render
   const generatedId = name || companyName
@@ -44,7 +50,7 @@ export const AuthPages: React.FC = () => {
       return;
     }
     setErrorMsg('');
-    login(signInId, signInPassword);
+    login(signInId, signInPassword, preLoginRole);
   };
 
   const handleSignUpSubmit = (e: React.FormEvent) => {
@@ -53,7 +59,11 @@ export const AuthPages: React.FC = () => {
       setErrorMsg('Please fill in all required fields');
       return;
     }
-    if (password && password !== confirmPassword) {
+    if (!strengthResult.isStrong) {
+      setErrorMsg('Password MUST meet all Strong requirements (8+ chars, uppercase, lowercase, number, symbol)');
+      return;
+    }
+    if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match');
       return;
     }
@@ -69,7 +79,7 @@ export const AuthPages: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col items-center justify-center p-6 relative overflow-hidden font-sans">
-      {/* Top Header Bar for Public Auth Page (No global navigation tabs or user role dropdown) */}
+      {/* Top Header Bar for Public Auth Page */}
       <div className="absolute top-6 left-6 right-6 flex items-center justify-between z-20 max-w-7xl mx-auto w-full">
         <button
           onClick={() => setActiveView('home')}
@@ -92,7 +102,7 @@ export const AuthPages: React.FC = () => {
         </button>
       </div>
 
-      {/* Soft Decorative Ambient Accents */}
+      {/* Soft Ambient Accents */}
       <div className="absolute top-12 left-12 w-80 h-80 bg-purple-200/30 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-12 right-12 w-80 h-80 bg-yellow-200/30 rounded-full blur-3xl pointer-events-none" />
 
@@ -101,20 +111,11 @@ export const AuthPages: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-lg bg-white rounded-[32px] shadow-floating-lg border border-slate-200/70 p-8 sm:p-10 relative z-10 space-y-8 my-auto mt-20 sm:mt-auto"
+        className="w-full max-w-lg bg-white rounded-[32px] shadow-floating-lg border border-slate-200/70 p-8 sm:p-10 relative z-10 space-y-7 my-auto mt-20 sm:mt-auto"
       >
-        {/* Brand Logo & Editorial Header */}
-        <div className="text-center space-y-3">
-          {/* Top Soft Lavender Banner Pill */}
-          <div className="inline-flex items-center gap-2 bg-[#F3E8FF] border border-[#E9D5FF] text-[#9333EA] px-4 py-1.5 rounded-full text-xs font-semibold shadow-xs">
-            <span className="w-5 h-5 rounded-full bg-[#E9D5FF] flex items-center justify-center text-[10px]">
-              <Sparkles className="w-3 h-3 text-[#9333EA]" />
-            </span>
-            <span>PulseFlow Enterprise HRMS</span>
-          </div>
-
-          {/* Primary Editorial Serif Heading with Luminous Yellow Circle Highlight */}
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading tracking-tight pt-2">
+        {/* Editorial Header Title (PulseFlow Badge Completely Removed) */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading tracking-tight">
             {authMode === 'signin' ? (
               <>
                 <span className="relative inline-block px-2 z-10">
@@ -135,8 +136,8 @@ export const AuthPages: React.FC = () => {
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto font-sans leading-relaxed">
             {authMode === 'signin'
-              ? 'Enter your employee credentials or system login ID to access your dashboard.'
-              : 'Register your company organization and auto-generate system employee IDs.'}
+              ? 'Select your session role and enter employee credentials to continue.'
+              : 'Register your company organization with enterprise password security.'}
           </p>
         </div>
 
@@ -173,14 +174,49 @@ export const AuthPages: React.FC = () => {
         </div>
 
         {errorMsg && (
-          <div className="p-3.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-medium text-center shadow-xs">
-            {errorMsg}
+          <div className="p-3.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 text-xs font-medium text-center shadow-xs flex items-center justify-center gap-1.5">
+            <AlertCircle className="w-4 h-4 shrink-0" />
+            <span>{errorMsg}</span>
           </div>
         )}
 
         {/* SIGN IN FORM */}
         {authMode === 'signin' && (
           <form onSubmit={handleSignInSubmit} className="space-y-5">
+            {/* Pre-Authentication Role Switcher */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 ml-1">
+                Select Session Role
+              </label>
+              <div className="grid grid-cols-2 gap-2 bg-slate-50 p-1.5 rounded-full border border-slate-200/80">
+                <button
+                  type="button"
+                  onClick={() => setPreLoginRole('admin')}
+                  className={`py-2 px-3 text-xs font-bold rounded-full flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    preLoginRole === 'admin'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  Admin / HR Officer
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPreLoginRole('employee')}
+                  className={`py-2 px-3 text-xs font-bold rounded-full flex items-center justify-center gap-1.5 transition cursor-pointer ${
+                    preLoginRole === 'employee'
+                      ? 'bg-black text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  <User className="w-3.5 h-3.5" />
+                  Standard Employee
+                </button>
+              </div>
+            </div>
+
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 ml-1">
                 Phone / Email / Login ID
@@ -237,7 +273,7 @@ export const AuthPages: React.FC = () => {
           </form>
         )}
 
-        {/* SIGN UP FORM */}
+        {/* SIGN UP FORM WITH REAL-TIME PASSWORD STRENGTH METER */}
         {authMode === 'signup' && (
           <form onSubmit={handleSignUpSubmit} className="space-y-4">
             {/* Auto Generated Login ID Pill Banner */}
@@ -325,7 +361,7 @@ export const AuthPages: React.FC = () => {
               </div>
             </div>
 
-            {/* Passwords */}
+            {/* Password & Confirm */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5 ml-1">Password</label>
@@ -333,8 +369,9 @@ export const AuthPages: React.FC = () => {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="e.g. Admin@12345"
                   className="w-full bg-white border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
+                  required
                 />
               </div>
 
@@ -344,16 +381,72 @@ export const AuthPages: React.FC = () => {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Re-enter password"
                   className="w-full bg-white border border-slate-200 rounded-full py-3 px-5 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-black shadow-floating"
+                  required
                 />
               </div>
             </div>
 
+            {/* REAL-TIME PASSWORD STRENGTH EVALUATOR METER */}
+            {password && (
+              <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-2 text-xs">
+                <div className="flex items-center justify-between font-bold">
+                  <span className="text-slate-700">Password Strength:</span>
+                  <span
+                    className={`${
+                      strengthResult.score === 'Strong'
+                        ? 'text-emerald-600'
+                        : strengthResult.score === 'Medium'
+                        ? 'text-amber-600'
+                        : 'text-rose-600'
+                    }`}
+                  >
+                    {strengthResult.score}
+                  </span>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                  <div
+                    className={`h-full transition-all duration-300 ${
+                      strengthResult.score === 'Strong'
+                        ? 'bg-emerald-500'
+                        : strengthResult.score === 'Medium'
+                        ? 'bg-amber-500'
+                        : 'bg-rose-500'
+                    }`}
+                    style={{ width: `${strengthResult.percent}%` }}
+                  />
+                </div>
+
+                {/* Requirements Checklist */}
+                <div className="grid grid-cols-2 gap-1 text-[11px] pt-1 font-medium text-slate-600">
+                  <div className={`flex items-center gap-1 ${strengthResult.hasMinLength ? 'text-emerald-600' : 'text-slate-400'}`}>
+                    <Check className="w-3 h-3" /> 8+ Characters
+                  </div>
+                  <div className={`flex items-center gap-1 ${strengthResult.hasUppercase ? 'text-emerald-600' : 'text-slate-400'}`}>
+                    <Check className="w-3 h-3" /> Uppercase (A-Z)
+                  </div>
+                  <div className={`flex items-center gap-1 ${strengthResult.hasNumber ? 'text-emerald-600' : 'text-slate-400'}`}>
+                    <Check className="w-3 h-3" /> Number (0-9)
+                  </div>
+                  <div className={`flex items-center gap-1 ${strengthResult.hasSpecialChar ? 'text-emerald-600' : 'text-slate-400'}`}>
+                    <Check className="w-3 h-3" /> Symbol (@, #, $)
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="pt-2">
               <button
                 type="submit"
-                className="w-full bg-black hover:bg-slate-800 text-white font-bold py-3.5 px-6 rounded-full shadow-lg shadow-black/10 transition cursor-pointer text-sm"
+                disabled={!strengthResult.isStrong}
+                className={`w-full font-bold py-3.5 px-6 rounded-full shadow-lg transition text-sm flex items-center justify-center gap-2 ${
+                  strengthResult.isStrong
+                    ? 'bg-black hover:bg-slate-800 text-white cursor-pointer shadow-black/10'
+                    : 'bg-slate-200 text-slate-400 cursor-not-allowed border border-slate-300'
+                }`}
               >
                 Sign Up & Generate Profile
               </button>

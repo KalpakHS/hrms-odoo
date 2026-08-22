@@ -29,7 +29,7 @@ export interface ProjectContextType {
   // Navigation & Auth Actions
   setActiveView: (view: AppView) => void;
   setAuthMode: (mode: 'signin' | 'signup') => void;
-  login: (loginIdOrEmail: string, password?: string) => boolean;
+  login: (loginIdOrEmail: string, password?: string, selectedRole?: UserRole) => boolean;
   signUp: (newEmpData: {
     companyName: string;
     name: string;
@@ -137,20 +137,22 @@ export const ProjectProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, []);
 
   // Auth Functions
-  const login = (loginIdOrEmail: string, _password?: string): boolean => {
+  const login = (loginIdOrEmail: string, _password?: string, selectedRole?: UserRole): boolean => {
     const found = employees.find(
       (e) =>
         e.loginId.toLowerCase() === loginIdOrEmail.trim().toLowerCase() ||
         e.email.toLowerCase() === loginIdOrEmail.trim().toLowerCase()
     );
 
-    const userToLogin = found || employees[0];
+    const fallbackUser = selectedRole === 'employee' ? (employees[1] || employees[0]) : employees[0];
+    const userToLogin = found || fallbackUser;
     if (userToLogin) {
+      const activeRole = selectedRole || userToLogin.role;
       setCurrentUser(userToLogin);
-      setCurrentRole(userToLogin.role);
+      setCurrentRole(activeRole);
       setActiveView('employees');
       authStorage.setToken(`session_token_${Date.now()}`);
-      addToast('success', `Welcome back, ${userToLogin.name}!`);
+      addToast('success', `Logged in as ${userToLogin.name} (${activeRole === 'admin' ? 'Admin / HR Officer' : 'Standard Employee'})`);
       return true;
     }
     return false;
