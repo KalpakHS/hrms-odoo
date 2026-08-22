@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Directory - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Employee Directory ({{ total_count }})</h2>
+    <a href="{% url 'employees:employee_create' %}" class="btn">+ Onboard New Employee</a>
+</div>
+
+<form method="GET" class="filter-bar">
+    <input type="text" name="q" value="{{ selected_q }}" placeholder="Search by name, login ID, email..." style="min-width: 220px;">
+    
+    <select name="company">
+        <option value="">All Companies</option>
+        {% for c in companies %}
+            <option value="{{ c.id }}" {% if selected_company == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="department">
+        <option value="">All Departments</option>
+        {% for d in departments %}
+            <option value="{{ d.id }}" {% if selected_department == d.id|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="designation">
+        <option value="">All Designations</option>
+        {% for des in designations %}
+            <option value="{{ des.id }}" {% if selected_designation == des.id|stringformat:"s" %}selected{% endif %}>{{ des.title }}</option>
+        {% endfor %}
+    </select>
+
+    <select name="status">
+        <option value="">All Statuses</option>
+        <option value="active" {% if selected_status == 'active' %}selected{% endif %}>Active Only</option>
+        <option value="inactive" {% if selected_status == 'inactive' %}selected{% endif %}>Inactive Only</option>
+    </select>
+
+    <button type="submit" class="btn btn-sm">Filter</button>
+    <a href="{% url 'employees:employee_list' %}" class="btn btn-secondary btn-sm">Reset</a>
+</form>
+
+<div class="card">
+    {% if page_obj %}
+    <table>
+        <thead>
+            <tr>
+                <th>Login ID</th>
+                <th>Employee Name</th>
+                <th>Work Email</th>
+                <th>Company</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Joining Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for emp in page_obj %}
+            <tr>
+                <td><strong>{{ emp.user.login_id }}</strong></td>
+                <td>{{ emp.full_name }}</td>
+                <td>{{ emp.email }}</td>
+                <td>{{ emp.company.code }}</td>
+                <td>{{ emp.department.name|default:"-" }}</td>
+                <td>{{ emp.designation.title|default:"-" }}</td>
+                <td>{{ emp.joining_date|date:"Y-m-d" }}</td>
+                <td>
+                    {% if emp.is_active %}
+                        <span class="badge badge-active">Active</span>
+                    {% else %}
+                        <span class="badge badge-inactive">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'employees:employee_detail' emp.id %}" class="btn btn-sm">View Profile</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="btn btn-secondary btn-sm">&laquo; Previous</a>
+        {% endif %}
+
+        <span style="font-size: 14px; align-self: center;">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_q %}&q={{ selected_q }}{% endif %}{% if selected_company %}&company={{ selected_company }}{% endif %}{% if selected_department %}&department={{ selected_department }}{% endif %}{% if selected_status %}&status={{ selected_status }}{% endif %}" class="btn btn-secondary btn-sm">Next &raquo;</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <p style="text-align: center; color: #64748b; padding: 20px;">No employees matched your filter criteria.</p>
+    {% endif %}
+</div>
+{% endblock %}

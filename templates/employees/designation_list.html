@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Designations - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Designation Directory</h2>
+    {% if can_manage %}
+        <a href="{% url 'employees:designation_create' %}" class="btn">+ Create Designation</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    {% if designations %}
+    <table>
+        <thead>
+            <tr>
+                <th>Designation Title</th>
+                <th>Department</th>
+                <th>Description</th>
+                {% if can_manage %}<th>Actions</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for d in designations %}
+            <tr>
+                <td><strong>{{ d.title }}</strong></td>
+                <td>{{ d.department.name }}</td>
+                <td>{{ d.description|default:"-" }}</td>
+                {% if can_manage %}
+                <td>
+                    <a href="{% url 'employees:designation_edit' d.id %}" class="btn btn-sm">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #64748b; text-align: center; padding: 20px;">No designations created yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

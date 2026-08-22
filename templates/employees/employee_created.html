@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Employee Onboarded - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 650px; margin: 0 auto; text-align: center;">
+    <div style="font-size: 48px; color: #16a34a; margin-bottom: 10px;">✔</div>
+    <h2>Employee Onboarded Successfully!</h2>
+    <p style="color: #64748b;">Profile for <strong>{{ employee.full_name }}</strong> has been created.</p>
+
+    <div style="background: #f8fafc; border: 2px dashed #cbd5e1; padding: 20px; border-radius: 8px; margin: 24px 0; text-align: left;">
+        <p style="margin: 6px 0;"><strong>Employee Name:</strong> {{ employee.full_name }}</p>
+        <p style="margin: 6px 0;"><strong>Work Email:</strong> {{ employee.email }}</p>
+        <p style="margin: 6px 0;"><strong>Login ID:</strong> <span style="font-size: 18px; font-weight: 700; color: #2563eb;">{{ login_id }}</span></p>
+        <p style="margin: 6px 0;"><strong>Temporary Password:</strong> <span style="font-size: 18px; font-weight: 700; color: #dc2626; background: #fee2e2; padding: 2px 8px; border-radius: 4px;">{{ temporary_password }}</span></p>
+    </div>
+
+    <div class="alert alert-warning" style="text-align: left;">
+        <strong>Important Security Notice:</strong>
+        <ul style="margin: 6px 0 0 20px; padding: 0;">
+            <li>This temporary password is displayed <strong>ONLY ONCE</strong> and is never stored in plaintext.</li>
+            <li>Please share this credential with the employee through a secure internal channel.</li>
+            <li>The employee will be required to create a new password on their first login.</li>
+        </ul>
+    </div>
+
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+        <a href="{% url 'employees:employee_detail' employee.id %}" class="btn">View Employee Profile</a>
+        <a href="{% url 'employees:employee_list' %}" class="btn btn-secondary">Return to Employee Directory</a>
+    </div>
+</div>
+{% endblock %}

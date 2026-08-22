@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Companies - Dayflow HRMS{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2>Company Directory</h2>
+    {% if can_manage %}
+        <a href="{% url 'employees:company_create' %}" class="btn">+ Create Company</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    {% if companies %}
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Company Name</th>
+                <th>Contact Email</th>
+                <th>Contact Phone</th>
+                <th>Website</th>
+                {% if can_manage %}<th>Actions</th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in companies %}
+            <tr>
+                <td><strong>{{ c.code }}</strong></td>
+                <td>{{ c.name }}</td>
+                <td>{{ c.contact_email|default:"-" }}</td>
+                <td>{{ c.contact_phone|default:"-" }}</td>
+                <td>
+                    {% if c.website %}
+                        <a href="{{ c.website }}" target="_blank" style="color: #2563eb;">{{ c.website }}</a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                {% if can_manage %}
+                <td>
+                    <a href="{% url 'employees:company_edit' c.id %}" class="btn btn-sm">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="color: #64748b; text-align: center; padding: 20px;">No companies created yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

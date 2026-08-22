@@ -5,20 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Dayflow HRMS{% endblock %}</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 20px; }
-        .container { max-width: 600px; margin: 40px auto; background: #ffffff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        .form-control { width: 100%; padding: 10px; margin: 8px 0 16px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; }
-        .btn { background: #2563eb; color: #ffffff; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; margin: 0; padding: 0; }
+        .navbar { background: #1e293b; color: #ffffff; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: #cbd5e1; text-decoration: none; margin-right: 16px; font-weight: 500; font-size: 14px; }
+        .navbar a:hover { color: #ffffff; }
+        .navbar .brand { font-size: 18px; font-weight: 700; color: #38bdf8; margin-right: 24px; }
+        .main-container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+        .card { background: #ffffff; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+        .form-control { width: 100%; padding: 8px 12px; margin: 6px 0 16px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .btn { display: inline-block; background: #2563eb; color: #ffffff; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; text-decoration: none; font-size: 14px; text-align: center; }
         .btn:hover { background: #1d4ed8; }
+        .btn-secondary { background: #64748b; }
+        .btn-secondary:hover { background: #475569; }
+        .btn-danger { background: #dc2626; }
+        .btn-danger:hover { background: #b91c1c; }
+        .btn-success { background: #16a34a; }
+        .btn-success:hover { background: #15803d; }
+        .btn-sm { padding: 4px 8px; font-size: 12px; }
         .alert { padding: 12px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
         .alert-success { background: #dcfce7; color: #166534; }
         .alert-error, .alert-danger { background: #fee2e2; color: #991b1b; }
         .alert-info { background: #e0f2fe; color: #075985; }
+        .alert-warning { background: #fef3c7; color: #92400e; }
         .errors { color: #dc2626; font-size: 13px; margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+        th { background: #f8fafc; font-weight: 600; color: #475569; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+        .badge-active { background: #dcfce7; color: #166534; }
+        .badge-inactive { background: #fee2e2; color: #991b1b; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; }
+        .filter-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; background: #f1f5f9; padding: 12px; border-radius: 6px; }
+        .filter-bar input, .filter-bar select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; }
     </style>
 </head>
 <body>
-    <div class="container">
+    {% if user.is_authenticated %}
+    <nav class="navbar">
+        <div style="display: flex; align-items: center;">
+            <a href="{% url 'accounts:dashboard' %}" class="brand">Dayflow HRMS</a>
+            <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+            {% if user.role == 'ADMIN' or user.role == 'HR' or user.is_superuser %}
+                <a href="{% url 'employees:employee_list' %}">Employees</a>
+                <a href="{% url 'employees:company_list' %}">Companies</a>
+                <a href="{% url 'employees:department_list' %}">Departments</a>
+                <a href="{% url 'employees:designation_list' %}">Designations</a>
+            {% elif user.employee_profile %}
+                <a href="{% url 'employees:employee_detail' user.employee_profile.id %}">My Profile</a>
+            {% endif %}
+        </div>
+        <div>
+            <span style="margin-right: 15px; font-size: 13px; color: #94a3b8;">
+                {{ user.get_full_name|default:user.login_id }} (<strong>{{ user.role }}</strong>)
+            </span>
+            <a href="{% url 'accounts:password_change' %}">Change Password</a>
+            <a href="{% url 'accounts:logout' %}" style="color: #f87171;">Logout</a>
+        </div>
+    </nav>
+    {% endif %}
+
+    <div class="main-container">
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }}">{{ message }}</div>
