@@ -99,22 +99,18 @@ WSGI_APPLICATION = 'dayflow.wsgi.application'
 # Database Configuration - MySQL via Django ORM
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+# Database Configuration - PostgreSQL
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv('DB_NAME', 'dayflow_hrms'),
-        'USER': os.getenv('DB_USER', 'root'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'dayflow_db'),
+        'USER': os.getenv('DB_USER', 'ashwin'),
         'PASSWORD': os.getenv('DB_PASSWORD', ''),
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '3306'),
-        'OPTIONS': {
-            'charset': 'utf8mb4',
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 

@@ -9,7 +9,8 @@ env/
 ENV/
 env.bak/
 venv.bak/
-
+dayflow_backup.sql
+*.sql
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
