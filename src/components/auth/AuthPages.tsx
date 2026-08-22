@@ -113,7 +113,7 @@ export const AuthPages: React.FC = () => {
         transition={{ duration: 0.4 }}
         className="w-full max-w-lg bg-white rounded-[32px] shadow-floating-lg border border-slate-200/70 p-8 sm:p-10 relative z-10 space-y-7 my-auto mt-20 sm:mt-auto"
       >
-        {/* Editorial Header Title (PulseFlow Badge Completely Removed) */}
+        {/* Editorial Header Title */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 font-heading tracking-tight">
             {authMode === 'signin' ? (

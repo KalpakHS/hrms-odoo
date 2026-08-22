@@ -82,7 +82,7 @@ export const Header: React.FC = () => {
                 dayflow.
               </span>
               <span className="text-[10px] text-slate-500 font-semibold tracking-wider uppercase block leading-none mt-0.5">
-                PulseFlow Enterprise
+                HRMS Enterprise
               </span>
             </div>
           </button>
