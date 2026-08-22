@@ -41,7 +41,7 @@ export function evaluatePasswordStrength(password: string): PasswordStrengthResu
       score: 'Strong',
       percent: 100,
       isStrong: true,
-      message: 'Strong password — Meets all enterprise security requirements!',
+      message: 'Strong password — Meets all security requirements!',
       hasMinLength,
       hasUppercase,
       hasLowercase,

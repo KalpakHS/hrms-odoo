@@ -130,7 +130,7 @@ export const hrmsApi = {
       workingDaysPerWeek: 5,
       breakTimeHours: 1,
       about: 'Newly onboarded team member.',
-      whatILove: 'Solving high impact enterprise problems.',
+      whatILove: 'Solving high impact organizational problems.',
       interests: 'Technology, Design, Product',
       skills: [{ id: `s-${Date.now()}`, name: 'General Engineering', level: 'Intermediate' }],
       certifications: [],

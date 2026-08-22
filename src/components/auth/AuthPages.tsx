@@ -137,7 +137,7 @@ export const AuthPages: React.FC = () => {
           <p className="text-xs sm:text-sm text-slate-500 max-w-sm mx-auto font-sans leading-relaxed">
             {authMode === 'signin'
               ? 'Select your session role and enter employee credentials to continue.'
-              : 'Register your company organization with enterprise password security.'}
+              : 'Register your company organization with strong password security.'}
           </p>
         </div>
 

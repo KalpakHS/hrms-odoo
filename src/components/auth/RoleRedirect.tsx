@@ -102,7 +102,7 @@ export const RoleRedirect: React.FC<RoleRedirectProps> = ({ user, onLogout }) =>
           </div>
         </div>
         <div className="border-t border-slate-100 pt-4 mt-6 text-[10px] font-bold text-slate-450 uppercase">
-          License Level: Enterprise Cloud
+          License Level: Pro Cloud
         </div>
       </div>
     </div>

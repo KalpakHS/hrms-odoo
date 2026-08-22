@@ -51,7 +51,7 @@ export const SecurityTab: React.FC<{ employee: Employee }> = ({ employee }) => {
         <div>
           <h4 className="font-extrabold text-base text-slate-900 font-heading">Security & Password Settings</h4>
           <p className="text-xs text-slate-500 mt-0.5">
-            Change your password with strict enterprise Strong-level validation.
+            Change your password with strict Strong-level validation.
           </p>
         </div>
       </div>

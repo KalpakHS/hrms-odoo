@@ -104,7 +104,7 @@ export const EmployeeCardsGrid: React.FC = () => {
         <div className="space-y-1">
           <div className="inline-flex items-center gap-1.5 bg-[#FEF08A]/60 border border-yellow-300 text-slate-900 px-3 py-1 rounded-full text-xs font-bold shadow-xs">
             <Sparkles className="w-3.5 h-3.5 text-slate-900" />
-            <span>Enterprise Directory</span>
+            <span>Employee Directory</span>
           </div>
           <h1 className="text-3xl font-extrabold text-slate-900 font-heading tracking-tight pt-1">
             Employees & Team Roster

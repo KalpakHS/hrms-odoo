@@ -15,7 +15,7 @@ interface HomeProps {
 export const Home: React.FC<HomeProps> = ({ onSignIn, onGetStarted }) => {
   return (
     <div className="min-h-screen bg-white text-[#0F172A] flex flex-col font-sans transition-colors duration-300">
-      {/* Sticky Enterprise Navbar */}
+      {/* Sticky Top Navbar */}
       <Navbar onSignIn={onSignIn} onGetStarted={onGetStarted} />
 
       {/* Main Page Content */}

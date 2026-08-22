@@ -33,7 +33,7 @@ export const initialEmployees: Employee[] = [
     monthlyWage: 75000,
     workingDaysPerWeek: 5,
     breakTimeHours: 1,
-    about: 'Experienced HR executive managing operations, employee welfare, and enterprise payroll setup at Dayflow.',
+    about: 'Experienced HR executive managing operations, employee welfare, and payroll setup at Dayflow.',
     whatILove: 'Fostering inclusive workplace culture and optimizing automated HR workflows.',
     interests: 'Tech Blogging, Chess, Classical Music',
     skills: [
@@ -124,7 +124,7 @@ export const initialEmployees: Employee[] = [
     monthlyWage: 60000,
     workingDaysPerWeek: 5,
     breakTimeHours: 1,
-    about: 'Product strategist focused on enterprise workflow automation.',
+    about: 'Product strategist focused on workflow automation.',
     whatILove: 'Solving complex operational roadblocks for client teams.',
     interests: 'Product Strategy, Podcasts, Travel',
     skills: [
