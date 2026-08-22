@@ -2,7 +2,11 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
-export const ProductCTA: React.FC = () => {
+interface ProductCTAProps {
+  onGetStarted: () => void;
+}
+
+export const ProductCTA: React.FC<ProductCTAProps> = ({ onGetStarted }) => {
   return (
     <section className="py-24 bg-[#FFFDF2] relative overflow-hidden">
       {/* Top separator line */}
@@ -44,11 +48,17 @@ export const ProductCTA: React.FC = () => {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-              <button className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#63B64F]">
+              <button 
+                onClick={onGetStarted}
+                className="bg-[#63B64F] hover:bg-[#52a13e] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#63B64F]"
+              >
                 Get Started
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
               </button>
-              <button className="bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-md">
+              <button 
+                onClick={onGetStarted}
+                className="bg-white/5 hover:bg-white/10 text-white border border-white/20 font-bold text-xs uppercase tracking-wider px-7 py-4.5 rounded-lg transition-all duration-200 cursor-pointer backdrop-blur-md"
+              >
                 Sign In
               </button>
             </div>

@@ -47,7 +47,11 @@ const TypingText: React.FC = () => {
   );
 };
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  onGetStarted: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onGetStarted }) => {
   // Staggered heading reveal setup
   const headingLine1 = "HUMAN RESOURCE".split(" ");
   const headingLine2 = "MANAGEMENT SYSTEM".split(" ");
@@ -227,7 +231,10 @@ export const Hero: React.FC = () => {
           animate="visible"
           className="flex flex-wrap items-center justify-center gap-4 mt-6"
         >
-          <button className="bg-[#163A2B] hover:bg-[#0f2a1f] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#163A2B]">
+          <button 
+            onClick={onGetStarted}
+            className="bg-[#163A2B] hover:bg-[#0f2a1f] text-white text-xs font-bold uppercase tracking-wider px-7 py-4.5 rounded-lg shadow-sm hover:shadow transition-all duration-200 flex items-center gap-2 group cursor-pointer border border-[#163A2B]"
+          >
             Get Started
             <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
