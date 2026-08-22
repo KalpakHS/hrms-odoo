@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: dayflow_mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: dayflow_db
+      MYSQL_ROOT_PASSWORD: dayflow_prod_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: dayflow_backend
+    restart: always
+    environment:
+      DJANGO_SECRET_KEY: 'prod-secret-key-change-me'
+      DJANGO_DEBUG: 'False'
+      ALLOWED_HOSTS: '*'
+      DB_ENGINE: 'django.db.backends.mysql'
+      DB_NAME: 'dayflow_db'
+      DB_USER: 'root'
+      DB_PASSWORD: 'dayflow_prod_password'
+      DB_HOST: 'db'
+      DB_PORT: '3306'
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py seed_dayflow &&
+             gunicorn dayflow.wsgi:application --bind 0.0.0.0:8000 --workers 3"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: dayflow_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mysql_data:
